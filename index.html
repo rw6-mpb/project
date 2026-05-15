@@ -3,87 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycby5E9tAwCJBubnOnSLEzBkfCaGFpc0yLihZkmSZ7RI2vjciTEkz-xieMCe7bzHBDg/exec">
   <title>ระบบข้อมูลผู้มาติดต่อ สน.พระราชวัง</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
       background: #0d1b2a;
-      color: #e0e6f0;
-      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    /* ── Loading overlay ── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #0d1b2a;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 1rem;
+      z-index: 10;
+      transition: opacity 0.4s ease;
     }
-    .card {
+    #loader.hidden { opacity: 0; pointer-events: none; }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #4a90d9;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loader-text {
+      color: #7a92b0;
+      font-size: 0.875rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Iframe ── */
+    #app {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* ── Fallback (shown if iframe is blocked) ── */
+    #fallback {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #0d1b2a;
+      color: #e0e6f0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      padding: 3rem 2.5rem;
-      max-width: 420px;
-      width: 90%;
+      padding: 2rem;
+      gap: 1.25rem;
     }
-    .badge {
-      display: inline-block;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
+    #fallback.visible { display: flex; }
+
+    .fallback-badge {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.13);
       border-radius: 999px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       padding: 0.3rem 0.9rem;
       color: #94a8c7;
-      margin-bottom: 1.5rem;
     }
-    h1 {
-      font-size: 1.35rem;
+    .fallback-title {
+      font-size: 1.3rem;
       font-weight: 600;
       line-height: 1.5;
-      margin-bottom: 0.5rem;
     }
-    .sub {
-      font-size: 0.9rem;
+    .fallback-sub {
+      font-size: 0.875rem;
       color: #7a92b0;
-      margin-bottom: 2.5rem;
+      max-width: 320px;
     }
-    .spinner {
-      width: 36px;
-      height: 36px;
-      border: 3px solid rgba(255,255,255,0.12);
-      border-top-color: #4a90d9;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 1.25rem;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .status {
-      font-size: 0.85rem;
-      color: #7a92b0;
-      margin-bottom: 1.5rem;
-    }
-    .link {
+    .open-btn {
       display: inline-block;
-      font-size: 0.8rem;
-      color: #4a90d9;
+      margin-top: 0.5rem;
+      padding: 0.65rem 1.75rem;
+      background: #4a90d9;
+      color: #fff;
+      border-radius: 8px;
       text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s;
     }
-    .link:hover { border-bottom-color: #4a90d9; }
+    .open-btn:hover { background: #3a7bc8; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="badge">สน.พระราชวัง</div>
-    <h1>ระบบข้อมูลผู้มาติดต่อ</h1>
-    <p class="sub">Police Station Visitor Management</p>
+
+  <!-- Loading overlay -->
+  <div id="loader">
     <div class="spinner"></div>
-    <p class="status">กำลังเปลี่ยนเส้นทาง&hellip;</p>
-    <a class="link" href="https://script.google.com/macros/s/AKfycby5E9tAwCJBubnOnSLEzBkfCaGFpc0yLihZkmSZ7RI2vjciTEkz-xieMCe7bzHBDg/exec">
-      คลิกที่นี่หากไม่ได้ถูกนำทางโดยอัตโนมัติ
+    <span class="loader-text">กำลังโหลด&hellip;</span>
+  </div>
+
+  <!-- Full-screen app iframe -->
+  <iframe
+    id="app"
+    src="https://script.google.com/macros/s/AKfycby5E9tAwCJBubnOnSLEzBkfCaGFpc0yLihZkmSZ7RI2vjciTEkz-xieMCe7bzHBDg/exec"
+    title="ระบบข้อมูลผู้มาติดต่อ สน.พระราชวัง"
+    allowfullscreen
+  ></iframe>
+
+  <!-- Fallback if iframe is blocked -->
+  <div id="fallback">
+    <span class="fallback-badge">สน.พระราชวัง</span>
+    <p class="fallback-title">ระบบข้อมูลผู้มาติดต่อ</p>
+    <p class="fallback-sub">ไม่สามารถโหลดในหน้านี้ได้ กรุณาเปิดในหน้าต่างใหม่</p>
+    <a class="open-btn"
+       href="https://script.google.com/macros/s/AKfycby5E9tAwCJBubnOnSLEzBkfCaGFpc0yLihZkmSZ7RI2vjciTEkz-xieMCe7bzHBDg/exec"
+       target="_blank" rel="noopener">
+      เปิดแอปพลิเคชัน
     </a>
   </div>
+
   <script>
-    window.location.replace('https://script.google.com/macros/s/AKfycby5E9tAwCJBubnOnSLEzBkfCaGFpc0yLihZkmSZ7RI2vjciTEkz-xieMCe7bzHBDg/exec');
+    const loader   = document.getElementById('loader');
+    const appFrame = document.getElementById('app');
+    const fallback = document.getElementById('fallback');
+
+    // Hide loader once iframe content loads
+    appFrame.addEventListener('load', function() {
+      loader.classList.add('hidden');
+
+      // Check if iframe was blocked (empty / error page)
+      try {
+        const doc = appFrame.contentDocument || appFrame.contentWindow.document;
+        if (!doc || doc.body.innerHTML.trim() === '') throw new Error('blocked');
+      } catch(e) {
+        // Cross-origin or blocked — show fallback
+        loader.classList.add('hidden');
+        fallback.classList.add('visible');
+      }
+    });
+
+    // Fallback if iframe never fires load within 15 s
+    setTimeout(function() {
+      if (!loader.classList.contains('hidden')) {
+        loader.classList.add('hidden');
+        fallback.classList.add('visible');
+      }
+    }, 15000);
   </script>
+
 </body>
 </html>
