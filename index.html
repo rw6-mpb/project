@@ -1665,6 +1665,7 @@
       if (icon) icon.className = sortAsc ? 'fas fa-sort-up text-primary' : 'fas fa-sort-down text-primary';
 
       filteredData.sort((a, b) => {
+        if (colIndex === 0) return sortAsc ? a.seqNo - b.seqNo : b.seqNo - a.seqNo;
         const valA = (a.data[colIndex] || '').toString();
         const valB = (b.data[colIndex] || '').toString();
         if (type === 'num') return sortAsc ? Number(valA) - Number(valB) : Number(valB) - Number(valA);
@@ -1710,7 +1711,7 @@
         var nameCell = '<td class="col-name-cell fw-bold text-primary" title="' + escHtml(rawName) + '">' + fullName + '</td>';
         html += '<tr class="clickable-row" onclick="viewDetails(' + index + ')">' +
           '<td class="text-center" onclick="event.stopPropagation()"><input type="checkbox" class="row-cb" data-rid="' + escHtml(rid) + '" ' + (isChecked ? 'checked' : '') + ' onchange="toggleRowSelect(\'' + escHtml(rid) + '\',event)"></td>' +
-          '<td class="text-center text-muted small">' + (d[0] || '-') + '</td>' +
+          '<td class="text-center text-muted small">' + item.seqNo + '</td>' +
           '<td class="small">' + escHtml(d[1] || '-') + '<br><span class="text-muted">' + escHtml(d[2] || '') + '</span></td>' +
           nameCell +
           '<td class="text-center">' + visitBadge + '</td>' +
@@ -2659,7 +2660,7 @@
       if (typeof XLSX === 'undefined') { showToast('โหลด SheetJS ไม่สำเร็จ', 'danger'); return; }
 
       var headers = [
-        'RecordID','วันที่','เวลา','คำนำหน้า','ชื่อ-สกุล','อายุ','เลขบัตร ปชช','ที่อยู่ปัจจุบัน','เบอร์โทร',
+        'ลำดับ','RecordID','วันที่','เวลา','คำนำหน้า','ชื่อ-สกุล','อายุ','เลขบัตร ปชช','ที่อยู่ปัจจุบัน','เบอร์โทร',
         'การแต่งกาย','ระบุ(แต่งกาย)','กระเป๋า/อุปกรณ์','ระบุ(กระเป๋า)','พูดคุยรู้เรื่อง','ระบุ(พูดคุย)',
         'เคยมารับเสด็จ','ระบุ(รับเสด็จ)','เรื่องโดยสังเขป','เคยยื่นร้องเรียน','ระบุ(หน่วย/ผล)',
         'ทราบจากที่ใด','เดินทางจากจังหวัด','สถานที่พักกทม','ยานพาหนะ','ชื่อผู้ติดต่อ','ความเกี่ยวข้อง',
@@ -2672,7 +2673,8 @@
         'ขนาดอื่นๆ','สีซอง','สีอื่นๆ',
         'ครั้งที่มา','ความครบถ้วน (%)','จำนวน field ที่ขาด','CreatedAt','UpdatedAt'
       ];
-      var PHONE_COLS_0IDX = new Set([6, 8, 26, 49]); // col7,9,27,50 → 0-indexed
+      // Phone cols shift +1 because ลำดับ is now col 0; original 0-idx 6,8,26,49 become 7,9,27,50
+      var PHONE_COLS_0IDX = new Set([7, 9, 27, 50]);
 
       var wsData = [headers];
       data.forEach(function(item) {
@@ -2681,11 +2683,11 @@
         var isReturn = (row[29] || '').toString().trim() === 'เคย';
         // Slice to first 61 data columns so new 63-col records don't double-add CreatedAt/UpdatedAt
         var core = row.slice(0, 61);
-        var xlRow = core.map(function(cell, i) {
+        var xlRow = [item.seqNo].concat(core.map(function(cell, i) {
           var v = (cell === null || cell === undefined) ? '' : cell.toString().replace(/^'/, '');
-          if (PHONE_COLS_0IDX.has(i)) return { v: v, t: 's' };
+          if (PHONE_COLS_0IDX.has(i + 1)) return { v: v, t: 's' }; // i+1 for seqNo offset
           return v;
-        });
+        }));
         xlRow.push(isReturn ? 'มาซ้ำ' : 'ครั้งแรก');
         xlRow.push(comp.percent);
         xlRow.push(comp.missingCount);
@@ -2696,7 +2698,7 @@
 
       var ws = XLSX.utils.aoa_to_sheet(wsData);
 
-      // Force phone columns as string type
+      // Force phone columns as string type (shifted +1 for seqNo prepend)
       var range = XLSX.utils.decode_range(ws['!ref']);
       for (var r = 1; r <= range.e.r; r++) {
         PHONE_COLS_0IDX.forEach(function(ci) {
@@ -2722,10 +2724,10 @@
       var nowStr  = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
       var scopeLabel = scope === 'all' ? 'ข้อมูลทั้งหมด' : 'ข้อมูลที่กรอง';
 
-      var rows = data.map(function(item, idx) {
+      var rows = data.map(function(item) {
         var d = item.data;
         return '<tr>' +
-          '<td>' + (idx + 1) + '</td>' +
+          '<td>' + item.seqNo + '</td>' +
           '<td>' + escHtml(d[1] || '') + ' ' + escHtml(d[2] || '') + '</td>' +
           '<td>' + escHtml((d[3] || '') + ' ' + (d[4] || '')) + '</td>' +
           '<td>' + escHtml(d[17] || '') + '</td>' +
