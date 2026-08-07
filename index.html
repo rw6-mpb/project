@@ -182,6 +182,24 @@
     .lightbox-close { position: absolute; top: 16px; right: 22px; color: #fff; font-size: 2.2rem; cursor: pointer; line-height: 1; opacity: 0.8; transition: opacity 0.15s; }
     .lightbox-close:hover { opacity: 1; }
     .lightbox-caption { color: #ccc; font-size: 0.82rem; margin-top: 10px; text-align: center; max-width: 80vw; }
+
+    /* ===== VISIT BADGES ===== */
+    .visit-badge { font-size: 0.7rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; white-space: nowrap; }
+    .visit-first  { background: #20c997; color: #fff; }
+    .visit-return { background: #fd7e14; color: #fff; }
+
+    /* ===== COMPLETENESS BADGES ===== */
+    .comp-badge { font-size: 0.68rem; padding: 2px 6px; border-radius: 10px; font-weight: 700; white-space: nowrap; cursor: default; }
+    .comp-complete   { background: #198754; color: #fff; }
+    .comp-incomplete { background: #ffc107; color: #212529; }
+
+    /* ===== FORM COMPLETENESS PANEL ===== */
+    #compPanelBlock { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px 14px; }
+    #compPanelBlock .cp-label { font-size: 0.8rem; font-weight: 700; color: #495057; }
+    #compPanelBlock .cp-missing { font-size: 0.78rem; color: #6c757d; }
+
+    /* ===== TABLE NAME COLUMN CONSTRAINT ===== */
+    .col-name-cell { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -314,24 +332,30 @@
         </div>
       </div>
 
-      <!-- Row 2: 3 info widgets -->
+      <!-- Row 2: 4 info widgets (3 existing + completeness) -->
       <div class="row g-3 mb-4">
-        <div class="col-lg-4 d-flex">
+        <div class="col-lg-3 d-flex">
           <div class="dash-widget w-100">
             <div class="wg-header"><i class="fas fa-map-marker-alt text-danger"></i> ที่อยู่ปัจจุบัน</div>
             <div id="widgetAddress"><div class="wg-empty"><i class="fas fa-spinner fa-spin"></i></div></div>
           </div>
         </div>
-        <div class="col-lg-4 d-flex">
+        <div class="col-lg-3 d-flex">
           <div class="dash-widget w-100">
             <div class="wg-header"><i class="fas fa-file-alt text-primary"></i> ประเภทเรื่องที่ยื่น</div>
             <div id="widgetTopic"><div class="wg-empty"><i class="fas fa-spinner fa-spin"></i></div></div>
           </div>
         </div>
-        <div class="col-lg-4 d-flex">
+        <div class="col-lg-3 d-flex">
           <div class="dash-widget w-100">
             <div class="wg-header"><i class="fas fa-route text-success"></i> สาเหตุเรื่องที่ยื่น</div>
             <div id="widgetProvince"><div class="wg-empty"><i class="fas fa-spinner fa-spin"></i></div></div>
+          </div>
+        </div>
+        <div class="col-lg-3 d-flex">
+          <div class="dash-widget w-100">
+            <div class="wg-header"><i class="fas fa-tasks text-warning"></i> ความครบถ้วนของข้อมูล</div>
+            <div id="completenessWidgetContent"><div class="wg-empty"><i class="fas fa-spinner fa-spin"></i></div></div>
           </div>
         </div>
       </div>
@@ -412,6 +436,22 @@
                 <option value="none">ยังไม่มีข้อมูล Section 1</option>
               </select>
             </div>
+            <div class="col-md-3">
+              <div class="filter-group-label">ความครบถ้วน</div>
+              <select class="form-select form-select-sm" id="advCompletenessFilter" onchange="applyFilters()">
+                <option value="all">ทั้งหมด</option>
+                <option value="complete">ข้อมูลครบ</option>
+                <option value="incomplete">ยังไม่ครบ</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <div class="filter-group-label">ครั้งที่มา</div>
+              <select class="form-select form-select-sm" id="advVisitFilter" onchange="applyFilters()">
+                <option value="all">ทั้งหมด</option>
+                <option value="first">ครั้งแรก</option>
+                <option value="return">มาซ้ำ</option>
+              </select>
+            </div>
             <div class="col-md-4">
               <div class="filter-group-label">วันที่พบ (ตั้งแต่)</div>
               <input type="date" class="form-control form-control-sm" id="advDateFrom" onchange="applyFilters()">
@@ -440,18 +480,20 @@
             <thead class="sticky-top">
               <tr>
                 <th class="text-center" style="width:36px"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" title="เลือกทั้งหมด"></th>
-                <th onclick="sortTable(0,'num')" class="text-center" style="width:56px"># <i class="fas fa-sort" id="icon-0"></i></th>
-                <th onclick="sortTable(1,'str')">วันที่/เวลา <i class="fas fa-sort" id="icon-1"></i></th>
-                <th onclick="sortTable(4,'str')">ชื่อ-สกุล <i class="fas fa-sort" id="icon-4"></i></th>
-                <th onclick="sortTable(41,'str')">หมายฯ <i class="fas fa-sort" id="icon-41"></i></th>
+                <th onclick="sortTable(0,'num')" class="text-center" style="width:52px"># <i class="fas fa-sort" id="icon-0"></i></th>
+                <th onclick="sortTable(1,'str')" style="width:100px">วันที่/เวลา <i class="fas fa-sort" id="icon-1"></i></th>
+                <th onclick="sortTable(4,'str')" style="max-width:160px">ชื่อ-สกุล <i class="fas fa-sort" id="icon-4"></i></th>
+                <th onclick="sortTable(29,'str')" class="text-center" style="width:80px">ครั้งที่มา <i class="fas fa-sort" id="icon-29"></i></th>
+                <th onclick="sortTable(41,'str')" style="width:80px">หมายฯ <i class="fas fa-sort" id="icon-41"></i></th>
                 <th onclick="sortTable(43,'str')">สถานที่พบ <i class="fas fa-sort" id="icon-43"></i></th>
                 <th onclick="sortTable(48,'str')">เจ้าหน้าที่ <i class="fas fa-sort" id="icon-48"></i></th>
-                <th class="text-center">รูป</th>
-                <th class="text-center" style="width:60px">ดูข้อมูล</th>
+                <th class="text-center" style="width:90px">ความครบถ้วน</th>
+                <th class="text-center" style="width:42px">รูป</th>
+                <th class="text-center" style="width:58px">ดูข้อมูล</th>
               </tr>
             </thead>
             <tbody id="tableBody">
-              <tr><td colspan="9" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr>
+              <tr><td colspan="11" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr>
             </tbody>
           </table>
         </div>
@@ -708,10 +750,10 @@
                   <option value="อื่นๆ">อื่นๆ</option>
                 </select>
               </div>
-              <div class="col-md-5 mb-3"><label class="form-label">ชื่อ - สกุล</label><input type="text" class="form-control" name="col5" required></div>
+              <div class="col-md-5 mb-3"><label class="form-label">ชื่อ - สกุล</label><input type="text" class="form-control" name="col5" required oninput="scheduleDupCheck();scheduleCompPanel()"></div>
               <div class="col-md-4 mb-3"><label class="form-label">อายุ</label><input type="number" class="form-control" name="col6"></div>
-              <div class="col-md-6 mb-3"><label class="form-label">เลขบัตร ปชช.</label><input type="text" class="form-control" name="col7" maxlength="13"></div>
-              <div class="col-md-6 mb-3"><label class="form-label">เบอร์โทร</label><input type="text" class="form-control" name="col9"></div>
+              <div class="col-md-6 mb-3"><label class="form-label">เลขบัตร ปชช.</label><input type="text" class="form-control" name="col7" maxlength="13" oninput="scheduleDupCheck();scheduleCompPanel()"></div>
+              <div class="col-md-6 mb-3"><label class="form-label">เบอร์โทร</label><input type="text" class="form-control" name="col9" oninput="scheduleDupCheck();scheduleCompPanel()"></div>
               <div class="col-12 mb-3"><label class="form-label">ที่อยู่ปัจจุบัน</label><textarea class="form-control" name="col8" rows="2"></textarea></div>
               <div class="col-12"><label class="form-label">ที่อยู่ภูมิลำเนา</label><textarea class="form-control" name="col38" rows="2"></textarea></div>
 
@@ -870,6 +912,27 @@
           </div>
         </div>
 
+        <!-- Duplicate Warning Block -->
+        <div id="dupWarningBlock" class="mx-auto" style="max-width:900px"></div>
+
+        <!-- Form Completeness Panel -->
+        <div id="compPanelBlock" class="mx-auto mb-3 d-flex align-items-center gap-3 flex-wrap" style="max-width:900px">
+          <span class="cp-label">ความครบถ้วน:</span>
+          <span id="cpPercent" class="fw-bold">—</span>
+          <span id="cpMissing" class="cp-missing"></span>
+        </div>
+
+        <!-- Pre-submit incomplete warning -->
+        <div id="formIncompleteWarn" class="alert alert-warning d-none mx-auto mb-2" style="max-width:900px">
+          <p class="fw-bold mb-1">⚠️ ข้อมูลบางส่วนยังไม่ครบ</p>
+          <p class="small mb-1">ยังขาด: <span id="fwMissingList" class="fw-semibold"></span></p>
+          <p class="text-muted small mb-2">สามารถบันทึกไว้และกลับมาแก้ไขภายหลังได้</p>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-warning btn-sm" onclick="formSubmitAnyway()"><i class="fas fa-save me-1"></i>บันทึกต่อ</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="formSubmitCancel()">กลับไปตรวจสอบ</button>
+          </div>
+        </div>
+
         <!-- Upload Progress -->
         <div id="uploadProgressArea" class="mx-auto mb-3" style="max-width:900px">
           <div class="fw-bold mb-2 text-success"><i class="fas fa-check-circle"></i> บันทึกข้อมูลหลักสำเร็จ — กำลังอัปโหลดรูป...</div>
@@ -1009,6 +1072,11 @@
     let activeProvinceFilter = null;
     let activeTopicFilter = null;
     let activeReasonFilter = null;
+    let activeCompletenessFilter = 'all'; // 'all','complete','incomplete','portrait','encounter'
+    let activeVisitFilter = 'all';        // 'all','first','return'
+    let allowIncompleteSubmit = false;    // bypasses pre-submit completeness gate
+    let dupCheckTimer = null;             // debounce handle for duplicate check
+    let compPanelTimer = null;            // debounce handle for form completeness panel
     const PROVINCES_STATIC = [{"id":1,"name":"กรุงเทพมหานคร"},{"id":2,"name":"สมุทรปราการ"},{"id":3,"name":"นนทบุรี"},{"id":4,"name":"ปทุมธานี"},{"id":5,"name":"พระนครศรีอยุธยา"},{"id":6,"name":"อ่างทอง"},{"id":7,"name":"ลพบุรี"},{"id":8,"name":"สิงห์บุรี"},{"id":9,"name":"ชัยนาท"},{"id":10,"name":"สระบุรี"},{"id":11,"name":"ชลบุรี"},{"id":12,"name":"ระยอง"},{"id":13,"name":"จันทบุรี"},{"id":14,"name":"ตราด"},{"id":15,"name":"ฉะเชิงเทรา"},{"id":16,"name":"ปราจีนบุรี"},{"id":17,"name":"นครนายก"},{"id":18,"name":"สระแก้ว"},{"id":19,"name":"นครราชสีมา"},{"id":20,"name":"บุรีรัมย์"},{"id":21,"name":"สุรินทร์"},{"id":22,"name":"ศรีสะเกษ"},{"id":23,"name":"อุบลราชธานี"},{"id":24,"name":"ยโสธร"},{"id":25,"name":"ชัยภูมิ"},{"id":26,"name":"อำนาจเจริญ"},{"id":27,"name":"หนองบัวลำภู"},{"id":28,"name":"ขอนแก่น"},{"id":29,"name":"อุดรธานี"},{"id":30,"name":"เลย"},{"id":31,"name":"หนองคาย"},{"id":32,"name":"มหาสารคาม"},{"id":33,"name":"ร้อยเอ็ด"},{"id":34,"name":"กาฬสินธุ์"},{"id":35,"name":"สกลนคร"},{"id":36,"name":"นครพนม"},{"id":37,"name":"มุกดาหาร"},{"id":38,"name":"เชียงใหม่"},{"id":39,"name":"ลำพูน"},{"id":40,"name":"ลำปาง"},{"id":41,"name":"อุตรดิตถ์"},{"id":42,"name":"แพร่"},{"id":43,"name":"น่าน"},{"id":44,"name":"พะเยา"},{"id":45,"name":"เชียงราย"},{"id":46,"name":"แม่ฮ่องสอน"},{"id":47,"name":"นครสวรรค์"},{"id":48,"name":"อุทัยธานี"},{"id":49,"name":"กำแพงเพชร"},{"id":50,"name":"ตาก"},{"id":51,"name":"สุโขทัย"},{"id":52,"name":"พิษณุโลก"},{"id":53,"name":"พิจิตร"},{"id":54,"name":"เพชรบูรณ์"},{"id":55,"name":"ราชบุรี"},{"id":56,"name":"กาญจนบุรี"},{"id":57,"name":"สุพรรณบุรี"},{"id":58,"name":"นครปฐม"},{"id":59,"name":"สมุทรสาคร"},{"id":60,"name":"สมุทรสงคราม"},{"id":61,"name":"เพชรบุรี"},{"id":62,"name":"ประจวบคีรีขันธ์"},{"id":63,"name":"นครศรีธรรมราช"},{"id":64,"name":"กระบี่"},{"id":65,"name":"พังงา"},{"id":66,"name":"ภูเก็ต"},{"id":67,"name":"สุราษฎร์ธานี"},{"id":68,"name":"ระนอง"},{"id":69,"name":"ชุมพร"},{"id":70,"name":"สงขลา"},{"id":71,"name":"สตูล"},{"id":72,"name":"ตรัง"},{"id":73,"name":"พัทลุง"},{"id":74,"name":"ปัตตานี"},{"id":75,"name":"ยะลา"},{"id":76,"name":"นราธิวาส"},{"id":77,"name":"บึงกาฬ"}];
     let provincesData = null;
     let provinceNameToId = {};
@@ -1083,7 +1151,7 @@
         btnHome.classList.remove('d-none');
         if (adminToken) btnLogout.classList.remove('d-none');
       }
-      if (viewId === 'formView') loadProvinces();
+      if (viewId === 'formView') { loadProvinces(); setTimeout(updateCompPanel, 200); }
     }
 
     function logout() {
@@ -1098,10 +1166,12 @@
       filteredData = [];
       sortCol      = -1;
       sortAsc      = true;
-      activeCardFilter     = 'all';
-      activeProvinceFilter = null;
-      activeTopicFilter    = null;
-      activeReasonFilter   = null;
+      activeCardFilter         = 'all';
+      activeProvinceFilter     = null;
+      activeTopicFilter        = null;
+      activeReasonFilter       = null;
+      activeCompletenessFilter = 'all';
+      activeVisitFilter        = 'all';
       const ed = document.getElementById('exportDropdownWrapper');
       if (ed) ed.classList.add('d-none');
       showView('welcomeView');
@@ -1235,12 +1305,14 @@
       const mFilter         = document.getElementById('monthFilter').value;
       const yFilter         = document.getElementById('yearFilter').value;
       const searchText      = document.getElementById('searchInput').value.toLowerCase().trim();
-      const advNotice       = (document.getElementById('advNoticeFilter')   || {}).value || 'all';
-      const advLocation     = (document.getElementById('advLocationFilter') || {}).value || 'all';
-      const advPhoto        = (document.getElementById('advPhotoFilter')    || {}).value || 'all';
-      const advNewData      = (document.getElementById('advNewDataFilter')  || {}).value || 'all';
-      const advDateFrom     = (document.getElementById('advDateFrom')       || {}).value || '';
-      const advDateTo       = (document.getElementById('advDateTo')         || {}).value || '';
+      const advNotice       = (document.getElementById('advNoticeFilter')      || {}).value || 'all';
+      const advLocation     = (document.getElementById('advLocationFilter')    || {}).value || 'all';
+      const advPhoto        = (document.getElementById('advPhotoFilter')       || {}).value || 'all';
+      const advNewData      = (document.getElementById('advNewDataFilter')     || {}).value || 'all';
+      const advDateFrom     = (document.getElementById('advDateFrom')          || {}).value || '';
+      const advDateTo       = (document.getElementById('advDateTo')            || {}).value || '';
+      const advCompleteness = (document.getElementById('advCompletenessFilter')|| {}).value || 'all';
+      const advVisit        = (document.getElementById('advVisitFilter')       || {}).value || 'all';
 
       let result = globalData.filter(item => {
         const dateStr    = item.data[1] || '';
@@ -1328,6 +1400,34 @@
         });
       }
 
+      // Completeness filter (adv dropdown or dashboard widget click)
+      var compFilter = advCompleteness !== 'all' ? advCompleteness : activeCompletenessFilter;
+      if (compFilter !== 'all') {
+        filteredData = filteredData.filter(function(item) {
+          var c = calculateRecordCompleteness(item, attachmentCounts);
+          if (compFilter === 'complete')   return c.status === 'complete';
+          if (compFilter === 'incomplete') return c.status === 'incomplete';
+          if (compFilter === 'portrait') {
+            return c.status === 'incomplete' &&
+              ((attachmentCounts[String(item.data[0])] || {}).person_portrait || 0) === 0;
+          }
+          if (compFilter === 'encounter') {
+            var d = item.data;
+            return !(d[41]||'').trim() || !(d[43]||'').trim() || !(d[48]||'').trim() || !(d[50]||'').trim();
+          }
+          return true;
+        });
+      }
+
+      // Visit type filter (adv dropdown)
+      var visitFilter = advVisit !== 'all' ? advVisit : activeVisitFilter;
+      if (visitFilter !== 'all') {
+        filteredData = filteredData.filter(function(item) {
+          var isReturn = (item.data[29] || '').toString().trim() === 'เคย';
+          return visitFilter === 'return' ? isReturn : !isReturn;
+        });
+      }
+
       // Update select-all checkbox state
       var selAll = document.getElementById('selectAll');
       if (selAll) selAll.checked = filteredData.length > 0 && filteredData.every(function(item) { return selectedRows.has(String(item.data[0])); });
@@ -1364,6 +1464,7 @@
       document.getElementById('returnCount').textContent    = returnee;
       updateEncounterCards(dataArray);
       updateInfoWidgets(dataArray);
+      updateCompletenessWidget(dataArray);
     }
 
     function updateInfoWidgets(dataArray) {
@@ -1589,19 +1690,39 @@
         const officer  = ((d[47] || '') + ' ' + (d[48] || '')).trim() || '-';
         const photoCount = (attachmentCounts[rid] || {}).total || 0;
         const photoBadge = '<span class="photo-badge' + (photoCount === 0 ? ' zero' : '') + '">' + photoCount + '</span>';
+        // ครั้งที่มา badge
+        const isReturn   = (d[29] || '').toString().trim() === 'เคย';
+        const visitBadge = isReturn
+          ? '<span class="visit-badge visit-return">มาซ้ำ</span>'
+          : '<span class="visit-badge visit-first">ครั้งแรก</span>';
+        // ความครบถ้วน badge
+        const comp = calculateRecordCompleteness(item, attachmentCounts);
+        var compBadge;
+        if (comp.status === 'complete') {
+          compBadge = '<span class="comp-badge comp-complete" title="ข้อมูลครบถ้วน">✓ ครบ</span>';
+        } else {
+          var missTip = 'ขาด: ' + comp.missingFields.join(', ');
+          compBadge = '<span class="comp-badge comp-incomplete" title="' + escHtml(missTip) + '">' + comp.percent + '% · ขาด ' + comp.missingCount + '</span>';
+        }
+        // ชื่อ-สกุล with ellipsis
+        var fullName = escHtml((d[3] || '') + ' ' + (d[4] || '-'));
+        var rawName  = ((d[3] || '') + ' ' + (d[4] || '-')).trim();
+        var nameCell = '<td class="col-name-cell fw-bold text-primary" title="' + escHtml(rawName) + '">' + fullName + '</td>';
         html += '<tr class="clickable-row" onclick="viewDetails(' + index + ')">' +
           '<td class="text-center" onclick="event.stopPropagation()"><input type="checkbox" class="row-cb" data-rid="' + escHtml(rid) + '" ' + (isChecked ? 'checked' : '') + ' onchange="toggleRowSelect(\'' + escHtml(rid) + '\',event)"></td>' +
           '<td class="text-center text-muted small">' + (d[0] || '-') + '</td>' +
           '<td class="small">' + escHtml(d[1] || '-') + '<br><span class="text-muted">' + escHtml(d[2] || '') + '</span></td>' +
-          '<td class="fw-bold text-primary">' + escHtml((d[3] || '') + ' ' + (d[4] || '-')) + '</td>' +
+          nameCell +
+          '<td class="text-center">' + visitBadge + '</td>' +
           '<td>' + noticeBadge + '</td>' +
           '<td class="small">' + escHtml(location) + '</td>' +
           '<td class="small">' + escHtml(officer) + '</td>' +
+          '<td class="text-center">' + compBadge + '</td>' +
           '<td class="text-center">' + photoBadge + '</td>' +
           '<td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary py-0 px-2" onclick="viewDetails(' + index + ')"><i class="fas fa-eye"></i></button></td>' +
           '</tr>';
       });
-      tbody.innerHTML = html || '<tr><td colspan="9" class="text-center py-4 text-danger fw-bold"><i class="fas fa-search"></i> ไม่พบข้อมูลที่ตรงกับการค้นหา</td></tr>';
+      tbody.innerHTML = html || '<tr><td colspan="11" class="text-center py-4 text-danger fw-bold"><i class="fas fa-search"></i> ไม่พบข้อมูลที่ตรงกับการค้นหา</td></tr>';
       if (footer) footer.textContent = 'แสดง ' + dataArray.length + ' รายการ จากทั้งหมด ' + globalData.length + ' รายการ';
     }
 
@@ -1711,7 +1832,17 @@
             '<div class="col-12"><div class="detail-label">13. กรณีมาติดตามเรื่องเดิม มีหลักฐานความคืบหน้าหรือไม่:</div><div class="detail-value">' + (row[33]||'-') + '</div></div>' +
             '<div class="col-12"><div class="detail-label">อื่นๆ (หมายเหตุ):</div><div class="detail-value">' + (row[34]||'-') + '</div></div>' +
           '</div>' +
-        '</div>';
+        '</div>' +
+        // Metadata footer
+        (function() {
+          var ca = row[61] || '', ua = row[62] || '';
+          if (!ca && !ua) return '';
+          return '<div class="text-muted small text-end pt-2 border-top mt-2">' +
+            (ca ? 'สร้างเมื่อ: ' + formatMetaDate(ca) : '') +
+            (ca && ua ? ' &nbsp;·&nbsp; ' : '') +
+            (ua ? 'แก้ไขล่าสุด: ' + formatMetaDate(ua) : '') +
+            '</div>';
+        })();
 
       detailModal.show();
 
@@ -1856,6 +1987,16 @@
       syncCarryMethods();
       syncContainerTypes();
 
+      // Completeness gate — warn once, then allow override
+      if (!allowIncompleteSubmit) {
+        const comp = calculateFormCompleteness();
+        if (comp && comp.status === 'incomplete') {
+          showFormIncompleteWarning(comp);
+          return;
+        }
+      }
+      allowIncompleteSubmit = false;
+
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
 
@@ -1939,6 +2080,10 @@
 
     function onTextSubmitSuccess(isEdit, form) {
       showToast('บันทึกสำเร็จ!', 'success');
+      hideDupWarning();
+      allowIncompleteSubmit = false;
+      var fw = document.getElementById('formIncompleteWarn');
+      if (fw) fw.classList.add('d-none');
       form.reset();
       clearAllUploadPreviews();
       resetConditionalFields();
@@ -2353,12 +2498,18 @@
     }
 
     function clearAdvFilters() {
-      document.getElementById('advNoticeFilter').value   = 'all';
-      document.getElementById('advLocationFilter').value = 'all';
-      document.getElementById('advPhotoFilter').value    = 'all';
-      document.getElementById('advNewDataFilter').value  = 'all';
-      document.getElementById('advDateFrom').value       = '';
-      document.getElementById('advDateTo').value         = '';
+      document.getElementById('advNoticeFilter').value      = 'all';
+      document.getElementById('advLocationFilter').value    = 'all';
+      document.getElementById('advPhotoFilter').value       = 'all';
+      document.getElementById('advNewDataFilter').value     = 'all';
+      document.getElementById('advDateFrom').value          = '';
+      document.getElementById('advDateTo').value            = '';
+      var cf = document.getElementById('advCompletenessFilter');
+      if (cf) cf.value = 'all';
+      var vf = document.getElementById('advVisitFilter');
+      if (vf) vf.value = 'all';
+      activeCompletenessFilter = 'all';
+      activeVisitFilter        = 'all';
       applyFilters();
     }
 
@@ -2518,18 +2669,26 @@
         'หมายฯ','รายละเอียดหมายฯ','สถานที่พบ','รายละเอียดสถานที่','วันที่พบ','เวลาที่พบ',
         'ยศเจ้าหน้าที่','ชื่อเจ้าหน้าที่','เบอร์เจ้าหน้าที่','วันที่นำส่ง','เวลานำส่ง',
         'การเก็บสิ่งของ','รายละเอียด(การเก็บ)','ลักษณะการนำพา','ภาชนะ','การใส่ซอง','ขนาดซอง',
-        'ขนาดอื่นๆ','สีซอง','สีอื่นๆ'
+        'ขนาดอื่นๆ','สีซอง','สีอื่นๆ',
+        'ครั้งที่มา','ความครบถ้วน (%)','จำนวน field ที่ขาด','CreatedAt','UpdatedAt'
       ];
       var PHONE_COLS_0IDX = new Set([6, 8, 26, 49]); // col7,9,27,50 → 0-indexed
 
       var wsData = [headers];
       data.forEach(function(item) {
         var row = item.data;
+        var comp     = calculateRecordCompleteness(item, attachmentCounts);
+        var isReturn = (row[29] || '').toString().trim() === 'เคย';
         var xlRow = row.map(function(cell, i) {
           var v = (cell === null || cell === undefined) ? '' : cell.toString().replace(/^'/, '');
           if (PHONE_COLS_0IDX.has(i)) return { v: v, t: 's' };
           return v;
         });
+        xlRow.push(isReturn ? 'มาซ้ำ' : 'ครั้งแรก');
+        xlRow.push(comp.percent);
+        xlRow.push(comp.missingCount);
+        xlRow.push((row[61] || '').toString());
+        xlRow.push((row[62] || '').toString());
         wsData.push(xlRow);
       });
 
@@ -2661,6 +2820,15 @@
         '<div class="field"><div class="label">ประเภทเรื่อง</div><div class="val">' + escHtml(d[35]||'-') + '</div></div>' +
         '<div class="field"><div class="label">สาเหตุ</div><div class="val">' + escHtml(d[36]||'-') + '</div></div>' +
         '</div>' +
+        (function() {
+          var ca = d[61] || '', ua = d[62] || '';
+          if (!ca && !ua) return '';
+          return '<div style="border-top:1px solid #ddd;margin-top:14px;padding-top:6px;color:#888;font-size:8pt;text-align:right">' +
+            (ca ? 'สร้างเมื่อ: ' + ca : '') +
+            (ca && ua ? ' · ' : '') +
+            (ua ? 'แก้ไขล่าสุด: ' + ua : '') +
+            '</div>';
+        })() +
         '<script>window.onload=function(){window.print();}<\/script>' +
         '</body></html>';
 
@@ -2677,6 +2845,278 @@
       if (type === 'phone'  && /^[1-9]\d{7,8}$/.test(str)) return '0' + str;
       if (type === 'idcard' && /^[1-9]\d{11}$/.test(str))  return '0' + str;
       return str || '-';
+    }
+
+    // ==================== COMPLETENESS ENGINE ====================
+    // Single centralized function — dashboard, table, form, filter all use this.
+    function calculateRecordCompleteness(record, attachmentMeta) {
+      var d = record.data;
+      var recId = String(d[0]);
+      var ac = attachmentMeta[recId] || {};
+
+      var required = [];
+      var missing  = [];
+      function check(label, value) {
+        required.push(label);
+        if (!value || value.toString().trim() === '') missing.push(label);
+      }
+
+      // Core fields — always checked
+      check('วันที่',             d[1]);
+      check('เวลา',               d[2]);
+      check('คำนำหน้า',           d[3]);
+      check('ชื่อ-สกุล',          d[4]);
+      check('เลขบัตร ปชช.',       d[6]);
+      check('เบอร์โทร',           d[8]);
+      check('หมายฯ (สถานะ)',      d[41]);
+      check('สถานที่พบ',          d[43]);
+      check('ชื่อเจ้าหน้าที่พบ',  d[48]);
+      check('วันที่นำส่ง',        d[50]);
+
+      // Portrait photo — counted as missing if no person_portrait attachment
+      required.push('รูปหน้าตรงบุคคล');
+      if ((ac.person_portrait || 0) === 0) missing.push('รูปหน้าตรงบุคคล');
+
+      // Conditional: notice detail
+      var notice = (d[41] || '').toString().trim();
+      if (notice === 'มีหมายฯ') check('รายละเอียดหมายฯ', d[42]);
+
+      // Conditional: location detail (for non-station locations)
+      var loc = (d[43] || '').toString().trim();
+      if (loc === 'จุดคัดกรอง' || loc === 'อุโมงค์' || loc === 'อื่น ๆ') {
+        check('รายละเอียดสถานที่', d[44]);
+      }
+
+      // Conditional: item hidden detail
+      var vis = (d[52] || '').toString().trim();
+      if (vis === 'ซุกซ่อนไว้') check('รายละเอียดการซุกซ่อน', d[53]);
+
+      // Conditional: envelope details
+      var env = (d[56] || '').toString().trim();
+      if (env === 'ใส่ซอง') {
+        var envSize  = (d[57] || '').toString().trim();
+        var envColor = (d[59] || '').toString().trim();
+        check('ขนาดซอง', envSize);
+        check('สีซอง',   envColor);
+        if (envSize  === 'อื่น ๆ')   check('ขนาดซองอื่นๆ', d[58]);
+        if (envColor === 'สีอื่น ๆ') check('สีซองอื่นๆ',   d[60]);
+      }
+
+      var total   = required.length;
+      var percent = total > 0 ? Math.round((total - missing.length) / total * 100) : 100;
+      return {
+        percent:       percent,
+        status:        missing.length === 0 ? 'complete' : 'incomplete',
+        missingCount:  missing.length,
+        missingFields: missing
+      };
+    }
+
+    // Same logic but reads live form values — used for form panel & pre-submit gate
+    function calculateFormCompleteness() {
+      var form = document.getElementById('dataForm');
+      if (!form) return null;
+      function fv(name) {
+        var el = form.querySelector('[name="' + name + '"]:checked') || form.querySelector('[name="' + name + '"]');
+        return el ? (el.value || '').toString().trim() : '';
+      }
+
+      var required = [], missing = [];
+      function check(label, val) {
+        required.push(label);
+        if (!val) missing.push(label);
+      }
+
+      check('วันที่',             fv('col2'));
+      check('เวลา',               fv('col3'));
+      check('คำนำหน้า',           fv('col4'));
+      check('ชื่อ-สกุล',          fv('col5'));
+      check('เลขบัตร ปชช.',       fv('col7'));
+      check('เบอร์โทร',           fv('col9'));
+      var notice = fv('col42');
+      check('หมายฯ (สถานะ)',      notice);
+      if (notice === 'มีหมายฯ')   check('รายละเอียดหมายฯ', fv('col43'));
+      var loc = fv('col44');
+      check('สถานที่พบ',          loc);
+      if (loc === 'จุดคัดกรอง' || loc === 'อุโมงค์' || loc === 'อื่น ๆ') {
+        check('รายละเอียดสถานที่', fv('col45'));
+      }
+      check('ชื่อเจ้าหน้าที่พบ',  fv('col49'));
+      check('วันที่นำส่ง',        fv('col51'));
+      var vis = fv('col53');
+      if (vis === 'ซุกซ่อนไว้')   check('รายละเอียดการซุกซ่อน', fv('col54'));
+      var env = fv('col57');
+      if (env === 'ใส่ซอง') {
+        var es = fv('col58'), ec = fv('col60');
+        check('ขนาดซอง', es); check('สีซอง', ec);
+        if (es === 'อื่น ๆ')   check('ขนาดซองอื่นๆ', fv('col59'));
+        if (ec === 'สีอื่น ๆ') check('สีซองอื่นๆ',   fv('col61'));
+      }
+
+      // Portrait: new pending uploads OR existing (edit mode)
+      required.push('รูปหน้าตรงบุคคล');
+      var hasPortrait = (uploadAreas.person_portrait || []).length > 0;
+      if (!hasPortrait && editRecordId) {
+        hasPortrait = (attachmentCounts[String(editRecordId)] || {}).person_portrait > 0;
+      }
+      if (!hasPortrait) missing.push('รูปหน้าตรงบุคคล');
+
+      var total = required.length;
+      return {
+        percent:       total > 0 ? Math.round((total - missing.length) / total * 100) : 100,
+        status:        missing.length === 0 ? 'complete' : 'incomplete',
+        missingCount:  missing.length,
+        missingFields: missing
+      };
+    }
+
+    function getVisitType(item) {
+      return (item.data[29] || '').toString().trim() === 'เคย' ? 'return' : 'first';
+    }
+
+    function formatMetaDate(str) {
+      if (!str) return '—';
+      try {
+        var d = new Date(str);
+        return d.toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      } catch(e) { return str; }
+    }
+
+    // ==================== FORM COMPLETENESS PANEL ====================
+    function scheduleCompPanel() {
+      clearTimeout(compPanelTimer);
+      compPanelTimer = setTimeout(updateCompPanel, 350);
+    }
+
+    function updateCompPanel() {
+      var block = document.getElementById('compPanelBlock');
+      if (!block) return;
+      var c = calculateFormCompleteness();
+      if (!c) return;
+      var pctEl = document.getElementById('cpPercent');
+      var misEl = document.getElementById('cpMissing');
+      if (!pctEl || !misEl) return;
+      if (c.status === 'complete') {
+        pctEl.textContent = '100% ✓';
+        pctEl.style.color = '#198754';
+        misEl.textContent = 'ข้อมูลครบถ้วน';
+      } else {
+        pctEl.textContent = c.percent + '%';
+        pctEl.style.color = '#d97706';
+        misEl.textContent = 'ยังขาด: ' + c.missingFields.slice(0, 5).join(', ') + (c.missingFields.length > 5 ? '...' : '');
+      }
+    }
+
+    // ==================== FORM INCOMPLETE WARNING ====================
+    function showFormIncompleteWarning(comp) {
+      var el = document.getElementById('formIncompleteWarn');
+      if (!el) return;
+      document.getElementById('fwMissingList').textContent = comp.missingFields.join(', ');
+      el.classList.remove('d-none');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function formSubmitAnyway() {
+      allowIncompleteSubmit = true;
+      document.getElementById('formIncompleteWarn').classList.add('d-none');
+      document.getElementById('dataForm').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
+
+    function formSubmitCancel() {
+      document.getElementById('formIncompleteWarn').classList.add('d-none');
+    }
+
+    // ==================== DUPLICATE CHECK ====================
+    function scheduleDupCheck() {
+      clearTimeout(dupCheckTimer);
+      dupCheckTimer = setTimeout(runDupCheck, 700);
+    }
+
+    async function runDupCheck() {
+      if (!adminToken) return; // only check when admin is logged in
+      var form = document.getElementById('dataForm');
+      if (!form) return;
+      var idCard = (form.querySelector('[name="col7"]') || {}).value || '';
+      var phone  = (form.querySelector('[name="col9"]') || {}).value || '';
+      var prefix = (form.querySelector('[name="col4"]') || form.querySelector('[name="col4"] option:checked') || {}).value || '';
+      var name   = (form.querySelector('[name="col5"]') || {}).value || '';
+      var full   = (prefix + ' ' + name).trim();
+      var normId = idCard.trim().replace(/\s/g, '');
+      var normPh = phone.trim().replace(/\D/g, '');
+      if (!normId && normPh.length < 8 && full.length < 3) { hideDupWarning(); return; }
+      try {
+        var res = await gasPost({ action: 'checkDuplicate', idCard: normId, phone: phone.trim(), name: full, excludeRecordId: editRecordId ? String(editRecordId) : '', token: adminToken });
+        if (!res.success || !res.candidates || !res.candidates.length) { hideDupWarning(); return; }
+        showDupWarning(res.candidates);
+      } catch(e) { hideDupWarning(); }
+    }
+
+    function showDupWarning(candidates) {
+      var el = document.getElementById('dupWarningBlock');
+      if (!el) return;
+      var html = '<div class="alert alert-warning border-warning mx-auto mb-2" style="max-width:900px">' +
+        '<div class="fw-bold mb-1"><i class="fas fa-exclamation-triangle me-1"></i>พบข้อมูลบุคคลที่อาจเป็นรายเดิม</div>';
+      candidates.forEach(function(c) {
+        html += '<div class="border-top pt-2 mt-1 d-flex align-items-start gap-3 flex-wrap">' +
+          '<div><div class="fw-bold">' + escHtml(c.name) + '</div>' +
+          '<div class="small text-muted">Record #' + escHtml(String(c.recordId)) + ' · ' + escHtml(c.date) + '</div>' +
+          '<div class="small"><span class="badge bg-secondary">' + escHtml(c.matchReason.join(', ')) + '</span></div></div>' +
+          '<button type="button" class="btn btn-sm btn-outline-dark ms-auto" onclick="viewDupRecord(\'' + c.recordId + '\')">ดูข้อมูลเดิม</button>' +
+          '</div>';
+      });
+      html += '<div class="mt-2"><button type="button" class="btn btn-sm btn-warning" onclick="hideDupWarning()">ดำเนินการเพิ่มข้อมูลต่อ</button></div></div>';
+      el.innerHTML = html;
+    }
+
+    function hideDupWarning() {
+      var el = document.getElementById('dupWarningBlock');
+      if (el) el.innerHTML = '';
+    }
+
+    function viewDupRecord(recordId) {
+      if (!adminToken) { showToast('กรุณาล็อกอิน Admin เพื่อดูข้อมูลเดิม', 'warning'); return; }
+      var item = globalData.find(function(i) { return String(i.data[0]) === String(recordId); });
+      if (!item) { showToast('ไม่พบข้อมูล Record #' + recordId, 'warning'); return; }
+      var saved = filteredData;
+      filteredData = [item];
+      viewDetails(0);
+      filteredData = saved;
+    }
+
+    // ==================== COMPLETENESS DASHBOARD WIDGET ====================
+    function updateCompletenessWidget(dataArray) {
+      var el = document.getElementById('completenessWidgetContent');
+      if (!el) return;
+      var complete = 0, incomplete = 0, missingPortrait = 0, missingEncounter = 0;
+      dataArray.forEach(function(item) {
+        var c = calculateRecordCompleteness(item, attachmentCounts);
+        if (c.status === 'complete') { complete++; }
+        else {
+          incomplete++;
+          if ((attachmentCounts[String(item.data[0])] || {}).person_portrait === 0 ||
+              !(attachmentCounts[String(item.data[0])] || {}).person_portrait) {
+            missingPortrait++;
+          }
+          var d = item.data;
+          var hasEncounter = (d[41]||'').trim() && (d[43]||'').trim() && (d[48]||'').trim() && (d[50]||'').trim();
+          if (!hasEncounter) missingEncounter++;
+        }
+      });
+      function wgItem(label, count, filterKey) {
+        var isAct = activeCompletenessFilter === filterKey;
+        return '<div class="wg-item wg-clickable' + (isAct ? ' active' : '') + '" onclick="filterByCompleteness(\'' + filterKey + '\')">' +
+          '<div class="wg-text">' + label + '</div><div class="wg-badge">' + count + ' ราย</div></div>';
+      }
+      el.innerHTML =
+        wgItem('ข้อมูลครบ',          complete,       'complete') +
+        wgItem('ยังไม่ครบ',           incomplete,     'incomplete') +
+        wgItem('รูปบุคคลยังขาด',     missingPortrait, 'portrait') +
+        wgItem('ข้อมูลการพบยังขาด',  missingEncounter,'encounter');
+    }
+
+    function filterByCompleteness(type) {
+      activeCompletenessFilter = (activeCompletenessFilter === type) ? 'all' : type;
+      applyFilters();
     }
   </script>
 </body>
