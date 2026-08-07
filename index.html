@@ -1083,7 +1083,7 @@
     let amphoeNameToId = {};
 
     // ==================== GAS API ====================
-    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycby5E9tAwCJBubnOnSLEzBkfCaGFpc0yLihZkmSZ7RI2vjciTEkz-xieMCe7bzHBDg/exec';
+    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbzYTwWObeXAGlnY_IqJ_LAsdwoxMIT3wQ9fSJ4NNsMroSzVAD-zybsMTo9FD6WBPhPH/exec';
     function gasGet(params) {
       return fetch(GAS_API_URL + '?' + new URLSearchParams(params).toString())
         .then(function(r) { return r.json(); });
@@ -3052,6 +3052,7 @@
                         excludeRecordId: editRecordId ? String(editRecordId) : '' };
         if (isAdmin) payload.token = adminToken;
         var res = await gasPost(payload);
+        if (res.rateLimited) { return; } // rate limited — stay silent, don't disrupt form
         if (!res.success || !res.candidates || !res.candidates.length) { hideDupWarning(); return; }
         showDupWarning(res.candidates, isAdmin);
       } catch(e) { hideDupWarning(); }
