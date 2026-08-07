@@ -120,6 +120,27 @@
     .dash-widget .wg-item.wg-clickable:hover { background: #f0f4ff; }
     .dash-widget .wg-item.wg-clickable.active .wg-text { color: #0d6efd; font-weight: 700; }
     .dash-widget .wg-item.wg-clickable.active .wg-badge { background: #0d6efd; color: #fff; }
+
+    /* ===== UPLOAD PREVIEW ===== */
+    .upload-zone { border: 2px dashed #ced4da; border-radius: 8px; padding: 14px 16px; background: #f8f9fa; transition: border-color 0.2s; }
+    .upload-zone.has-files { border-color: #0d6efd; background: #f0f4ff; }
+    .upload-thumb-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; min-height: 0; }
+    .upload-thumb { position: relative; width: 80px; height: 80px; border-radius: 6px; overflow: hidden; border: 2px solid #dee2e6; flex-shrink: 0; }
+    .upload-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .upload-thumb .remove-btn { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; background: rgba(220,53,69,0.88); border: none; border-radius: 50%; color: #fff; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; padding: 0; }
+    .upload-counter { font-size: 0.8rem; color: #6c757d; margin-top: 4px; }
+    .upload-counter.at-limit { color: #dc3545; font-weight: 700; }
+
+    /* ===== CONDITIONAL FIELDS ===== */
+    .cond-field { display: none; }
+    .cond-field.visible { display: block; }
+
+    /* ===== UPLOAD PROGRESS ===== */
+    #uploadProgressArea { display: none; border: 1px solid #dee2e6; border-radius: 8px; padding: 14px 16px; background: #fff; margin-bottom: 16px; }
+    .upload-progress-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 0.85rem; }
+    .upload-progress-row .prg-icon { width: 22px; text-align: center; flex-shrink: 0; }
+    .upload-progress-row .prg-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #495057; }
+    .upload-progress-row .prg-status { font-size: 0.78rem; color: #6c757d; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -305,6 +326,225 @@
 
       <form id="dataForm" onsubmit="handleFormSubmit(event)" class="mx-auto" style="max-width: 900px;">
 
+        <!-- Section 0a: ข้อมูลการพบและการนำส่ง -->
+        <div class="card card-form mb-4 border-top border-4 shadow-sm" style="border-top-color:#6f42c1!important">
+          <div class="card-header" style="color:#6f42c1"><i class="fas fa-search-location"></i> ข้อมูลการพบและการนำส่ง</div>
+          <div class="card-body p-4 bg-white">
+
+            <!-- 0.1 หมายฯ -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">0.1 หมายฯ</label>
+              <div class="d-flex gap-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="col42" id="notice_no" value="ไม่มีหมายฯ" checked onchange="onNoticeChange()">
+                  <label class="form-check-label" for="notice_no">ไม่มีหมายฯ</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="col42" id="notice_yes" value="มีหมายฯ" onchange="onNoticeChange()">
+                  <label class="form-check-label" for="notice_yes">มีหมายฯ</label>
+                </div>
+              </div>
+              <div class="cond-field mt-2" id="noticeDetailRow">
+                <input type="text" class="form-control" name="col43" placeholder="หมายฯ (โปรดระบุ)">
+              </div>
+            </div>
+
+            <!-- 0.2 สถานที่ที่พบ -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">0.2 สถานที่ที่พบ</label>
+              <div class="row g-2">
+                <div class="col-auto">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="col44" id="loc_screening" value="จุดคัดกรอง" onchange="onLocationChange()">
+                    <label class="form-check-label" for="loc_screening">จุดคัดกรอง</label>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="col44" id="loc_tunnel" value="อุโมงค์" onchange="onLocationChange()">
+                    <label class="form-check-label" for="loc_tunnel">อุโมงค์</label>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="col44" id="loc_station" value="สน.พระราชวัง" onchange="onLocationChange()">
+                    <label class="form-check-label" for="loc_station">สน.พระราชวัง</label>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="col44" id="loc_other" value="อื่น ๆ" onchange="onLocationChange()">
+                    <label class="form-check-label" for="loc_other">อื่น ๆ</label>
+                  </div>
+                </div>
+              </div>
+              <div class="cond-field mt-2" id="locationDetailRow">
+                <input type="text" class="form-control" name="col45" placeholder="โปรดระบุสถานที่ที่พบ">
+              </div>
+            </div>
+
+            <!-- 0.3 วัน/เวลา/เจ้าหน้าที่ที่พบ -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">0.3 วันเวลาและเจ้าหน้าที่ที่พบ</label>
+              <div class="row g-2 mb-2">
+                <div class="col-md-6 col-6">
+                  <label class="form-label">วันที่พบ</label>
+                  <input type="date" class="form-control" name="col46">
+                </div>
+                <div class="col-md-6 col-6">
+                  <label class="form-label">เวลาที่พบ</label>
+                  <input type="time" class="form-control" name="col47">
+                </div>
+              </div>
+              <div class="row g-2 mb-3">
+                <div class="col-md-4 col-12">
+                  <label class="form-label">ยศ</label>
+                  <input type="text" class="form-control" name="col48" placeholder="ยศ">
+                </div>
+                <div class="col-md-5 col-12">
+                  <label class="form-label">ชื่อ-สกุลเจ้าหน้าที่ที่พบ</label>
+                  <input type="text" class="form-control" name="col49" placeholder="ชื่อ-สกุล">
+                </div>
+                <div class="col-md-3 col-12">
+                  <label class="form-label">เบอร์โทร</label>
+                  <input type="text" class="form-control" name="col50" placeholder="เบอร์โทร">
+                </div>
+              </div>
+
+              <!-- Officer photo upload -->
+              <div class="upload-zone" id="zone_officer_found">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                  <label class="form-label mb-0 fw-semibold">รูปเจ้าหน้าที่ที่พบ <small class="text-muted fw-normal">(สูงสุด 2 รูป)</small></label>
+                  <button type="button" class="btn btn-outline-primary btn-sm" onclick="triggerFileInput('officer_found')">
+                    <i class="fas fa-camera"></i> เลือกรูป
+                  </button>
+                  <span class="upload-counter" id="counter_officer_found">0 / 2 รูป</span>
+                </div>
+                <div class="upload-thumb-grid" id="thumbGrid_officer_found"></div>
+                <input type="file" id="fileInput_officer_found" accept="image/*" multiple style="display:none" onchange="handleFileSelect(event,'officer_found',2)">
+              </div>
+            </div>
+
+            <!-- วันที่/เวลานำส่ง -->
+            <div class="row g-2">
+              <div class="col-md-6 col-6">
+                <label class="form-label fw-bold">วันที่นำส่ง</label>
+                <input type="date" class="form-control" name="col51">
+              </div>
+              <div class="col-md-6 col-6">
+                <label class="form-label fw-bold">เวลาที่นำส่ง</label>
+                <input type="time" class="form-control" name="col52">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Section 0b: จุดที่อยู่สิ่งของและสิ่งของที่นำมายื่นฯ -->
+        <div class="card card-form mb-4 border-top border-4 shadow-sm" style="border-top-color:#fd7e14!important">
+          <div class="card-header" style="color:#fd7e14"><i class="fas fa-box-open"></i> จุดที่อยู่สิ่งของและสิ่งของที่นำมายื่นฯ</div>
+          <div class="card-body p-4 bg-white">
+
+            <!-- การเก็บ/ตำแหน่งของสิ่งของ -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">การเก็บ/ตำแหน่งของสิ่งของ</label>
+              <div class="d-flex gap-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="col53" id="vis_visible" value="เห็นเด่นชัด" checked onchange="onVisibilityChange()">
+                  <label class="form-check-label" for="vis_visible">เห็นเด่นชัด</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="col53" id="vis_hidden" value="ซุกซ่อนไว้" onchange="onVisibilityChange()">
+                  <label class="form-check-label" for="vis_hidden">ซุกซ่อนไว้</label>
+                </div>
+              </div>
+              <div class="cond-field mt-2" id="itemHiddenRow">
+                <input type="text" class="form-control" name="col54" placeholder="โปรดระบุ">
+              </div>
+            </div>
+
+            <!-- ลักษณะการนำพา -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">ลักษณะการนำพา</label>
+              <input type="hidden" name="col55" id="carryMethodsInput">
+              <div class="row g-2">
+                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input carry-cb" type="checkbox" value="สะพายข้าง" id="carry_side" onchange="syncCarryMethods()"><label class="form-check-label" for="carry_side">สะพายข้าง</label></div></div>
+                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input carry-cb" type="checkbox" value="สะพายเป้" id="carry_back" onchange="syncCarryMethods()"><label class="form-check-label" for="carry_back">สะพายเป้</label></div></div>
+                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input carry-cb" type="checkbox" value="หิ้ว/ถือ" id="carry_hand" onchange="syncCarryMethods()"><label class="form-check-label" for="carry_hand">หิ้ว/ถือ</label></div></div>
+              </div>
+            </div>
+
+            <!-- ภาชนะ -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">ภาชนะ</label>
+              <input type="hidden" name="col56" id="containerTypesInput">
+              <div class="row g-2">
+                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input container-cb" type="checkbox" value="ถุงผ้า" id="cont_cloth" onchange="syncContainerTypes()"><label class="form-check-label" for="cont_cloth">ถุงผ้า</label></div></div>
+                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input container-cb" type="checkbox" value="ถุงกระดาษ" id="cont_paper" onchange="syncContainerTypes()"><label class="form-check-label" for="cont_paper">ถุงกระดาษ</label></div></div>
+                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input container-cb" type="checkbox" value="ถุงพลาสติก" id="cont_plastic" onchange="syncContainerTypes()"><label class="form-check-label" for="cont_plastic">ถุงพลาสติก</label></div></div>
+              </div>
+            </div>
+
+            <!-- การใส่ซอง -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">การใส่ซอง</label>
+              <div class="d-flex gap-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="col57" id="env_no" value="ไม่ใส่ซอง" checked onchange="onEnvelopeChange()">
+                  <label class="form-check-label" for="env_no">ไม่ใส่ซอง</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="col57" id="env_yes" value="ใส่ซอง" onchange="onEnvelopeChange()">
+                  <label class="form-check-label" for="env_yes">ใส่ซอง</label>
+                </div>
+              </div>
+              <div class="cond-field mt-3" id="envelopeDetails">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">ขนาด</label>
+                    <div class="d-flex gap-3 flex-wrap">
+                      <div class="form-check"><input class="form-check-input" type="radio" name="col58" id="sz_a4" value="A4" onchange="onEnvSizeChange()"><label class="form-check-label" for="sz_a4">A4</label></div>
+                      <div class="form-check"><input class="form-check-input" type="radio" name="col58" id="sz_a3" value="A3" onchange="onEnvSizeChange()"><label class="form-check-label" for="sz_a3">A3</label></div>
+                      <div class="form-check"><input class="form-check-input" type="radio" name="col58" id="sz_other" value="อื่น ๆ" onchange="onEnvSizeChange()"><label class="form-check-label" for="sz_other">อื่น ๆ</label></div>
+                    </div>
+                    <div class="cond-field mt-2" id="envSizeOtherRow">
+                      <input type="text" class="form-control form-control-sm" name="col59" placeholder="ระบุขนาด">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">สี</label>
+                    <div class="d-flex gap-3 flex-wrap">
+                      <div class="form-check"><input class="form-check-input" type="radio" name="col60" id="clr_brown" value="น้ำตาล" onchange="onEnvColorChange()"><label class="form-check-label" for="clr_brown">น้ำตาล</label></div>
+                      <div class="form-check"><input class="form-check-input" type="radio" name="col60" id="clr_white" value="ขาว" onchange="onEnvColorChange()"><label class="form-check-label" for="clr_white">ขาว</label></div>
+                      <div class="form-check"><input class="form-check-input" type="radio" name="col60" id="clr_other" value="สีอื่น ๆ" onchange="onEnvColorChange()"><label class="form-check-label" for="clr_other">สีอื่น ๆ</label></div>
+                    </div>
+                    <div class="cond-field mt-2" id="envColorOtherRow">
+                      <input type="text" class="form-control form-control-sm" name="col61" placeholder="ระบุสี">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- รูปสิ่งของ / เอกสาร (items_evidence, max 10) -->
+            <div class="mt-1">
+              <label class="form-label fw-bold">3.1 รูปสิ่งของ / เอกสาร / ลักษณะการนำพา</label>
+              <div class="upload-zone" id="zone_items_evidence">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                  <small class="text-muted">สูงสุด 10 รูป — ครอบคลุม การเก็บ/ตำแหน่ง, การนำพา, ภาชนะ, ซอง</small>
+                  <button type="button" class="btn btn-outline-warning btn-sm" onclick="triggerFileInput('items_evidence')">
+                    <i class="fas fa-images"></i> เลือกรูป
+                  </button>
+                  <span class="upload-counter" id="counter_items_evidence">0 / 10 รูป</span>
+                </div>
+                <div class="upload-thumb-grid" id="thumbGrid_items_evidence"></div>
+                <input type="file" id="fileInput_items_evidence" accept="image/*" multiple style="display:none" onchange="handleFileSelect(event,'items_evidence',10)">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
         <!-- Section 1: Personal Info -->
         <div class="card card-form mb-4 border-top border-primary border-4 shadow-sm">
           <div class="card-header text-primary"><i class="fas fa-user"></i> 1. ข้อมูลส่วนตัวเบื้องต้น</div>
@@ -327,6 +567,21 @@
               <div class="col-md-6 mb-3"><label class="form-label">เบอร์โทร</label><input type="text" class="form-control" name="col9"></div>
               <div class="col-12 mb-3"><label class="form-label">ที่อยู่ปัจจุบัน</label><textarea class="form-control" name="col8" rows="2"></textarea></div>
               <div class="col-12"><label class="form-label">ที่อยู่ภูมิลำเนา</label><textarea class="form-control" name="col38" rows="2"></textarea></div>
+
+              <!-- Portrait photo upload -->
+              <div class="col-12 mt-2">
+                <div class="upload-zone" id="zone_person_portrait">
+                  <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <label class="form-label mb-0 fw-semibold">รูปหน้าตรงบุคคลผู้มาติดต่อ <small class="text-muted fw-normal">(สูงสุด 1 รูป)</small></label>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="triggerFileInput('person_portrait')">
+                      <i class="fas fa-portrait"></i> เลือกรูป
+                    </button>
+                    <span class="upload-counter" id="counter_person_portrait">0 / 1 รูป</span>
+                  </div>
+                  <div class="upload-thumb-grid" id="thumbGrid_person_portrait"></div>
+                  <input type="file" id="fileInput_person_portrait" accept="image/*" style="display:none" onchange="handleFileSelect(event,'person_portrait',1)">
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -468,6 +723,12 @@
           </div>
         </div>
 
+        <!-- Upload Progress -->
+        <div id="uploadProgressArea" class="mx-auto mb-3" style="max-width:900px">
+          <div class="fw-bold mb-2 text-success"><i class="fas fa-check-circle"></i> บันทึกข้อมูลหลักสำเร็จ — กำลังอัปโหลดรูป...</div>
+          <div id="uploadProgressList"></div>
+        </div>
+
         <!-- Form Action Buttons -->
         <div class="d-grid gap-2 mb-2" style="max-width: 900px; margin: 0 auto;">
           <button type="submit" class="btn btn-primary btn-lg shadow" id="submitBtn">
@@ -579,7 +840,8 @@
     let globalData   = [];          // [{ sheetRow: N, data: [...35 cols...] }, ...]
     let filteredData = [];
     let currentViewItem = null;     // currently open detail record
-    let editSheetRow = null;        // null = create mode, number = edit mode
+    let editSheetRow  = null;        // null = create mode, number = edit mode
+    let editRecordId  = null;        // col1 value of the record being edited
     let sortCol = -1;
     let sortAsc = true;
     let activeCardFilter = 'all';
@@ -1156,6 +1418,7 @@
 
     function editRecord(sheetRow, rowData) {
       editSheetRow = sheetRow;
+      editRecordId  = rowData[0] || sheetRow;
       const fullName = ((rowData[3] || '') + ' ' + (rowData[4] || '')).trim();
 
       // Update form UI for edit mode
@@ -1173,18 +1436,33 @@
 
     function populateFormForEdit(rowData) {
       const form = document.getElementById('dataForm');
-      for (let n = 2; n <= 38; n++) {
-        const el = form.querySelector('[name="col' + n + '"]');
-        if (!el) continue;
+      // Populate all named inputs col2..col61 (skip col39-41 handled by location restore)
+      for (let n = 2; n <= 61; n++) {
+        const els = form.querySelectorAll('[name="col' + n + '"]');
+        if (!els.length) continue;
         let val = (rowData[n - 1] || '').toString().replace(/^'/, '');
-        if (el.tagName === 'SELECT') {
-          el.value = val;
-        } else if (el.type === 'date') {
-          el.value = parseDateForInput(val);
-        } else {
-          el.value = val;
-        }
+        els.forEach(function(el) {
+          if (el.type === 'radio') {
+            el.checked = (el.value === val);
+          } else if (el.type === 'checkbox') {
+            // checkboxes handled separately via syncCheckboxStates
+          } else if (el.tagName === 'SELECT') {
+            el.value = val;
+          } else if (el.type === 'date') {
+            el.value = parseDateForInput(val);
+          } else {
+            el.value = val;
+          }
+        });
       }
+      // Restore checkbox states from hidden inputs
+      restoreCheckboxStates(
+        (rowData[54] || '').toString(),
+        (rowData[55] || '').toString()
+      );
+      // Update all conditional field visibility
+      syncAllConditionals();
+      // Restore cascading location dropdowns
       const province = (rowData[38] || '').toString().replace(/^'/, '');
       const amphoe   = (rowData[39] || '').toString().replace(/^'/, '');
       const tambon   = (rowData[40] || '').toString().replace(/^'/, '');
@@ -1212,12 +1490,15 @@
 
     function resetFormMode() {
       editSheetRow = null;
+      editRecordId = null;
       document.getElementById('formTitle').innerHTML =
         '<i class="fas fa-file-signature text-primary"></i> แบบฟอร์มลงข้อมูลใหม่';
       document.getElementById('editModeBanner').classList.add('d-none');
       document.getElementById('submitBtn').innerHTML =
         '<i class="fas fa-save"></i> บันทึกข้อมูลเข้าฐานข้อมูล';
       document.getElementById('cancelEditBtn').classList.add('d-none');
+      clearAllUploadPreviews();
+      resetConditionalFields();
     }
 
     // ==================== DELETE ====================
@@ -1255,61 +1536,110 @@
     }
 
     // ==================== FORM SUBMIT (Create & Edit) ====================
-    function handleFormSubmit(event) {
+    async function handleFormSubmit(event) {
       event.preventDefault();
-      const btn  = document.getElementById('submitBtn');
-      const form = document.getElementById('dataForm');
+      const btn    = document.getElementById('submitBtn');
+      const form   = document.getElementById('dataForm');
       const isEdit = editSheetRow !== null;
+
+      // Sync checkbox hidden inputs before FormData collection
+      syncCarryMethods();
+      syncContainerTypes();
 
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
 
+      const PHONE_COLS = new Set(['col7','col9','col27','col50']);
       const formObject = {};
-      new FormData(form).forEach((value, key) => {
-        // Prepend apostrophe to phone/ID fields to preserve leading zeros in Sheets
-        if ((key === 'col7' || key === 'col9' || key === 'col27') && value !== '') {
+      new FormData(form).forEach(function(value, key) {
+        if (PHONE_COLS.has(key) && value !== '') {
           formObject[key] = "'" + value;
         } else {
           formObject[key] = value;
         }
       });
 
-      const resetBtn = () => {
+      const resetBtn = function() {
         btn.disabled = false;
         btn.innerHTML = isEdit
           ? '<i class="fas fa-save"></i> บันทึกการแก้ไข'
           : '<i class="fas fa-save"></i> บันทึกข้อมูลเข้าฐานข้อมูล';
       };
 
-      const onSuccess = function(response) {
-        resetBtn();
-        if (response.success) {
-          showToast(response.message, 'success');
-          form.reset();
-          resetIncidentLocation();
-          if (isEdit) {
-            resetFormMode();
-            refreshDashboard();
-          } else {
-            showView('welcomeView');
-          }
+      // ── Step 1: Save text data ──
+      let recordId;
+      try {
+        let res;
+        if (isEdit) {
+          res = await gasPost(Object.assign({ action: 'update', sheetRow: editSheetRow, password: adminSession }, formObject));
+          recordId = editRecordId;
         } else {
-          showToast(response.message, 'danger');
+          res = await gasPost(Object.assign({ action: 'submit' }, formObject));
+          recordId = res.recordId;
         }
-      };
-
-      const onFailure = function(error) {
+        if (!res.success) { resetBtn(); showToast(res.message, 'danger'); return; }
+      } catch(err) {
         resetBtn();
-        showToast('เกิดข้อผิดพลาด: ' + (error.message || error), 'danger');
-      };
-
-      if (isEdit) {
-        gasPost(Object.assign({ action: 'update', sheetRow: editSheetRow, password: adminSession }, formObject))
-          .then(onSuccess).catch(onFailure);
-      } else {
-        gasPost(Object.assign({ action: 'submit' }, formObject))
-          .then(onSuccess).catch(onFailure);
+        showToast('เกิดข้อผิดพลาด: ' + (err.message || err), 'danger');
+        return;
       }
+
+      // ── Step 2: Upload images ──
+      const queue = [];
+      ['officer_found','person_portrait','items_evidence'].forEach(function(sec) {
+        (uploadAreas[sec] || []).forEach(function(item) {
+          queue.push({ file: item.file, name: item.name, section: sec });
+        });
+      });
+
+      if (queue.length === 0) {
+        resetBtn();
+        onTextSubmitSuccess(isEdit, form);
+        return;
+      }
+
+      showUploadProgress(queue);
+
+      const failed = [];
+      for (let i = 0; i < queue.length; i++) {
+        updateProgressItem(i, 'uploading');
+        try {
+          const compressed = await compressImage(queue[i].file);
+          const res = await gasPost({
+            action: 'uploadAttachment',
+            recordId: recordId,
+            section: queue[i].section,
+            fileData: compressed.base64,
+            fileName: queue[i].name,
+            mimeType: compressed.mimeType,
+            sizeBytes: queue[i].file.size
+          });
+          if (res.success) { updateProgressItem(i, 'success'); }
+          else { updateProgressItem(i, 'error', res.message); failed.push({ name: queue[i].name, error: res.message }); }
+        } catch(err) {
+          updateProgressItem(i, 'error', err.message);
+          failed.push({ name: queue[i].name, error: err.message });
+        }
+      }
+
+      hideUploadProgress();
+      resetBtn();
+
+      if (failed.length === 0) {
+        onTextSubmitSuccess(isEdit, form);
+      } else {
+        showToast('บันทึกข้อมูลสำเร็จ แต่อัปโหลดรูปไม่สำเร็จ ' + failed.length + ' ไฟล์ (RecordID: ' + recordId + ')', 'warning');
+      }
+    }
+
+    function onTextSubmitSuccess(isEdit, form) {
+      showToast('บันทึกสำเร็จ!', 'success');
+      form.reset();
+      clearAllUploadPreviews();
+      resetConditionalFields();
+      resetIncidentLocation();
+      if (isEdit) { resetFormMode(); refreshDashboard(); }
+      else { showView('welcomeView'); }
     }
 
     // ==================== THAI GEOGRAPHY ====================
@@ -1439,6 +1769,212 @@
       if (provEl) { provEl.value = ''; }
       if (amphEl) { amphEl.innerHTML = '<option value="">-- เลือกอำเภอ/เขต --</option>'; amphEl.disabled = true; }
       if (tambEl) { tambEl.innerHTML = '<option value="">-- เลือกตำบล/แขวง --</option>'; tambEl.disabled = true; }
+    }
+
+    // ==================== IMAGE UPLOAD AREAS ====================
+    const uploadAreas = { officer_found: [], person_portrait: [], items_evidence: [] };
+    const uploadMaxes = { officer_found: 2,  person_portrait: 1,  items_evidence: 10 };
+
+    function triggerFileInput(sectionType) {
+      document.getElementById('fileInput_' + sectionType).click();
+    }
+
+    function handleFileSelect(event, sectionType, maxFiles) {
+      const files = Array.from(event.target.files || []);
+      event.target.value = ''; // reset so same file can be re-selected after removal
+      const existing = uploadAreas[sectionType];
+      const available = maxFiles - existing.length;
+      if (available <= 0) {
+        showToast('ครบ ' + maxFiles + ' รูปแล้ว', 'warning'); return;
+      }
+      const toAdd = files.slice(0, available);
+      const rejected = files.length - toAdd.length;
+      toAdd.forEach(function(file) {
+        const allowed = ['image/jpeg','image/jpg','image/png','image/gif','image/webp','image/heic','image/heif','image/bmp'];
+        if (allowed.indexOf(file.type.toLowerCase()) === -1) {
+          showToast('ไม่รองรับไฟล์: ' + file.name, 'warning'); return;
+        }
+        const dataUrl = URL.createObjectURL(file);
+        existing.push({ file: file, dataUrl: dataUrl, name: file.name });
+      });
+      if (rejected > 0) showToast('เกินจำนวนสูงสุด — เพิ่มได้อีก ' + (maxFiles - (existing.length - toAdd.length)) + ' รูป เลือกมา ' + files.length + ' รูป', 'warning');
+      renderThumbGrid(sectionType);
+    }
+
+    function removeUploadFile(sectionType, index) {
+      const arr = uploadAreas[sectionType];
+      if (arr[index] && arr[index].dataUrl) URL.revokeObjectURL(arr[index].dataUrl);
+      arr.splice(index, 1);
+      renderThumbGrid(sectionType);
+    }
+
+    function renderThumbGrid(sectionType) {
+      const arr   = uploadAreas[sectionType];
+      const max   = uploadMaxes[sectionType];
+      const grid  = document.getElementById('thumbGrid_' + sectionType);
+      const ctr   = document.getElementById('counter_' + sectionType);
+      const zone  = document.getElementById('zone_' + sectionType);
+
+      ctr.textContent = arr.length + ' / ' + max + ' รูป';
+      ctr.className   = 'upload-counter' + (arr.length >= max ? ' at-limit' : '');
+      zone.classList.toggle('has-files', arr.length > 0);
+
+      grid.innerHTML = arr.map(function(item, i) {
+        return '<div class="upload-thumb">' +
+          '<img src="' + item.dataUrl + '" alt="' + item.name + '">' +
+          '<button type="button" class="remove-btn" onclick="removeUploadFile(\'' + sectionType + '\',' + i + ')" title="ลบรูป">✕</button>' +
+          '</div>';
+      }).join('');
+    }
+
+    function clearAllUploadPreviews() {
+      ['officer_found','person_portrait','items_evidence'].forEach(function(sec) {
+        uploadAreas[sec].forEach(function(item) { if (item.dataUrl) URL.revokeObjectURL(item.dataUrl); });
+        uploadAreas[sec] = [];
+        renderThumbGrid(sec);
+      });
+    }
+
+    // ==================== IMAGE COMPRESSION ====================
+    function compressImage(file, maxDim, quality) {
+      maxDim   = maxDim   || 1920;
+      quality  = quality  || 0.85;
+      return new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = function(e) {
+          var img = new Image();
+          img.onerror = reject;
+          img.onload = function() {
+            var w = img.width, h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
+              else { w = Math.round(w * maxDim / h); h = maxDim; }
+            }
+            var canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            var dataUrl = canvas.toDataURL('image/jpeg', quality);
+            resolve({ base64: dataUrl.split(',')[1], mimeType: 'image/jpeg', dataUrl: dataUrl });
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ==================== CHECKBOX SYNC ====================
+    function syncCarryMethods() {
+      var vals = Array.from(document.querySelectorAll('.carry-cb:checked')).map(function(el) { return el.value; });
+      document.getElementById('carryMethodsInput').value = vals.join(',');
+    }
+
+    function syncContainerTypes() {
+      var vals = Array.from(document.querySelectorAll('.container-cb:checked')).map(function(el) { return el.value; });
+      document.getElementById('containerTypesInput').value = vals.join(',');
+    }
+
+    function restoreCheckboxStates(carryStr, containerStr) {
+      var carryVals     = carryStr.split(',').filter(Boolean);
+      var containerVals = containerStr.split(',').filter(Boolean);
+      document.querySelectorAll('.carry-cb').forEach(function(el) { el.checked = carryVals.indexOf(el.value) !== -1; });
+      document.querySelectorAll('.container-cb').forEach(function(el) { el.checked = containerVals.indexOf(el.value) !== -1; });
+      syncCarryMethods(); syncContainerTypes();
+    }
+
+    // ==================== CONDITIONAL FIELD VISIBILITY ====================
+    function setVisible(id, show) {
+      var el = document.getElementById(id);
+      if (el) el.classList.toggle('visible', show);
+    }
+
+    function onNoticeChange() {
+      var val = document.querySelector('[name="col42"]:checked');
+      setVisible('noticeDetailRow', val && val.value === 'มีหมายฯ');
+      if (val && val.value !== 'มีหมายฯ') { var i = document.querySelector('[name="col43"]'); if (i) i.value = ''; }
+    }
+
+    function onLocationChange() {
+      var val = document.querySelector('[name="col44"]:checked');
+      var needsDetail = val && val.value !== 'สน.พระราชวัง';
+      setVisible('locationDetailRow', needsDetail);
+      if (!needsDetail) { var i = document.querySelector('[name="col45"]'); if (i) i.value = ''; }
+    }
+
+    function onVisibilityChange() {
+      var val = document.querySelector('[name="col53"]:checked');
+      setVisible('itemHiddenRow', val && val.value === 'ซุกซ่อนไว้');
+      if (val && val.value !== 'ซุกซ่อนไว้') { var i = document.querySelector('[name="col54"]'); if (i) i.value = ''; }
+    }
+
+    function onEnvelopeChange() {
+      var val = document.querySelector('[name="col57"]:checked');
+      setVisible('envelopeDetails', val && val.value === 'ใส่ซอง');
+    }
+
+    function onEnvSizeChange() {
+      var val = document.querySelector('[name="col58"]:checked');
+      setVisible('envSizeOtherRow', val && val.value === 'อื่น ๆ');
+      if (val && val.value !== 'อื่น ๆ') { var i = document.querySelector('[name="col59"]'); if (i) i.value = ''; }
+    }
+
+    function onEnvColorChange() {
+      var val = document.querySelector('[name="col60"]:checked');
+      setVisible('envColorOtherRow', val && val.value === 'สีอื่น ๆ');
+      if (val && val.value !== 'สีอื่น ๆ') { var i = document.querySelector('[name="col61"]'); if (i) i.value = ''; }
+    }
+
+    function syncAllConditionals() {
+      onNoticeChange(); onLocationChange(); onVisibilityChange();
+      onEnvelopeChange(); onEnvSizeChange(); onEnvColorChange();
+    }
+
+    function resetConditionalFields() {
+      // Reset radio groups to defaults
+      var noNotice = document.getElementById('notice_no');     if (noNotice) noNotice.checked = true;
+      var noEnv    = document.getElementById('env_no');        if (noEnv)    noEnv.checked    = true;
+      var visVis   = document.getElementById('vis_visible');   if (visVis)   visVis.checked   = true;
+      // Uncheck location and envelope size/color radios
+      ['col44','col58','col60'].forEach(function(name) {
+        document.querySelectorAll('[name="' + name + '"]').forEach(function(el) { el.checked = false; });
+      });
+      // Uncheck all checkboxes
+      document.querySelectorAll('.carry-cb, .container-cb').forEach(function(el) { el.checked = false; });
+      syncCarryMethods(); syncContainerTypes();
+      syncAllConditionals();
+    }
+
+    // ==================== UPLOAD PROGRESS UI ====================
+    function showUploadProgress(queue) {
+      var area = document.getElementById('uploadProgressArea');
+      var list = document.getElementById('uploadProgressList');
+      area.style.display = 'block';
+      list.innerHTML = queue.map(function(item, i) {
+        return '<div class="upload-progress-row" id="prg_' + i + '">' +
+          '<span class="prg-icon"><i class="fas fa-clock text-secondary"></i></span>' +
+          '<span class="prg-name">' + escHtml(item.name) + '</span>' +
+          '<span class="prg-status text-muted">รอ...</span>' +
+          '</div>';
+      }).join('');
+      document.getElementById('uploadProgressArea').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function updateProgressItem(i, status, msg) {
+      var row = document.getElementById('prg_' + i);
+      if (!row) return;
+      var icons   = { uploading: '<i class="fas fa-spinner fa-spin text-primary"></i>', success: '<i class="fas fa-check-circle text-success"></i>', error: '<i class="fas fa-times-circle text-danger"></i>' };
+      var labels  = { uploading: 'กำลังอัปโหลด...', success: 'สำเร็จ', error: (msg || 'ล้มเหลว') };
+      var colors  = { uploading: 'text-primary', success: 'text-success', error: 'text-danger' };
+      row.querySelector('.prg-icon').innerHTML  = icons[status]  || '';
+      row.querySelector('.prg-status').innerHTML = '<span class="' + (colors[status] || '') + '">' + escHtml(labels[status] || '') + '</span>';
+    }
+
+    function hideUploadProgress() {
+      document.getElementById('uploadProgressArea').style.display = 'none';
+    }
+
+    function escHtml(str) {
+      return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
     // ==================== UTILITIES ====================
