@@ -2679,7 +2679,9 @@
         var row = item.data;
         var comp     = calculateRecordCompleteness(item, attachmentCounts);
         var isReturn = (row[29] || '').toString().trim() === 'เคย';
-        var xlRow = row.map(function(cell, i) {
+        // Slice to first 61 data columns so new 63-col records don't double-add CreatedAt/UpdatedAt
+        var core = row.slice(0, 61);
+        var xlRow = core.map(function(cell, i) {
           var v = (cell === null || cell === undefined) ? '' : cell.toString().replace(/^'/, '');
           if (PHONE_COLS_0IDX.has(i)) return { v: v, t: 's' };
           return v;
@@ -2687,8 +2689,8 @@
         xlRow.push(isReturn ? 'มาซ้ำ' : 'ครั้งแรก');
         xlRow.push(comp.percent);
         xlRow.push(comp.missingCount);
-        xlRow.push((row[61] || '').toString());
-        xlRow.push((row[62] || '').toString());
+        xlRow.push((row[61] || '').toString()); // CreatedAt
+        xlRow.push((row[62] || '').toString()); // UpdatedAt
         wsData.push(xlRow);
       });
 
@@ -3033,7 +3035,6 @@
     }
 
     async function runDupCheck() {
-      if (!adminToken) return; // only check when admin is logged in
       var form = document.getElementById('dataForm');
       if (!form) return;
       var idCard = (form.querySelector('[name="col7"]') || {}).value || '';
@@ -3045,24 +3046,32 @@
       var normPh = phone.trim().replace(/\D/g, '');
       if (!normId && normPh.length < 8 && full.length < 3) { hideDupWarning(); return; }
       try {
-        var res = await gasPost({ action: 'checkDuplicate', idCard: normId, phone: phone.trim(), name: full, excludeRecordId: editRecordId ? String(editRecordId) : '', token: adminToken });
+        var isAdmin = !!adminToken;
+        var payload = { action: isAdmin ? 'checkDuplicate' : 'checkDuplicatePublic',
+                        idCard: normId, phone: phone.trim(), name: full,
+                        excludeRecordId: editRecordId ? String(editRecordId) : '' };
+        if (isAdmin) payload.token = adminToken;
+        var res = await gasPost(payload);
         if (!res.success || !res.candidates || !res.candidates.length) { hideDupWarning(); return; }
-        showDupWarning(res.candidates);
+        showDupWarning(res.candidates, isAdmin);
       } catch(e) { hideDupWarning(); }
     }
 
-    function showDupWarning(candidates) {
+    function showDupWarning(candidates, isAdmin) {
       var el = document.getElementById('dupWarningBlock');
       if (!el) return;
       var html = '<div class="alert alert-warning border-warning mx-auto mb-2" style="max-width:900px">' +
         '<div class="fw-bold mb-1"><i class="fas fa-exclamation-triangle me-1"></i>พบข้อมูลบุคคลที่อาจเป็นรายเดิม</div>';
       candidates.forEach(function(c) {
+        var displayName = isAdmin ? escHtml(c.name || '') : escHtml(c.maskedName || '***');
+        var viewBtn = isAdmin
+          ? '<button type="button" class="btn btn-sm btn-outline-dark ms-auto" onclick="viewDupRecord(\'' + c.recordId + '\')">ดูข้อมูลเดิม</button>'
+          : '';
         html += '<div class="border-top pt-2 mt-1 d-flex align-items-start gap-3 flex-wrap">' +
-          '<div><div class="fw-bold">' + escHtml(c.name) + '</div>' +
-          '<div class="small text-muted">Record #' + escHtml(String(c.recordId)) + ' · ' + escHtml(c.date) + '</div>' +
+          '<div><div class="fw-bold">' + displayName + '</div>' +
+          '<div class="small text-muted">วันที่: ' + escHtml(c.date) + (isAdmin ? ' · Record #' + escHtml(String(c.recordId)) : '') + '</div>' +
           '<div class="small"><span class="badge bg-secondary">' + escHtml(c.matchReason.join(', ')) + '</span></div></div>' +
-          '<button type="button" class="btn btn-sm btn-outline-dark ms-auto" onclick="viewDupRecord(\'' + c.recordId + '\')">ดูข้อมูลเดิม</button>' +
-          '</div>';
+          viewBtn + '</div>';
       });
       html += '<div class="mt-2"><button type="button" class="btn btn-sm btn-warning" onclick="hideDupWarning()">ดำเนินการเพิ่มข้อมูลต่อ</button></div></div>';
       el.innerHTML = html;
@@ -3108,9 +3117,9 @@
           '<div class="wg-text">' + label + '</div><div class="wg-badge">' + count + ' ราย</div></div>';
       }
       el.innerHTML =
-        wgItem('ข้อมูลครบ',          complete,       'complete') +
-        wgItem('ยังไม่ครบ',           incomplete,     'incomplete') +
-        wgItem('รูปบุคคลยังขาด',     missingPortrait, 'portrait') +
+        wgItem('✓ ข้อมูลครบ',        complete,        'complete') +
+        wgItem('ยังไม่ครบ',           incomplete,      'incomplete') +
+        wgItem('ขาดรูปบุคคล',        missingPortrait, 'portrait') +
         wgItem('ข้อมูลการพบยังขาด',  missingEncounter,'encounter');
     }
 
