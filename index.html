@@ -141,6 +141,47 @@
     .upload-progress-row .prg-icon { width: 22px; text-align: center; flex-shrink: 0; }
     .upload-progress-row .prg-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #495057; }
     .upload-progress-row .prg-status { font-size: 0.78rem; color: #6c757d; flex-shrink: 0; }
+
+    /* ===== ENCOUNTER INFO CARDS ===== */
+    .enc-card { background: white; border-radius: 14px; padding: 14px 16px; height: 100%; box-shadow: 0 2px 12px rgba(0,0,0,0.07); border-left: 4px solid #6f42c1; }
+    .enc-card .ec-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #6c757d; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; margin-bottom: 8px; }
+    .enc-card .ec-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 0.83rem; }
+    .enc-card .ec-label { color: #495057; }
+    .enc-card .ec-val { font-weight: 700; color: #212529; }
+    .enc-card .ec-big { font-size: 2.2rem; font-weight: 800; line-height: 1.1; color: #212529; }
+    .enc-card .ec-sub { font-size: 0.78rem; color: #6c757d; }
+
+    /* ===== ADVANCED FILTER PANEL ===== */
+    .adv-filter-panel { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 12px; padding: 14px 18px; margin-bottom: 14px; }
+    .adv-filter-panel .filter-group-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6c757d; margin-bottom: 6px; }
+
+    /* ===== SELECTION BAR ===== */
+    .selection-bar { background: #e7f3ff; border: 1px solid #b8d4f5; border-radius: 8px; padding: 8px 14px; margin-bottom: 10px; display: none; align-items: center; gap: 10px; font-size: 0.88rem; }
+    .selection-bar.show { display: flex; }
+
+    /* ===== TABLE BADGES ===== */
+    .badge-notice { font-size: 0.7rem; padding: 2px 6px; border-radius: 8px; font-weight: 700; white-space: nowrap; }
+    .badge-notice-yes { background: #dc3545; color: #fff; }
+    .badge-notice-no  { background: #e9ecef; color: #6c757d; }
+    .photo-badge { background: #0d6efd; color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
+    .photo-badge.zero { background: #e9ecef; color: #adb5bd; }
+
+    /* ===== GALLERY ===== */
+    .gallery-section-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6c757d; margin: 10px 0 6px; }
+    .gallery-grid { display: flex; flex-wrap: wrap; gap: 8px; min-height: 10px; }
+    .gallery-thumb { width: 88px; height: 88px; border-radius: 8px; overflow: hidden; border: 2px solid #dee2e6; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #f8f9fa; }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.2s; }
+    .gallery-thumb:hover img { transform: scale(1.07); }
+    .gallery-thumb .gal-loading { color: #adb5bd; font-size: 0.75rem; text-align: center; }
+    .gallery-thumb .gal-error  { color: #dc3545; font-size: 0.7rem; text-align: center; padding: 4px; }
+
+    /* ===== LIGHTBOX ===== */
+    .lightbox-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+    .lightbox-overlay.show { display: flex; }
+    .lightbox-img { max-width: 94vw; max-height: 88vh; object-fit: contain; border-radius: 4px; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+    .lightbox-close { position: absolute; top: 16px; right: 22px; color: #fff; font-size: 2.2rem; cursor: pointer; line-height: 1; opacity: 0.8; transition: opacity 0.15s; }
+    .lightbox-close:hover { opacity: 1; }
+    .lightbox-caption { color: #ccc; font-size: 0.82rem; margin-top: 10px; text-align: center; max-width: 80vw; }
   </style>
 </head>
 <body>
@@ -151,10 +192,23 @@
       <span class="navbar-brand mb-0 h1" onclick="showView('welcomeView')" style="cursor:pointer; transition: 0.2s;">
         <i class="fas fa-shield-alt text-warning"></i> ระบบฐานข้อมูล สน.พระราชวัง
       </span>
-      <div class="d-flex gap-2">
+      <div class="d-flex gap-2 align-items-center">
         <button class="btn btn-outline-light btn-sm d-none" id="btnHome" onclick="showView('welcomeView')">
           <i class="fas fa-home"></i> หน้าแรก
         </button>
+        <div class="dropdown d-none" id="exportDropdownWrapper">
+          <button class="btn btn-outline-warning btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="fas fa-download"></i> ส่งออก
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportExcel('filtered')"><i class="fas fa-file-excel text-success me-2"></i> Excel (ข้อมูลที่กรอง)</a></li>
+            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportExcel('all')"><i class="fas fa-file-excel text-success me-2"></i> Excel (ทั้งหมด)</a></li>
+            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportExcel('selected')"><i class="fas fa-file-excel text-success me-2"></i> Excel (ที่เลือก)</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportPDFSummary('filtered')"><i class="fas fa-file-pdf text-danger me-2"></i> PDF สรุป (ข้อมูลที่กรอง)</a></li>
+            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportPDFSummary('all')"><i class="fas fa-file-pdf text-danger me-2"></i> PDF สรุป (ทั้งหมด)</a></li>
+          </ul>
+        </div>
         <button class="btn btn-outline-danger btn-sm d-none" id="btnLogout" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
         </button>
@@ -238,6 +292,28 @@
         </div>
       </div>
 
+      <!-- Row 1.5: 3 encounter info cards -->
+      <div class="row g-3 mb-3" id="encounterCardsRow">
+        <div class="col-md-4 d-flex">
+          <div class="enc-card w-100" style="border-left-color:#6f42c1">
+            <div class="ec-title"><i class="fas fa-gavel me-1"></i> หมายฯ (ข้อมูลการพบ)</div>
+            <div id="encNoticeContent"><div class="ec-row"><span class="ec-label">กำลังโหลด...</span></div></div>
+          </div>
+        </div>
+        <div class="col-md-4 d-flex">
+          <div class="enc-card w-100" style="border-left-color:#fd7e14">
+            <div class="ec-title"><i class="fas fa-map-pin me-1"></i> สถานที่ที่พบ</div>
+            <div id="encLocationContent"><div class="ec-row"><span class="ec-label">กำลังโหลด...</span></div></div>
+          </div>
+        </div>
+        <div class="col-md-4 d-flex">
+          <div class="enc-card w-100" style="border-left-color:#198754">
+            <div class="ec-title"><i class="fas fa-camera me-1"></i> รูปถ่าย</div>
+            <div id="encPhotoContent"><div class="ec-row"><span class="ec-label">กำลังโหลด...</span></div></div>
+          </div>
+        </div>
+      </div>
+
       <!-- Row 2: 3 info widgets -->
       <div class="row g-3 mb-4">
         <div class="col-lg-4 d-flex">
@@ -263,20 +339,20 @@
       <!-- Table card -->
       <div class="card card-form p-4 shadow-sm">
         <div class="row mb-3 align-items-center">
-          <div class="col-lg-4 mb-3 mb-lg-0">
+          <div class="col-lg-3 mb-2 mb-lg-0">
             <h5 class="mb-0 text-dark"><i class="fas fa-list"></i> รายละเอียดข้อมูล</h5>
-            <small class="text-muted">คลิกที่ <span class="text-primary fw-bold">แถวรายชื่อ</span> เพื่อดูข้อมูลทั้งหมด</small>
+            <small class="text-muted">คลิก <span class="text-primary fw-bold">แถว</span> เพื่อดูข้อมูล</small>
           </div>
-          <div class="col-lg-4 mb-3 mb-lg-0">
+          <div class="col-lg-4 mb-2 mb-lg-0">
             <div class="input-group shadow-sm">
               <span class="input-group-text bg-white border-end-0 text-primary"><i class="fas fa-search"></i></span>
-              <input type="text" id="searchInput" class="form-control border-start-0 search-input" placeholder="ค้นหาทุกฟิลด์: ชื่อ, เลขบัตร, เบอร์, จังหวัด, เรื่อง..." oninput="applyFilters()">
+              <input type="text" id="searchInput" class="form-control border-start-0 search-input" placeholder="ค้นหา: ชื่อ, เลขบัตร, เบอร์, เรื่อง, หมายฯ, เจ้าหน้าที่..." oninput="applyFilters()">
             </div>
           </div>
-          <div class="col-lg-4 text-lg-end d-flex justify-content-lg-end gap-2 flex-wrap">
-            <div class="d-flex align-items-center gap-2">
-              <label class="col-form-label fw-bold">เดือน:</label>
-              <select class="form-select border-secondary w-auto" id="monthFilter" onchange="applyFilters()">
+          <div class="col-lg-5 d-flex justify-content-lg-end gap-2 flex-wrap align-items-center">
+            <div class="d-flex align-items-center gap-1">
+              <label class="col-form-label fw-bold small">เดือน:</label>
+              <select class="form-select form-select-sm border-secondary" style="width:90px" id="monthFilter" onchange="applyFilters()">
                 <option value="all">ทั้งหมด</option>
                 <option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option>
                 <option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option>
@@ -284,31 +360,99 @@
                 <option value="ต.ค.">ต.ค.</option><option value="พ.ย.">พ.ย.</option><option value="ธ.ค.">ธ.ค.</option>
               </select>
             </div>
-            <div class="d-flex align-items-center gap-2">
-              <label class="col-form-label fw-bold">ปี:</label>
-              <select class="form-select border-secondary w-auto" id="yearFilter" onchange="applyFilters()">
+            <div class="d-flex align-items-center gap-1">
+              <label class="col-form-label fw-bold small">ปี:</label>
+              <select class="form-select form-select-sm border-secondary" style="width:90px" id="yearFilter" onchange="applyFilters()">
                 <option value="all">ทุกปี</option>
               </select>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm" onclick="toggleAdvFilter()" id="btnAdvFilter">
+              <i class="fas fa-filter"></i> กรองขั้นสูง
+            </button>
+          </div>
+        </div>
+
+        <!-- Advanced Filter Panel -->
+        <div class="adv-filter-panel d-none" id="advFilterPanel">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <div class="filter-group-label">หมายฯ</div>
+              <select class="form-select form-select-sm" id="advNoticeFilter" onchange="applyFilters()">
+                <option value="all">ทั้งหมด</option>
+                <option value="มีหมายฯ">มีหมายฯ</option>
+                <option value="ไม่มีหมายฯ">ไม่มีหมายฯ</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <div class="filter-group-label">สถานที่พบ</div>
+              <select class="form-select form-select-sm" id="advLocationFilter" onchange="applyFilters()">
+                <option value="all">ทั้งหมด</option>
+                <option value="จุดคัดกรอง">จุดคัดกรอง</option>
+                <option value="อุโมงค์">อุโมงค์</option>
+                <option value="สน.พระราชวัง">สน.พระราชวัง</option>
+                <option value="อื่น ๆ">อื่น ๆ</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <div class="filter-group-label">รูปถ่าย</div>
+              <select class="form-select form-select-sm" id="advPhotoFilter" onchange="applyFilters()">
+                <option value="all">ทั้งหมด</option>
+                <option value="has">มีรูป</option>
+                <option value="none">ไม่มีรูป</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <div class="filter-group-label">ข้อมูลเพิ่มเติม (Section 1)</div>
+              <select class="form-select form-select-sm" id="advNewDataFilter" onchange="applyFilters()">
+                <option value="all">ทั้งหมด</option>
+                <option value="has">มีข้อมูล Section 1</option>
+                <option value="none">ยังไม่มีข้อมูล Section 1</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <div class="filter-group-label">วันที่พบ (ตั้งแต่)</div>
+              <input type="date" class="form-control form-control-sm" id="advDateFrom" onchange="applyFilters()">
+            </div>
+            <div class="col-md-4">
+              <div class="filter-group-label">วันที่พบ (ถึง)</div>
+              <input type="date" class="form-control form-control-sm" id="advDateTo" onchange="applyFilters()">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+              <button class="btn btn-outline-secondary btn-sm w-100" onclick="clearAdvFilters()">
+                <i class="fas fa-times"></i> ล้างตัวกรองขั้นสูง
+              </button>
             </div>
           </div>
         </div>
 
+        <!-- Selection Bar -->
+        <div class="selection-bar" id="selectionBar">
+          <span id="selectionCount" class="fw-bold text-primary">0 รายการที่เลือก</span>
+          <button class="btn btn-sm btn-outline-secondary ms-2" onclick="clearSelection()"><i class="fas fa-times"></i> ยกเลิกการเลือก</button>
+          <button class="btn btn-sm btn-success ms-auto" onclick="exportExcel('selected')"><i class="fas fa-file-excel me-1"></i> Export ที่เลือก</button>
+        </div>
+
         <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
-          <table class="table table-hover table-bordered mb-0">
+          <table class="table table-hover table-bordered mb-0" id="mainTable">
             <thead class="sticky-top">
               <tr>
-                <th onclick="sortTable(0, 'num')" class="text-center">ลำดับ <i class="fas fa-sort" id="icon-0"></i></th>
-                <th onclick="sortTable(1, 'str')">วันที่ <i class="fas fa-sort" id="icon-1"></i></th>
-                <th onclick="sortTable(2, 'str')">เวลา <i class="fas fa-sort" id="icon-2"></i></th>
-                <th onclick="sortTable(4, 'str')">ชื่อ-สกุล <i class="fas fa-sort" id="icon-4"></i></th>
-                <th onclick="sortTable(17, 'str')">เรื่องโดยสังเขป <i class="fas fa-sort" id="icon-17"></i></th>
+                <th class="text-center" style="width:36px"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" title="เลือกทั้งหมด"></th>
+                <th onclick="sortTable(0,'num')" class="text-center" style="width:56px"># <i class="fas fa-sort" id="icon-0"></i></th>
+                <th onclick="sortTable(1,'str')">วันที่/เวลา <i class="fas fa-sort" id="icon-1"></i></th>
+                <th onclick="sortTable(4,'str')">ชื่อ-สกุล <i class="fas fa-sort" id="icon-4"></i></th>
+                <th onclick="sortTable(41,'str')">หมายฯ <i class="fas fa-sort" id="icon-41"></i></th>
+                <th onclick="sortTable(43,'str')">สถานที่พบ <i class="fas fa-sort" id="icon-43"></i></th>
+                <th onclick="sortTable(48,'str')">เจ้าหน้าที่ <i class="fas fa-sort" id="icon-48"></i></th>
+                <th class="text-center">รูป</th>
+                <th class="text-center" style="width:60px">ดูข้อมูล</th>
               </tr>
             </thead>
             <tbody id="tableBody">
-              <tr><td colspan="5" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr>
+              <tr><td colspan="9" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr>
             </tbody>
           </table>
         </div>
+        <div id="tableFooter" class="mt-2 text-muted small"></div>
       </div>
     </div>
 
@@ -326,14 +470,14 @@
 
       <form id="dataForm" onsubmit="handleFormSubmit(event)" class="mx-auto" style="max-width: 900px;">
 
-        <!-- Section 0a: ข้อมูลการพบและการนำส่ง -->
+        <!-- Section 1: ข้อมูลการพบและการนำส่ง -->
         <div class="card card-form mb-4 border-top border-4 shadow-sm" style="border-top-color:#6f42c1!important">
-          <div class="card-header" style="color:#6f42c1"><i class="fas fa-search-location"></i> ข้อมูลการพบและการนำส่ง</div>
+          <div class="card-header" style="color:#6f42c1"><i class="fas fa-search-location"></i> 1. ข้อมูลการพบและการนำส่ง</div>
           <div class="card-body p-4 bg-white">
 
-            <!-- 0.1 หมายฯ -->
+            <!-- 1.1 หมายฯ -->
             <div class="mb-3">
-              <label class="form-label fw-bold">0.1 หมายฯ</label>
+              <label class="form-label fw-bold">1.1 หมายฯ</label>
               <div class="d-flex gap-4">
                 <div class="form-check">
                   <input class="form-check-input" type="radio" name="col42" id="notice_no" value="ไม่มีหมายฯ" checked onchange="onNoticeChange()">
@@ -349,9 +493,9 @@
               </div>
             </div>
 
-            <!-- 0.2 สถานที่ที่พบ -->
+            <!-- 1.2 สถานที่ที่พบ -->
             <div class="mb-3">
-              <label class="form-label fw-bold">0.2 สถานที่ที่พบ</label>
+              <label class="form-label fw-bold">1.2 สถานที่ที่พบ</label>
               <div class="row g-2">
                 <div class="col-auto">
                   <div class="form-check">
@@ -383,9 +527,9 @@
               </div>
             </div>
 
-            <!-- 0.3 วัน/เวลา/เจ้าหน้าที่ที่พบ -->
+            <!-- 1.3 วัน/เวลา/เจ้าหน้าที่ที่พบ -->
             <div class="mb-3">
-              <label class="form-label fw-bold">0.3 วันเวลาและเจ้าหน้าที่ที่พบ</label>
+              <label class="form-label fw-bold">1.3 วันเวลาและเจ้าหน้าที่ที่พบ</label>
               <div class="row g-2 mb-2">
                 <div class="col-md-6 col-6">
                   <label class="form-label">วันที่พบ</label>
@@ -440,9 +584,9 @@
           </div>
         </div>
 
-        <!-- Section 0b: จุดที่อยู่สิ่งของและสิ่งของที่นำมายื่นฯ -->
+        <!-- Section 1 (cont.): จุดที่อยู่สิ่งของและสิ่งของที่นำมายื่นฯ -->
         <div class="card card-form mb-4 border-top border-4 shadow-sm" style="border-top-color:#fd7e14!important">
-          <div class="card-header" style="color:#fd7e14"><i class="fas fa-box-open"></i> จุดที่อยู่สิ่งของและสิ่งของที่นำมายื่นฯ</div>
+          <div class="card-header" style="color:#fd7e14"><i class="fas fa-box-open"></i> 1. จุดที่อยู่สิ่งของและสิ่งของที่นำมายื่นฯ</div>
           <div class="card-body p-4 bg-white">
 
             <!-- การเก็บ/ตำแหน่งของสิ่งของ -->
@@ -545,9 +689,9 @@
           </div>
         </div>
 
-        <!-- Section 1: Personal Info -->
+        <!-- Section 2: Personal Info -->
         <div class="card card-form mb-4 border-top border-primary border-4 shadow-sm">
-          <div class="card-header text-primary"><i class="fas fa-user"></i> 1. ข้อมูลส่วนตัวเบื้องต้น</div>
+          <div class="card-header text-primary"><i class="fas fa-user"></i> 2. ข้อมูลส่วนตัวเบื้องต้น</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-md-6 mb-3"><label class="form-label">วันเดือนปี</label><input type="date" class="form-control" name="col2" required></div>
@@ -586,9 +730,9 @@
           </div>
         </div>
 
-        <!-- Section 2: Observation -->
+        <!-- Section 3: Observation -->
         <div class="card card-form mb-4 border-top border-success border-4 shadow-sm">
-          <div class="card-header text-success"><i class="fas fa-eye"></i> 2. การตรวจสอบและสังเกตเบื้องต้น</div>
+          <div class="card-header text-success"><i class="fas fa-eye"></i> 3. การตรวจสอบและสังเกตเบื้องต้น</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-md-4 mb-3">
@@ -615,9 +759,9 @@
           </div>
         </div>
 
-        <!-- Section 3: Complaint -->
+        <!-- Section 4: Complaint -->
         <div class="card card-form mb-4 border-top border-danger border-4 shadow-sm">
-          <div class="card-header text-danger"><i class="fas fa-file-alt"></i> 3. รายละเอียดเรื่องร้องเรียนและการเดินทาง</div>
+          <div class="card-header text-danger"><i class="fas fa-file-alt"></i> 4. รายละเอียดเรื่องร้องเรียนและการเดินทาง</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-12 mb-3"><label class="form-label">1. เป็นเรื่องอะไร โดยสังเขป</label><textarea class="form-control" name="col18" rows="2"></textarea></div>
@@ -691,9 +835,9 @@
           </div>
         </div>
 
-        <!-- Section 4: Contact -->
+        <!-- Section 5: Contact -->
         <div class="card card-form mb-4 border-top border-warning border-4 shadow-sm">
-          <div class="card-header text-warning text-dark"><i class="fas fa-address-book"></i> 4. บุคคลที่สามารถติดต่อได้</div>
+          <div class="card-header text-warning text-dark"><i class="fas fa-address-book"></i> 5. บุคคลที่สามารถติดต่อได้</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-md-4 mb-3"><label class="form-label">7. ชื่อ - สกุล</label><input type="text" class="form-control" name="col25"></div>
@@ -703,9 +847,9 @@
           </div>
         </div>
 
-        <!-- Section 5: Deep Info -->
+        <!-- Section 6: Deep Info -->
         <div class="card card-form mb-4 border-top border-info border-4 shadow-sm">
-          <div class="card-header text-info text-dark"><i class="fas fa-search"></i> 5. ข้อมูลเชิงลึก</div>
+          <div class="card-header text-info text-dark"><i class="fas fa-search"></i> 6. ข้อมูลเชิงลึก</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-12 mb-3"><label class="form-label">8. ความตั้งใจในวันนี้</label><textarea class="form-control" name="col28" rows="2"></textarea></div>
@@ -762,14 +906,17 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body bg-light" id="detailModalBody"></div>
-        <div class="modal-footer">
+        <div class="modal-footer flex-wrap gap-2">
           <button type="button" class="btn btn-warning" onclick="openEditFromModal()">
             <i class="fas fa-edit"></i> แก้ไขข้อมูล
+          </button>
+          <button type="button" class="btn btn-info text-white" onclick="exportPDFIndividual()">
+            <i class="fas fa-print"></i> พิมพ์/PDF
           </button>
           <button type="button" class="btn btn-danger" onclick="openDeleteConfirm()">
             <i class="fas fa-trash-alt"></i> ลบข้อมูล
           </button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-secondary ms-auto" data-bs-dismiss="modal">
             <i class="fas fa-times"></i> ปิด
           </button>
         </div>
@@ -832,14 +979,25 @@
     </div>
   </div>
 
+  <!-- ===== LIGHTBOX ===== -->
+  <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script>
     // ==================== STATE ====================
     let loginModal, detailModal, deleteConfirmModal, toastInstance;
-    let adminSession = null;        // stores admin password after login
-    let globalData   = [];          // [{ sheetRow: N, data: [...35 cols...] }, ...]
-    let filteredData = [];
-    let currentViewItem = null;     // currently open detail record
+    let adminToken    = null;        // opaque UUID session token from CacheService
+    let globalData    = [];          // [{ sheetRow: N, data: [...61 cols...] }, ...]
+    let filteredData  = [];
+    let attachmentCounts = {};       // { recordId: { officer_found:N, person_portrait:N, items_evidence:N, total:N } }
+    let selectedRows  = new Set();   // Set of col1 (recordId) strings for checkbox selection
+    let imageCache    = new Map();   // attachmentId → { base64, mimeType, fileName }
+    let currentViewItem = null;      // currently open detail record
     let editSheetRow  = null;        // null = create mode, number = edit mode
     let editRecordId  = null;        // col1 value of the record being edited
     let sortCol = -1;
@@ -866,13 +1024,41 @@
 
     // ==================== INIT ====================
     document.addEventListener("DOMContentLoaded", function() {
-      loginModal       = new bootstrap.Modal(document.getElementById('loginModal'));
-      detailModal      = new bootstrap.Modal(document.getElementById('detailModal'));
+      loginModal         = new bootstrap.Modal(document.getElementById('loginModal'));
+      detailModal        = new bootstrap.Modal(document.getElementById('detailModal'));
       deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
 
       document.getElementById('loginModal').addEventListener('shown.bs.modal', function() {
         document.getElementById('adminPasswordInput').focus();
       });
+
+      // Restore session from sessionStorage (survives page refresh, clears on tab close)
+      var savedToken = sessionStorage.getItem('adminToken');
+      if (savedToken) {
+        adminToken = savedToken;
+        const ed = document.getElementById('exportDropdownWrapper');
+        if (ed) ed.classList.remove('d-none');
+        gasPost({ action: 'dashboard', token: adminToken })
+          .then(function(data) {
+            if (!data.success) {
+              sessionStorage.removeItem('adminToken');
+              adminToken = null;
+              if (ed) ed.classList.add('d-none');
+              return;
+            }
+            globalData       = data.allData || [];
+            attachmentCounts = data.attachmentCounts || {};
+            filteredData     = [...globalData];
+            populateYearDropdown();
+            applyFilters();
+            showView('dashboardView');
+          })
+          .catch(function() {
+            sessionStorage.removeItem('adminToken');
+            adminToken = null;
+            if (ed) ed.classList.add('d-none');
+          });
+      }
     });
 
     // ==================== NAVIGATION ====================
@@ -892,21 +1078,29 @@
         resetFormMode();
       } else {
         btnHome.classList.remove('d-none');
-        if (adminSession) btnLogout.classList.remove('d-none');
+        if (adminToken) btnLogout.classList.remove('d-none');
       }
       if (viewId === 'formView') loadProvinces();
     }
 
     function logout() {
-      adminSession = null;
-      globalData = [];
+      var tok = adminToken;
+      adminToken   = null;
+      attachmentCounts = {};
+      selectedRows = new Set();
+      imageCache   = new Map();
+      sessionStorage.removeItem('adminToken');
+      try { if (tok) gasPost({ action: 'logout', token: tok }); } catch(e) {}
+      globalData   = [];
       filteredData = [];
-      sortCol = -1;
-      sortAsc = true;
-      activeCardFilter = 'all';
+      sortCol      = -1;
+      sortAsc      = true;
+      activeCardFilter     = 'all';
       activeProvinceFilter = null;
-      activeTopicFilter = null;
-      activeReasonFilter = null;
+      activeTopicFilter    = null;
+      activeReasonFilter   = null;
+      const ed = document.getElementById('exportDropdownWrapper');
+      if (ed) ed.classList.add('d-none');
       showView('welcomeView');
       showToast('ออกจากระบบเรียบร้อยแล้ว', 'secondary');
     }
@@ -933,23 +1127,27 @@
       spinnerEl.classList.remove('d-none');
       btnEl.disabled = true;
 
-      gasGet({ action: 'dashboard', password: pwd })
+      gasPost({ action: 'login', password: pwd })
         .then(function(data) {
           spinnerEl.classList.add('d-none');
           btnEl.disabled = false;
-          if (data.error) {
+          if (!data.success) {
             errorEl.classList.remove('d-none');
-            errorEl.textContent = data.error;
+            errorEl.textContent = data.message || 'รหัสผ่านไม่ถูกต้อง!';
             return;
           }
           errorEl.classList.add('d-none');
           loginModal.hide();
           document.getElementById('adminPasswordInput').value = '';
 
-          adminSession = pwd;
-          globalData   = data.allData;
-          filteredData = [...globalData];
+          adminToken       = data.token;
+          sessionStorage.setItem('adminToken', adminToken);
+          globalData       = data.allData || [];
+          attachmentCounts = data.attachmentCounts || {};
+          filteredData     = [...globalData];
 
+          const ed = document.getElementById('exportDropdownWrapper');
+          if (ed) ed.classList.remove('d-none');
           populateYearDropdown();
           applyFilters();
           showView('dashboardView');
@@ -964,11 +1162,22 @@
 
     // ==================== DASHBOARD HELPERS ====================
     function refreshDashboard() {
-      gasGet({ action: 'dashboard', password: adminSession })
+      gasPost({ action: 'dashboard', token: adminToken })
         .then(function(data) {
-          if (data.error) { showToast('ไม่สามารถโหลดข้อมูลได้: ' + data.error, 'danger'); return; }
-          globalData   = data.allData;
-          filteredData = [...globalData];
+          if (!data.success) {
+            if (data.message && data.message.includes('Session')) {
+              sessionStorage.removeItem('adminToken');
+              adminToken = null;
+              showToast('Session หมดอายุ กรุณาล็อกอินใหม่', 'warning');
+              loginModal.show();
+              return;
+            }
+            showToast('ไม่สามารถโหลดข้อมูลได้: ' + data.message, 'danger'); return;
+          }
+          globalData       = data.allData || [];
+          attachmentCounts = data.attachmentCounts || {};
+          filteredData     = [...globalData];
+          imageCache.clear();
           populateYearDropdown();
           applyFilters();
           showView('dashboardView');
@@ -1020,9 +1229,15 @@
     }
 
     function applyFilters() {
-      const mFilter    = document.getElementById('monthFilter').value;
-      const yFilter    = document.getElementById('yearFilter').value;
-      const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
+      const mFilter         = document.getElementById('monthFilter').value;
+      const yFilter         = document.getElementById('yearFilter').value;
+      const searchText      = document.getElementById('searchInput').value.toLowerCase().trim();
+      const advNotice       = (document.getElementById('advNoticeFilter')   || {}).value || 'all';
+      const advLocation     = (document.getElementById('advLocationFilter') || {}).value || 'all';
+      const advPhoto        = (document.getElementById('advPhotoFilter')    || {}).value || 'all';
+      const advNewData      = (document.getElementById('advNewDataFilter')  || {}).value || 'all';
+      const advDateFrom     = (document.getElementById('advDateFrom')       || {}).value || '';
+      const advDateTo       = (document.getElementById('advDateTo')         || {}).value || '';
 
       let result = globalData.filter(item => {
         const dateStr    = item.data[1] || '';
@@ -1070,6 +1285,45 @@
         );
       }
 
+      // Advanced filters
+      if (advNotice !== 'all') {
+        filteredData = filteredData.filter(item => (item.data[41] || '').toString().trim() === advNotice);
+      }
+      if (advLocation !== 'all') {
+        filteredData = filteredData.filter(item => (item.data[43] || '').toString().trim() === advLocation);
+      }
+      if (advPhoto !== 'all') {
+        filteredData = filteredData.filter(function(item) {
+          var cnt = (attachmentCounts[String(item.data[0])] || {}).total || 0;
+          return advPhoto === 'has' ? cnt > 0 : cnt === 0;
+        });
+      }
+      if (advNewData !== 'all') {
+        filteredData = filteredData.filter(function(item) {
+          var d = item.data;
+          var hasNew = [41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60].some(function(i) {
+            return (d[i] || '').toString().trim() !== '';
+          });
+          return advNewData === 'has' ? hasNew : !hasNew;
+        });
+      }
+      if (advDateFrom) {
+        filteredData = filteredData.filter(function(item) {
+          var fd = (item.data[45] || '').toString();
+          return fd && fd >= advDateFrom;
+        });
+      }
+      if (advDateTo) {
+        filteredData = filteredData.filter(function(item) {
+          var fd = (item.data[45] || '').toString();
+          return fd && fd <= advDateTo;
+        });
+      }
+
+      // Update select-all checkbox state
+      var selAll = document.getElementById('selectAll');
+      if (selAll) selAll.checked = filteredData.length > 0 && filteredData.every(function(item) { return selectedRows.has(String(item.data[0])); });
+
       // Re-apply existing sort without toggling direction
       if (sortCol > -1) {
         filteredData.sort((a, b) => {
@@ -1100,6 +1354,7 @@
       document.getElementById('femaleCount').textContent    = female;
       document.getElementById('firstTimeCount').textContent = firstTime;
       document.getElementById('returnCount').textContent    = returnee;
+      updateEncounterCards(dataArray);
       updateInfoWidgets(dataArray);
     }
 
@@ -1311,19 +1566,35 @@
     }
 
     function renderTable(dataArray) {
-      const tbody = document.getElementById('tableBody');
+      const tbody   = document.getElementById('tableBody');
+      const footer  = document.getElementById('tableFooter');
       let html = '';
-      dataArray.forEach((item, index) => {
-        const d = item.data;
+      dataArray.forEach(function(item, index) {
+        const d    = item.data;
+        const rid  = String(d[0]);
+        const isChecked = selectedRows.has(rid);
+        const noticeVal = (d[41] || '').toString().trim();
+        const noticeBadge = noticeVal === 'มีหมายฯ'
+          ? '<span class="badge-notice badge-notice-yes">มีหมายฯ</span>'
+          : '<span class="badge-notice badge-notice-no">ไม่มี</span>';
+        const location = (d[43] || '-').toString().trim() || '-';
+        const officer  = ((d[47] || '') + ' ' + (d[48] || '')).trim() || '-';
+        const photoCount = (attachmentCounts[rid] || {}).total || 0;
+        const photoBadge = '<span class="photo-badge' + (photoCount === 0 ? ' zero' : '') + '">' + photoCount + '</span>';
         html += '<tr class="clickable-row" onclick="viewDetails(' + index + ')">' +
-                  '<td class="text-center">' + (d[0] || '-') + '</td>' +
-                  '<td>' + (d[1] || '-') + '</td>' +
-                  '<td>' + (d[2] || '-') + '</td>' +
-                  '<td class="fw-bold text-primary">' + (d[3] || '') + ' ' + (d[4] || '-') + '</td>' +
-                  '<td class="text-truncate" style="max-width: 250px;">' + (d[17] || '-') + '</td>' +
-                '</tr>';
+          '<td class="text-center" onclick="event.stopPropagation()"><input type="checkbox" class="row-cb" data-rid="' + escHtml(rid) + '" ' + (isChecked ? 'checked' : '') + ' onchange="toggleRowSelect(\'' + escHtml(rid) + '\',event)"></td>' +
+          '<td class="text-center text-muted small">' + (d[0] || '-') + '</td>' +
+          '<td class="small">' + escHtml(d[1] || '-') + '<br><span class="text-muted">' + escHtml(d[2] || '') + '</span></td>' +
+          '<td class="fw-bold text-primary">' + escHtml((d[3] || '') + ' ' + (d[4] || '-')) + '</td>' +
+          '<td>' + noticeBadge + '</td>' +
+          '<td class="small">' + escHtml(location) + '</td>' +
+          '<td class="small">' + escHtml(officer) + '</td>' +
+          '<td class="text-center">' + photoBadge + '</td>' +
+          '<td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary py-0 px-2" onclick="viewDetails(' + index + ')"><i class="fas fa-eye"></i></button></td>' +
+          '</tr>';
       });
-      tbody.innerHTML = html || '<tr><td colspan="5" class="text-center py-4 text-danger fw-bold"><i class="fas fa-search"></i> ไม่พบข้อมูลที่ตรงกับการค้นหา</td></tr>';
+      tbody.innerHTML = html || '<tr><td colspan="9" class="text-center py-4 text-danger fw-bold"><i class="fas fa-search"></i> ไม่พบข้อมูลที่ตรงกับการค้นหา</td></tr>';
+      if (footer) footer.textContent = 'แสดง ' + dataArray.length + ' รายการ จากทั้งหมด ' + globalData.length + ' รายการ';
     }
 
     // ==================== DETAIL MODAL ====================
@@ -1334,12 +1605,39 @@
       const idCard = fixMissingZero(row[6], 'idcard');
       const phone1 = fixMissingZero(row[8], 'phone');
       const phone2 = fixMissingZero(row[26], 'phone');
+      const phone3 = fixMissingZero(row[49], 'phone'); // officer phone col50
 
       document.getElementById('detailModalTitle').textContent = 'ข้อมูล: ' + (row[3] || '') + ' ' + (row[4] || '');
 
       document.getElementById('detailModalBody').innerHTML =
+        // Section 1: Encounter info (col42-col61, data[41-60])
+        '<div class="card p-3 mb-3 border-0 shadow-sm" style="border-left:4px solid #6f42c1!important">' +
+          '<div class="detail-section-title" style="color:#6f42c1;border-color:#6f42c1"><i class="fas fa-search-location"></i> Section 1: ข้อมูลการพบและการนำส่ง</div>' +
+          '<div class="row">' +
+            '<div class="col-md-4"><div class="detail-label">1.1 หมายฯ:</div><div class="detail-value">' + escHtml(row[41]||'-') + '</div></div>' +
+            '<div class="col-md-8"><div class="detail-label">รายละเอียดหมายฯ:</div><div class="detail-value">' + escHtml(row[42]||'-') + '</div></div>' +
+            '<div class="col-md-4"><div class="detail-label">1.2 สถานที่พบ:</div><div class="detail-value">' + escHtml(row[43]||'-') + '</div></div>' +
+            '<div class="col-md-8"><div class="detail-label">รายละเอียดสถานที่:</div><div class="detail-value">' + escHtml(row[44]||'-') + '</div></div>' +
+            '<div class="col-md-4"><div class="detail-label">วันที่พบ:</div><div class="detail-value">' + escHtml(row[45]||'-') + '</div></div>' +
+            '<div class="col-md-4"><div class="detail-label">เวลาที่พบ:</div><div class="detail-value">' + escHtml(row[46]||'-') + '</div></div>' +
+            '<div class="col-md-4"><div class="detail-label">ยศเจ้าหน้าที่:</div><div class="detail-value">' + escHtml(row[47]||'-') + '</div></div>' +
+            '<div class="col-md-5"><div class="detail-label">ชื่อเจ้าหน้าที่:</div><div class="detail-value">' + escHtml(row[48]||'-') + '</div></div>' +
+            '<div class="col-md-3"><div class="detail-label">เบอร์เจ้าหน้าที่:</div><div class="detail-value">' + phone3 + '</div></div>' +
+            '<div class="col-md-6"><div class="detail-label">วันที่นำส่ง:</div><div class="detail-value">' + escHtml(row[50]||'-') + '</div></div>' +
+            '<div class="col-md-6"><div class="detail-label">เวลานำส่ง:</div><div class="detail-value">' + escHtml(row[51]||'-') + '</div></div>' +
+          '</div>' +
+          '<div class="mt-2"><div class="detail-label">การเก็บ/ตำแหน่งสิ่งของ:</div><div class="detail-value">' + escHtml(row[52]||'-') + (row[53] ? ' (' + escHtml(row[53]) + ')' : '') + '</div></div>' +
+          '<div class="row mt-1">' +
+            '<div class="col-md-4"><div class="detail-label">ลักษณะการนำพา:</div><div class="detail-value">' + escHtml(row[54]||'-') + '</div></div>' +
+            '<div class="col-md-4"><div class="detail-label">ภาชนะ:</div><div class="detail-value">' + escHtml(row[55]||'-') + '</div></div>' +
+            '<div class="col-md-4"><div class="detail-label">การใส่ซอง:</div><div class="detail-value">' + escHtml(row[56]||'-') + (row[57] ? ' ขนาด: ' + escHtml(row[57]) + (row[58] ? '/' + escHtml(row[58]) : '') : '') + (row[59] ? ' สี: ' + escHtml(row[59]) + (row[60] ? '/' + escHtml(row[60]) : '') : '') + '</div></div>' +
+          '</div>' +
+          // Photo gallery
+          '<div class="mt-3"><div class="detail-label fw-bold"><i class="fas fa-camera me-1"></i> รูปภาพ Section 1</div><div id="galleryContainer" class="mt-1"><div class="text-muted small">กำลังโหลด...</div></div></div>' +
+        '</div>' +
+
         '<div class="card p-3 mb-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title"><i class="fas fa-user"></i> 1. ข้อมูลส่วนตัวเบื้องต้น</div>' +
+          '<div class="detail-section-title"><i class="fas fa-user"></i> Section 2: ข้อมูลส่วนตัวเบื้องต้น</div>' +
           '<div class="row">' +
             '<div class="col-md-6"><div class="detail-label">วันเดือนปี:</div><div class="detail-value">' + (row[1]||'-') + '</div></div>' +
             '<div class="col-md-6"><div class="detail-label">เวลาประมาณ:</div><div class="detail-value">' + (row[2]||'-') + '</div></div>' +
@@ -1353,7 +1651,7 @@
         '</div>' +
 
         '<div class="card p-3 mb-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title text-success" style="border-color:#198754"><i class="fas fa-eye"></i> 2. การตรวจสอบและสังเกตเบื้องต้น</div>' +
+          '<div class="detail-section-title text-success" style="border-color:#198754"><i class="fas fa-eye"></i> Section 3: การตรวจสอบและสังเกตเบื้องต้น</div>' +
           '<div class="row">' +
             '<div class="col-md-4"><div class="detail-label">1. การแต่งกาย:</div><div class="detail-value">' + (row[9]||'-') + '</div></div>' +
             '<div class="col-md-8"><div class="detail-label">ระบุรายละเอียด:</div><div class="detail-value">' + (row[10]||'-') + '</div></div>' +
@@ -1367,7 +1665,7 @@
         '</div>' +
 
         '<div class="card p-3 mb-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title text-danger" style="border-color:#dc3545"><i class="fas fa-file-alt"></i> 3. รายละเอียดเรื่องร้องเรียน</div>' +
+          '<div class="detail-section-title text-danger" style="border-color:#dc3545"><i class="fas fa-file-alt"></i> Section 4: รายละเอียดเรื่องร้องเรียน</div>' +
           '<div class="row">' +
             '<div class="col-12"><div class="detail-label">1. เป็นเรื่องอะไร โดยสังเขป:</div><div class="detail-value">' + (row[17]||'-') + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">สถานที่เกิดเรื่อง จังหวัด:</div><div class="detail-value">' + (row[38]||'-') + '</div></div>' +
@@ -1385,7 +1683,7 @@
         '</div>' +
 
         '<div class="card p-3 mb-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title text-warning" style="border-color:#ffc107"><i class="fas fa-address-book"></i> 4. บุคคลที่สามารถติดต่อได้</div>' +
+          '<div class="detail-section-title text-warning" style="border-color:#ffc107"><i class="fas fa-address-book"></i> Section 5: บุคคลที่สามารถติดต่อได้</div>' +
           '<div class="row">' +
             '<div class="col-md-4"><div class="detail-label">7. ชื่อ - สกุล:</div><div class="detail-value">' + (row[24]||'-') + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">เกี่ยวข้องเป็น:</div><div class="detail-value">' + (row[25]||'-') + '</div></div>' +
@@ -1394,7 +1692,7 @@
         '</div>' +
 
         '<div class="card p-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title text-info" style="border-color:#0dcaf0"><i class="fas fa-search"></i> 5. ข้อมูลเชิงลึก</div>' +
+          '<div class="detail-section-title text-info" style="border-color:#0dcaf0"><i class="fas fa-search"></i> Section 6: ข้อมูลเชิงลึก</div>' +
           '<div class="row">' +
             '<div class="col-12"><div class="detail-label">8. ความตั้งใจในวันนี้:</div><div class="detail-value">' + (row[27]||'-') + '</div></div>' +
             '<div class="col-12"><div class="detail-label">9. ทราบจากที่ใดว่าวันนี้จะมีขบวนเสด็จฯ:</div><div class="detail-value">' + (row[28]||'-') + '</div></div>' +
@@ -1408,6 +1706,10 @@
         '</div>';
 
       detailModal.show();
+
+      // Load gallery async after modal renders
+      var recId = String(row[0]);
+      setTimeout(function() { loadGallery(recId); }, 100);
     }
 
     // ==================== EDIT ====================
@@ -1514,7 +1816,7 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังลบ...';
 
-      gasPost({ action: 'delete', sheetRow: currentViewItem.sheetRow, password: adminSession })
+      gasPost({ action: 'delete', sheetRow: currentViewItem.sheetRow, token: adminToken })
         .then(function(response) {
           btn.disabled = false;
           btn.innerHTML = '<i class="fas fa-trash-alt"></i> ยืนยันการลบ';
@@ -1549,14 +1851,9 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
 
-      const PHONE_COLS = new Set(['col7','col9','col27','col50']);
       const formObject = {};
       new FormData(form).forEach(function(value, key) {
-        if (PHONE_COLS.has(key) && value !== '') {
-          formObject[key] = "'" + value;
-        } else {
-          formObject[key] = value;
-        }
+        formObject[key] = value; // phone leading-zero handled backend via rewritePhoneCells
       });
 
       const resetBtn = function() {
@@ -1571,7 +1868,7 @@
       try {
         let res;
         if (isEdit) {
-          res = await gasPost(Object.assign({ action: 'update', sheetRow: editSheetRow, password: adminSession }, formObject));
+          res = await gasPost(Object.assign({ action: 'update', sheetRow: editSheetRow, token: adminToken }, formObject));
           recordId = editRecordId;
         } else {
           res = await gasPost(Object.assign({ action: 'submit' }, formObject));
@@ -1975,6 +2272,381 @@
 
     function escHtml(str) {
       return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ==================== ENCOUNTER INFO CARDS ====================
+    function updateEncounterCards(dataArray) {
+      // Notice
+      var noticeYes = 0, noticeNo = 0;
+      // Location
+      var locCounts = {};
+      // Photos
+      var hasPhoto = 0, noPhoto = 0;
+
+      dataArray.forEach(function(item) {
+        var d = item.data;
+        var recId = String(d[0]);
+        // Notice (data[41] = col42)
+        if ((d[41] || '') === 'มีหมายฯ') noticeYes++; else noticeNo++;
+        // Location (data[43] = col44)
+        var loc = (d[43] || '').toString().trim() || 'ไม่ระบุ';
+        locCounts[loc] = (locCounts[loc] || 0) + 1;
+        // Photos
+        var cnt = attachmentCounts[recId] ? (attachmentCounts[recId].total || 0) : 0;
+        if (cnt > 0) hasPhoto++; else noPhoto++;
+      });
+
+      // Render notice card
+      var nc = document.getElementById('encNoticeContent');
+      if (nc) nc.innerHTML =
+        '<div class="ec-row"><span class="ec-label">มีหมายฯ</span><span class="ec-val text-danger">' + noticeYes + ' ราย</span></div>' +
+        '<div class="ec-row"><span class="ec-label">ไม่มีหมายฯ</span><span class="ec-val text-secondary">' + noticeNo + ' ราย</span></div>';
+
+      // Render location card (top 4)
+      var lc = document.getElementById('encLocationContent');
+      if (lc) {
+        var locEntries = Object.entries(locCounts).sort(function(a,b){ return b[1]-a[1]; }).slice(0,4);
+        lc.innerHTML = locEntries.length
+          ? locEntries.map(function(e){ return '<div class="ec-row"><span class="ec-label">' + escHtml(e[0]) + '</span><span class="ec-val">' + e[1] + '</span></div>'; }).join('')
+          : '<div class="ec-row"><span class="ec-label text-muted">ไม่มีข้อมูล</span></div>';
+      }
+
+      // Render photo card
+      var pc = document.getElementById('encPhotoContent');
+      if (pc) pc.innerHTML =
+        '<div class="ec-row"><span class="ec-label">มีรูปถ่าย</span><span class="ec-val text-success">' + hasPhoto + ' ราย</span></div>' +
+        '<div class="ec-row"><span class="ec-label">ยังไม่มีรูป</span><span class="ec-val text-secondary">' + noPhoto + ' ราย</span></div>';
+    }
+
+    // ==================== ADVANCED FILTER ====================
+    function toggleAdvFilter() {
+      var panel = document.getElementById('advFilterPanel');
+      var btn   = document.getElementById('btnAdvFilter');
+      if (panel.classList.toggle('d-none')) {
+        btn.classList.remove('btn-secondary');
+        btn.classList.add('btn-outline-secondary');
+      } else {
+        btn.classList.remove('btn-outline-secondary');
+        btn.classList.add('btn-secondary');
+      }
+    }
+
+    function clearAdvFilters() {
+      document.getElementById('advNoticeFilter').value   = 'all';
+      document.getElementById('advLocationFilter').value = 'all';
+      document.getElementById('advPhotoFilter').value    = 'all';
+      document.getElementById('advNewDataFilter').value  = 'all';
+      document.getElementById('advDateFrom').value       = '';
+      document.getElementById('advDateTo').value         = '';
+      applyFilters();
+    }
+
+    // ==================== CHECKBOX SELECTION ====================
+    function toggleSelectAll(el) {
+      var checked = el.checked;
+      filteredData.forEach(function(item) {
+        var rid = String(item.data[0]);
+        if (checked) selectedRows.add(rid); else selectedRows.delete(rid);
+      });
+      updateSelectionUI();
+      renderTable(filteredData);
+    }
+
+    function toggleRowSelect(rid, el) {
+      el.stopPropagation();
+      if (selectedRows.has(rid)) selectedRows.delete(rid); else selectedRows.add(rid);
+      updateSelectionUI();
+      var allCbs = document.querySelectorAll('.row-cb');
+      var allChecked = filteredData.length > 0 && filteredData.every(function(item) { return selectedRows.has(String(item.data[0])); });
+      var selAll = document.getElementById('selectAll');
+      if (selAll) selAll.checked = allChecked;
+    }
+
+    function clearSelection() {
+      selectedRows.clear();
+      var selAll = document.getElementById('selectAll');
+      if (selAll) selAll.checked = false;
+      updateSelectionUI();
+      renderTable(filteredData);
+    }
+
+    function updateSelectionUI() {
+      var bar   = document.getElementById('selectionBar');
+      var count = document.getElementById('selectionCount');
+      if (!bar) return;
+      var n = selectedRows.size;
+      if (n > 0) {
+        bar.classList.add('show');
+        count.textContent = n + ' รายการที่เลือก';
+      } else {
+        bar.classList.remove('show');
+      }
+    }
+
+    // ==================== GALLERY / LIGHTBOX ====================
+    function openLightbox(src, caption) {
+      var overlay = document.getElementById('lightboxOverlay');
+      var img     = document.getElementById('lightboxImg');
+      var cap     = document.getElementById('lightboxCaption');
+      img.src     = src;
+      cap.textContent = caption || '';
+      overlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightboxOverlay').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    async function loadGallery(recordId) {
+      var container = document.getElementById('galleryContainer');
+      if (!container) return;
+      container.innerHTML = '<div class="text-muted small py-2"><i class="fas fa-spinner fa-spin"></i> กำลังโหลดรูปภาพ...</div>';
+
+      var res;
+      try {
+        res = await gasPost({ action: 'listAttachments', recordId: recordId, token: adminToken });
+      } catch(e) {
+        container.innerHTML = '<div class="text-danger small">โหลดรายการรูปล้มเหลว</div>';
+        return;
+      }
+      if (!res.success || !res.attachments || !res.attachments.length) {
+        container.innerHTML = '<div class="text-muted small py-1">ไม่มีรูปภาพ</div>';
+        return;
+      }
+
+      var sections = {
+        officer_found:    { label: '1.3 รูปเจ้าหน้าที่ที่พบ', items: [] },
+        person_portrait:  { label: '2. รูปบุคคล',              items: [] },
+        items_evidence:   { label: '1. รูปสิ่งของ/เอกสาร',    items: [] }
+      };
+      res.attachments.forEach(function(att) {
+        if (sections[att.section]) sections[att.section].items.push(att);
+      });
+
+      var html = '';
+      Object.values(sections).forEach(function(sec) {
+        if (!sec.items.length) return;
+        html += '<div class="gallery-section-title">' + sec.label + '</div><div class="gallery-grid">';
+        sec.items.forEach(function(att) {
+          html += '<div class="gallery-thumb" id="gthumb_' + att.attachmentId + '" onclick="openGalleryImage(\'' + att.attachmentId + '\',\'' + escHtml(att.fileName) + '\')">' +
+                  '<div class="gal-loading"><i class="fas fa-spinner fa-spin"></i></div></div>';
+        });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+
+      // Load images async
+      res.attachments.forEach(async function(att) {
+        var thumb = document.getElementById('gthumb_' + att.attachmentId);
+        if (!thumb) return;
+        try {
+          var imgData = await getAttachmentImage(att.attachmentId);
+          var src = 'data:' + imgData.mimeType + ';base64,' + imgData.base64;
+          thumb.innerHTML = '<img src="' + src + '" alt="' + escHtml(att.fileName) + '">';
+        } catch(e) {
+          if (thumb) thumb.innerHTML = '<div class="gal-error"><i class="fas fa-exclamation-triangle"></i><br>โหลดไม่ได้</div>';
+        }
+      });
+    }
+
+    async function getAttachmentImage(attachmentId) {
+      if (imageCache.has(attachmentId)) return imageCache.get(attachmentId);
+      var res = await gasPost({ action: 'getAttachmentData', attachmentId: attachmentId, token: adminToken });
+      if (!res.success) throw new Error(res.message);
+      imageCache.set(attachmentId, res);
+      return res;
+    }
+
+    async function openGalleryImage(attachmentId, fileName) {
+      try {
+        var img = document.getElementById('gthumb_' + attachmentId);
+        if (img) { var existing = img.querySelector('img'); if (existing) { openLightbox(existing.src, fileName); return; } }
+        var data = await getAttachmentImage(attachmentId);
+        openLightbox('data:' + data.mimeType + ';base64,' + data.base64, fileName);
+      } catch(e) {
+        showToast('ไม่สามารถโหลดรูปได้: ' + e.message, 'danger');
+      }
+    }
+
+    // ==================== EXCEL EXPORT ====================
+    function getExportData(scope) {
+      if (scope === 'all')      return globalData;
+      if (scope === 'selected') return globalData.filter(function(item) { return selectedRows.has(String(item.data[0])); });
+      return filteredData;
+    }
+
+    function exportExcel(scope) {
+      var data = getExportData(scope);
+      if (!data.length) { showToast('ไม่มีข้อมูลที่จะส่งออก', 'warning'); return; }
+      if (typeof XLSX === 'undefined') { showToast('โหลด SheetJS ไม่สำเร็จ', 'danger'); return; }
+
+      var headers = [
+        'RecordID','วันที่','เวลา','คำนำหน้า','ชื่อ-สกุล','อายุ','เลขบัตร ปชช','ที่อยู่ปัจจุบัน','เบอร์โทร',
+        'การแต่งกาย','ระบุ(แต่งกาย)','กระเป๋า/อุปกรณ์','ระบุ(กระเป๋า)','พูดคุยรู้เรื่อง','ระบุ(พูดคุย)',
+        'เคยมารับเสด็จ','ระบุ(รับเสด็จ)','เรื่องโดยสังเขป','เคยยื่นร้องเรียน','ระบุ(หน่วย/ผล)',
+        'ทราบจากที่ใด','เดินทางจากจังหวัด','สถานที่พักกทม','ยานพาหนะ','ชื่อผู้ติดต่อ','ความเกี่ยวข้อง',
+        'เบอร์ผู้ติดต่อ','ความตั้งใจวันนี้','ทราบขบวนเสด็จจาก','เคยมายื่นฎีกาที่นี่','ระบุ(เคยมา)',
+        'ยื่นที่อื่นก่อนมาสน.','เคยมายื่นที่อื่น','หลักฐานความคืบหน้า','หมายเหตุ',
+        'ประเภทเรื่อง','สาเหตุเรื่อง','ที่อยู่ภูมิลำเนา','จังหวัดเกิดเหตุ','อำเภอเกิดเหตุ','ตำบลเกิดเหตุ',
+        'หมายฯ','รายละเอียดหมายฯ','สถานที่พบ','รายละเอียดสถานที่','วันที่พบ','เวลาที่พบ',
+        'ยศเจ้าหน้าที่','ชื่อเจ้าหน้าที่','เบอร์เจ้าหน้าที่','วันที่นำส่ง','เวลานำส่ง',
+        'การเก็บสิ่งของ','รายละเอียด(การเก็บ)','ลักษณะการนำพา','ภาชนะ','การใส่ซอง','ขนาดซอง',
+        'ขนาดอื่นๆ','สีซอง','สีอื่นๆ'
+      ];
+      var PHONE_COLS_0IDX = new Set([6, 8, 26, 49]); // col7,9,27,50 → 0-indexed
+
+      var wsData = [headers];
+      data.forEach(function(item) {
+        var row = item.data;
+        var xlRow = row.map(function(cell, i) {
+          var v = (cell === null || cell === undefined) ? '' : cell.toString().replace(/^'/, '');
+          if (PHONE_COLS_0IDX.has(i)) return { v: v, t: 's' };
+          return v;
+        });
+        wsData.push(xlRow);
+      });
+
+      var ws = XLSX.utils.aoa_to_sheet(wsData);
+
+      // Force phone columns as string type
+      var range = XLSX.utils.decode_range(ws['!ref']);
+      for (var r = 1; r <= range.e.r; r++) {
+        PHONE_COLS_0IDX.forEach(function(ci) {
+          var addr = XLSX.utils.encode_cell({ r: r, c: ci });
+          if (ws[addr]) ws[addr].t = 's';
+        });
+      }
+
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'ข้อมูล');
+      var now = new Date();
+      var fname = 'RW01_' + now.getFullYear() + ('0'+(now.getMonth()+1)).slice(-2) + ('0'+now.getDate()).slice(-2) + '_' + scope + '.xlsx';
+      XLSX.writeFile(wb, fname);
+      showToast('ส่งออก Excel ' + data.length + ' รายการแล้ว', 'success');
+    }
+
+    // ==================== PDF EXPORT ====================
+    function exportPDFSummary(scope) {
+      var data = getExportData(scope);
+      if (!data.length) { showToast('ไม่มีข้อมูลที่จะส่งออก', 'warning'); return; }
+
+      var now     = new Date();
+      var nowStr  = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      var scopeLabel = scope === 'all' ? 'ข้อมูลทั้งหมด' : 'ข้อมูลที่กรอง';
+
+      var rows = data.map(function(item, idx) {
+        var d = item.data;
+        return '<tr>' +
+          '<td>' + (idx + 1) + '</td>' +
+          '<td>' + escHtml(d[1] || '') + ' ' + escHtml(d[2] || '') + '</td>' +
+          '<td>' + escHtml((d[3] || '') + ' ' + (d[4] || '')) + '</td>' +
+          '<td>' + escHtml(d[17] || '') + '</td>' +
+          '<td>' + escHtml(d[41] || '') + '</td>' +
+          '<td>' + escHtml(d[43] || '') + '</td>' +
+          '<td>' + escHtml((d[47] || '') + ' ' + (d[48] || '')) + '</td>' +
+          '</tr>';
+      }).join('');
+
+      var html = '<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">' +
+        '<title>สรุปข้อมูล สน.พระราชวัง</title>' +
+        '<style>@page{size:A4 landscape;margin:15mm}body{font-family:Sarabun,sans-serif;font-size:10pt;color:#222}' +
+        'h1{font-size:14pt;text-align:center;margin-bottom:4px}p.sub{text-align:center;color:#555;font-size:9pt;margin-bottom:12px}' +
+        'table{width:100%;border-collapse:collapse}th,td{border:1px solid #999;padding:4px 6px;font-size:9pt}' +
+        'th{background:#e9ecef;font-weight:700}tr:nth-child(even){background:#f9f9f9}' +
+        '@media print{button{display:none}}' +
+        '</style></head><body>' +
+        '<h1>ระบบฐานข้อมูลผู้มาติดต่อ สน.พระราชวัง</h1>' +
+        '<p class="sub">สรุปผล: ' + scopeLabel + ' | จำนวน ' + data.length + ' ราย | วันที่พิมพ์: ' + nowStr + '</p>' +
+        '<table><thead><tr><th>#</th><th>วันที่/เวลา</th><th>ชื่อ-สกุล</th><th>เรื่องโดยสังเขป</th><th>หมายฯ</th><th>สถานที่พบ</th><th>เจ้าหน้าที่</th></tr></thead>' +
+        '<tbody>' + rows + '</tbody></table>' +
+        '<script>window.onload=function(){window.print();}<\/script>' +
+        '</body></html>';
+
+      var win = window.open('', '_blank');
+      if (!win) { showToast('กรุณาอนุญาต Pop-up ก่อน', 'warning'); return; }
+      win.document.write(html);
+      win.document.close();
+    }
+
+    async function exportPDFIndividual() {
+      if (!currentViewItem) return;
+      var d = currentViewItem.data;
+      var recId = String(d[0]);
+      showToast('กำลังเตรียม PDF...', 'info');
+
+      // Load all images for this record
+      var imgSections = {};
+      try {
+        var listRes = await gasPost({ action: 'listAttachments', recordId: recId, token: adminToken });
+        if (listRes.success && listRes.attachments.length) {
+          for (var att of listRes.attachments) {
+            try {
+              var imgData = await getAttachmentImage(att.attachmentId);
+              if (!imgSections[att.section]) imgSections[att.section] = [];
+              imgSections[att.section].push({ src: 'data:' + imgData.mimeType + ';base64,' + imgData.base64, name: att.fileName });
+            } catch(e) {}
+          }
+        }
+      } catch(e) {}
+
+      function imgBlock(sec, label) {
+        var imgs = imgSections[sec];
+        if (!imgs || !imgs.length) return '';
+        return '<div style="margin-top:10px"><strong>' + label + '</strong><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">' +
+          imgs.map(function(im) { return '<img src="' + im.src + '" style="width:120px;height:120px;object-fit:cover;border:1px solid #ccc;border-radius:4px">'; }).join('') +
+          '</div></div>';
+      }
+
+      var phone1 = fixMissingZero(d[8], 'phone');
+      var phone2 = fixMissingZero(d[26], 'phone');
+      var idCard  = fixMissingZero(d[6], 'idcard');
+
+      var html = '<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>ข้อมูลผู้มาติดต่อ</title>' +
+        '<style>@page{size:A4;margin:15mm}body{font-family:Sarabun,sans-serif;font-size:10pt;color:#222}' +
+        'h1{font-size:13pt;border-bottom:2px solid #333;padding-bottom:4px;margin-bottom:10px}' +
+        'h2{font-size:10pt;color:#0d6efd;border-bottom:1px solid #0d6efd;padding-bottom:2px;margin:12px 0 6px}' +
+        '.row{display:flex;flex-wrap:wrap;gap:4px 16px}.field{min-width:180px;flex:1}' +
+        '.label{color:#777;font-size:8.5pt}.val{font-weight:600}' +
+        '@media print{button{display:none}}' +
+        '</style></head><body>' +
+        '<h1>ระบบฐานข้อมูลผู้มาติดต่อ สน.พระราชวัง — บันทึกรายบุคคล</h1>' +
+        '<h2>Section 1: ข้อมูลการพบและการนำส่ง</h2><div class="row">' +
+        '<div class="field"><div class="label">หมายฯ</div><div class="val">' + escHtml(d[41]||'-') + (d[42] ? ' (' + escHtml(d[42]) + ')' : '') + '</div></div>' +
+        '<div class="field"><div class="label">สถานที่พบ</div><div class="val">' + escHtml(d[43]||'-') + (d[44] ? ' (' + escHtml(d[44]) + ')' : '') + '</div></div>' +
+        '<div class="field"><div class="label">วันที่/เวลาพบ</div><div class="val">' + escHtml(d[45]||'-') + ' ' + escHtml(d[46]||'') + '</div></div>' +
+        '<div class="field"><div class="label">เจ้าหน้าที่ที่พบ</div><div class="val">' + escHtml((d[47]||'') + ' ' + (d[48]||'')) + '</div></div>' +
+        '<div class="field"><div class="label">เบอร์เจ้าหน้าที่</div><div class="val">' + fixMissingZero(d[49],'phone') + '</div></div>' +
+        '<div class="field"><div class="label">วันที่/เวลานำส่ง</div><div class="val">' + escHtml(d[50]||'-') + ' ' + escHtml(d[51]||'') + '</div></div>' +
+        '</div>' +
+        imgBlock('officer_found','รูปเจ้าหน้าที่ที่พบ') +
+        imgBlock('items_evidence','รูปสิ่งของ/เอกสาร') +
+        '<h2>Section 2: ข้อมูลส่วนตัว</h2><div class="row">' +
+        '<div class="field"><div class="label">วันที่/เวลา</div><div class="val">' + escHtml(d[1]||'-') + ' ' + escHtml(d[2]||'') + '</div></div>' +
+        '<div class="field"><div class="label">ชื่อ-สกุล</div><div class="val">' + escHtml((d[3]||'') + ' ' + (d[4]||'')) + '</div></div>' +
+        '<div class="field"><div class="label">อายุ</div><div class="val">' + escHtml(d[5]||'-') + '</div></div>' +
+        '<div class="field"><div class="label">เลขบัตร</div><div class="val">' + idCard + '</div></div>' +
+        '<div class="field"><div class="label">เบอร์โทร</div><div class="val">' + phone1 + '</div></div>' +
+        '<div class="field" style="min-width:300px"><div class="label">ที่อยู่ปัจจุบัน</div><div class="val">' + escHtml(d[7]||'-') + '</div></div>' +
+        '</div>' +
+        imgBlock('person_portrait','รูปบุคคล') +
+        '<h2>Section 4: รายละเอียดเรื่องร้องเรียน</h2><div class="row">' +
+        '<div class="field" style="min-width:100%"><div class="label">เรื่องโดยสังเขป</div><div class="val">' + escHtml(d[17]||'-') + '</div></div>' +
+        '<div class="field"><div class="label">ประเภทเรื่อง</div><div class="val">' + escHtml(d[35]||'-') + '</div></div>' +
+        '<div class="field"><div class="label">สาเหตุ</div><div class="val">' + escHtml(d[36]||'-') + '</div></div>' +
+        '</div>' +
+        '<script>window.onload=function(){window.print();}<\/script>' +
+        '</body></html>';
+
+      var win = window.open('', '_blank');
+      if (!win) { showToast('กรุณาอนุญาต Pop-up ก่อน', 'warning'); return; }
+      win.document.write(html);
+      win.document.close();
     }
 
     // ==================== UTILITIES ====================
