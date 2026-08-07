@@ -397,8 +397,11 @@
               <div class="filter-group-label">รูปถ่าย</div>
               <select class="form-select form-select-sm" id="advPhotoFilter" onchange="applyFilters()">
                 <option value="all">ทั้งหมด</option>
-                <option value="has">มีรูป</option>
-                <option value="none">ไม่มีรูป</option>
+                <option value="has">มีรูปอย่างน้อย 1 ประเภท</option>
+                <option value="portrait">มีรูปบุคคล</option>
+                <option value="officer">มีรูปเจ้าหน้าที่</option>
+                <option value="items">มีรูปสิ่งของ/เอกสาร</option>
+                <option value="none">ไม่มีรูปเลย</option>
               </select>
             </div>
             <div class="col-md-3">
@@ -1294,8 +1297,13 @@
       }
       if (advPhoto !== 'all') {
         filteredData = filteredData.filter(function(item) {
-          var cnt = (attachmentCounts[String(item.data[0])] || {}).total || 0;
-          return advPhoto === 'has' ? cnt > 0 : cnt === 0;
+          var ac = attachmentCounts[String(item.data[0])] || {};
+          if (advPhoto === 'has')      return (ac.total || 0) > 0;
+          if (advPhoto === 'none')     return (ac.total || 0) === 0;
+          if (advPhoto === 'portrait') return (ac.person_portrait  || 0) > 0;
+          if (advPhoto === 'officer')  return (ac.officer_found    || 0) > 0;
+          if (advPhoto === 'items')    return (ac.items_evidence   || 0) > 0;
+          return true;
         });
       }
       if (advNewData !== 'all') {
@@ -2276,46 +2284,59 @@
 
     // ==================== ENCOUNTER INFO CARDS ====================
     function updateEncounterCards(dataArray) {
-      // Notice
-      var noticeYes = 0, noticeNo = 0;
-      // Location
-      var locCounts = {};
-      // Photos
-      var hasPhoto = 0, noPhoto = 0;
+      var noticeYes = 0, noticeNo = 0, noticeBlank = 0;
+      var locCounts = {}, locBlank = 0;
+      var photoPortrait = 0, photoOfficer = 0, photoItems = 0, photoNone = 0;
 
       dataArray.forEach(function(item) {
         var d = item.data;
         var recId = String(d[0]);
-        // Notice (data[41] = col42)
-        if ((d[41] || '') === 'มีหมายฯ') noticeYes++; else noticeNo++;
+
+        // Notice (data[41] = col42): three-way split
+        var notice = (d[41] || '').toString().trim();
+        if      (notice === 'มีหมายฯ')    noticeYes++;
+        else if (notice === 'ไม่มีหมายฯ') noticeNo++;
+        else                               noticeBlank++;
+
         // Location (data[43] = col44)
-        var loc = (d[43] || '').toString().trim() || 'ไม่ระบุ';
-        locCounts[loc] = (locCounts[loc] || 0) + 1;
-        // Photos
-        var cnt = attachmentCounts[recId] ? (attachmentCounts[recId].total || 0) : 0;
-        if (cnt > 0) hasPhoto++; else noPhoto++;
+        var loc = (d[43] || '').toString().trim();
+        if (loc) { locCounts[loc] = (locCounts[loc] || 0) + 1; }
+        else     { locBlank++; }
+
+        // Photos: per-section breakdown
+        var ac = attachmentCounts[recId] || {};
+        var prt = (ac.person_portrait  || 0) > 0;
+        var ofc = (ac.officer_found    || 0) > 0;
+        var itm = (ac.items_evidence   || 0) > 0;
+        if (prt) photoPortrait++;
+        if (ofc) photoOfficer++;
+        if (itm) photoItems++;
+        if (!prt && !ofc && !itm) photoNone++;
       });
 
-      // Render notice card
+      // Notice card
       var nc = document.getElementById('encNoticeContent');
       if (nc) nc.innerHTML =
         '<div class="ec-row"><span class="ec-label">มีหมายฯ</span><span class="ec-val text-danger">' + noticeYes + ' ราย</span></div>' +
-        '<div class="ec-row"><span class="ec-label">ไม่มีหมายฯ</span><span class="ec-val text-secondary">' + noticeNo + ' ราย</span></div>';
+        '<div class="ec-row"><span class="ec-label">ไม่มีหมายฯ</span><span class="ec-val text-secondary">' + noticeNo + ' ราย</span></div>' +
+        (noticeBlank ? '<div class="ec-row"><span class="ec-label text-muted">ยังไม่มีข้อมูล</span><span class="ec-val text-muted">' + noticeBlank + ' ราย</span></div>' : '');
 
-      // Render location card (top 4)
+      // Location card (known values first, ยังไม่มีข้อมูล last)
       var lc = document.getElementById('encLocationContent');
       if (lc) {
         var locEntries = Object.entries(locCounts).sort(function(a,b){ return b[1]-a[1]; }).slice(0,4);
-        lc.innerHTML = locEntries.length
-          ? locEntries.map(function(e){ return '<div class="ec-row"><span class="ec-label">' + escHtml(e[0]) + '</span><span class="ec-val">' + e[1] + '</span></div>'; }).join('')
-          : '<div class="ec-row"><span class="ec-label text-muted">ไม่มีข้อมูล</span></div>';
+        var rows = locEntries.map(function(e){ return '<div class="ec-row"><span class="ec-label">' + escHtml(e[0]) + '</span><span class="ec-val">' + e[1] + '</span></div>'; }).join('');
+        if (locBlank) rows += '<div class="ec-row"><span class="ec-label text-muted">ยังไม่มีข้อมูล</span><span class="ec-val text-muted">' + locBlank + '</span></div>';
+        lc.innerHTML = rows || '<div class="ec-row"><span class="ec-label text-muted">ไม่มีข้อมูล</span></div>';
       }
 
-      // Render photo card
+      // Photo card: per-section breakdown
       var pc = document.getElementById('encPhotoContent');
       if (pc) pc.innerHTML =
-        '<div class="ec-row"><span class="ec-label">มีรูปถ่าย</span><span class="ec-val text-success">' + hasPhoto + ' ราย</span></div>' +
-        '<div class="ec-row"><span class="ec-label">ยังไม่มีรูป</span><span class="ec-val text-secondary">' + noPhoto + ' ราย</span></div>';
+        '<div class="ec-row"><span class="ec-label">รูปบุคคล</span><span class="ec-val text-success">' + photoPortrait + ' ราย</span></div>' +
+        '<div class="ec-row"><span class="ec-label">รูปเจ้าหน้าที่</span><span class="ec-val text-primary">' + photoOfficer + ' ราย</span></div>' +
+        '<div class="ec-row"><span class="ec-label">รูปสิ่งของ/เอกสาร</span><span class="ec-val text-warning">' + photoItems + ' ราย</span></div>' +
+        '<div class="ec-row"><span class="ec-label text-muted">ไม่มีรูปเลย</span><span class="ec-val text-muted">' + photoNone + ' ราย</span></div>';
     }
 
     // ==================== ADVANCED FILTER ====================
