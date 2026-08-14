@@ -120,86 +120,6 @@
     .dash-widget .wg-item.wg-clickable:hover { background: #f0f4ff; }
     .dash-widget .wg-item.wg-clickable.active .wg-text { color: #0d6efd; font-weight: 700; }
     .dash-widget .wg-item.wg-clickable.active .wg-badge { background: #0d6efd; color: #fff; }
-
-    /* ===== UPLOAD PREVIEW ===== */
-    .upload-zone { border: 2px dashed #ced4da; border-radius: 8px; padding: 14px 16px; background: #f8f9fa; transition: border-color 0.2s; }
-    .upload-zone.has-files { border-color: #0d6efd; background: #f0f4ff; }
-    .upload-thumb-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; min-height: 0; }
-    .upload-thumb { position: relative; width: 80px; height: 80px; border-radius: 6px; overflow: hidden; border: 2px solid #dee2e6; flex-shrink: 0; }
-    .upload-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .upload-thumb .remove-btn { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; background: rgba(220,53,69,0.88); border: none; border-radius: 50%; color: #fff; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; padding: 0; }
-    .upload-counter { font-size: 0.8rem; color: #6c757d; margin-top: 4px; }
-    .upload-counter.at-limit { color: #dc3545; font-weight: 700; }
-
-    /* ===== CONDITIONAL FIELDS ===== */
-    .cond-field { display: none; }
-    .cond-field.visible { display: block; }
-
-    /* ===== UPLOAD PROGRESS ===== */
-    #uploadProgressArea { display: none; border: 1px solid #dee2e6; border-radius: 8px; padding: 14px 16px; background: #fff; margin-bottom: 16px; }
-    .upload-progress-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 0.85rem; }
-    .upload-progress-row .prg-icon { width: 22px; text-align: center; flex-shrink: 0; }
-    .upload-progress-row .prg-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #495057; }
-    .upload-progress-row .prg-status { font-size: 0.78rem; color: #6c757d; flex-shrink: 0; }
-
-    /* ===== ENCOUNTER INFO CARDS ===== */
-    .enc-card { background: white; border-radius: 14px; padding: 14px 16px; height: 100%; box-shadow: 0 2px 12px rgba(0,0,0,0.07); border-left: 4px solid #6f42c1; }
-    .enc-card .ec-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #6c757d; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; margin-bottom: 8px; }
-    .enc-card .ec-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 0.83rem; }
-    .enc-card .ec-label { color: #495057; }
-    .enc-card .ec-val { font-weight: 700; color: #212529; }
-    .enc-card .ec-big { font-size: 2.2rem; font-weight: 800; line-height: 1.1; color: #212529; }
-    .enc-card .ec-sub { font-size: 0.78rem; color: #6c757d; }
-
-    /* ===== ADVANCED FILTER PANEL ===== */
-    .adv-filter-panel { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 12px; padding: 14px 18px; margin-bottom: 14px; }
-    .adv-filter-panel .filter-group-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6c757d; margin-bottom: 6px; }
-
-    /* ===== SELECTION BAR ===== */
-    .selection-bar { background: #e7f3ff; border: 1px solid #b8d4f5; border-radius: 8px; padding: 8px 14px; margin-bottom: 10px; display: none; align-items: center; gap: 10px; font-size: 0.88rem; }
-    .selection-bar.show { display: flex; }
-
-    /* ===== TABLE BADGES ===== */
-    .badge-notice { font-size: 0.7rem; padding: 2px 6px; border-radius: 8px; font-weight: 700; white-space: nowrap; }
-    .badge-notice-yes { background: #dc3545; color: #fff; }
-    .badge-notice-no  { background: #e9ecef; color: #6c757d; }
-    .photo-badge { background: #0d6efd; color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
-    .photo-badge.zero { background: #e9ecef; color: #adb5bd; }
-
-    /* ===== GALLERY ===== */
-    .gallery-section-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6c757d; margin: 10px 0 6px; }
-    .gallery-grid { display: flex; flex-wrap: wrap; gap: 8px; min-height: 10px; }
-    .gallery-thumb { width: 88px; height: 88px; border-radius: 8px; overflow: hidden; border: 2px solid #dee2e6; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #f8f9fa; }
-    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.2s; }
-    .gallery-thumb:hover img { transform: scale(1.07); }
-    .gallery-thumb .gal-loading { color: #adb5bd; font-size: 0.75rem; text-align: center; }
-    .gallery-thumb .gal-error  { color: #dc3545; font-size: 0.7rem; text-align: center; padding: 4px; }
-
-    /* ===== LIGHTBOX ===== */
-    .lightbox-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-    .lightbox-overlay.show { display: flex; }
-    .lightbox-img { max-width: 94vw; max-height: 88vh; object-fit: contain; border-radius: 4px; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
-    .lightbox-close { position: absolute; top: 16px; right: 22px; color: #fff; font-size: 2.2rem; cursor: pointer; line-height: 1; opacity: 0.8; transition: opacity 0.15s; }
-    .lightbox-close:hover { opacity: 1; }
-    .lightbox-caption { color: #ccc; font-size: 0.82rem; margin-top: 10px; text-align: center; max-width: 80vw; }
-
-    /* ===== VISIT BADGES ===== */
-    .visit-badge { font-size: 0.7rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; white-space: nowrap; }
-    .visit-first  { background: #20c997; color: #fff; }
-    .visit-return { background: #fd7e14; color: #fff; }
-
-    /* ===== COMPLETENESS BADGES ===== */
-    .comp-badge { font-size: 0.68rem; padding: 2px 6px; border-radius: 10px; font-weight: 700; white-space: nowrap; cursor: default; }
-    .comp-complete   { background: #198754; color: #fff; }
-    .comp-incomplete { background: #ffc107; color: #212529; }
-
-    /* ===== FORM COMPLETENESS PANEL ===== */
-    #compPanelBlock { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px 14px; }
-    #compPanelBlock .cp-label { font-size: 0.8rem; font-weight: 700; color: #495057; }
-    #compPanelBlock .cp-missing { font-size: 0.78rem; color: #6c757d; }
-
-    /* ===== TABLE NAME COLUMN CONSTRAINT ===== */
-    .col-name-cell { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -210,23 +130,10 @@
       <span class="navbar-brand mb-0 h1" onclick="showView('welcomeView')" style="cursor:pointer; transition: 0.2s;">
         <i class="fas fa-shield-alt text-warning"></i> ระบบฐานข้อมูล สน.พระราชวัง
       </span>
-      <div class="d-flex gap-2 align-items-center">
+      <div class="d-flex gap-2">
         <button class="btn btn-outline-light btn-sm d-none" id="btnHome" onclick="showView('welcomeView')">
           <i class="fas fa-home"></i> หน้าแรก
         </button>
-        <div class="dropdown d-none" id="exportDropdownWrapper">
-          <button class="btn btn-outline-warning btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="fas fa-download"></i> ส่งออก
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportExcel('filtered')"><i class="fas fa-file-excel text-success me-2"></i> Excel (ข้อมูลที่กรอง)</a></li>
-            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportExcel('all')"><i class="fas fa-file-excel text-success me-2"></i> Excel (ทั้งหมด)</a></li>
-            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportExcel('selected')"><i class="fas fa-file-excel text-success me-2"></i> Excel (ที่เลือก)</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportPDFSummary('filtered')"><i class="fas fa-file-pdf text-danger me-2"></i> PDF สรุป (ข้อมูลที่กรอง)</a></li>
-            <li><a class="dropdown-item" href="#" onclick="event.preventDefault();exportPDFSummary('all')"><i class="fas fa-file-pdf text-danger me-2"></i> PDF สรุป (ทั้งหมด)</a></li>
-          </ul>
-        </div>
         <button class="btn btn-outline-danger btn-sm d-none" id="btnLogout" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
         </button>
@@ -310,52 +217,24 @@
         </div>
       </div>
 
-      <!-- Row 1.5: 3 encounter info cards -->
-      <div class="row g-3 mb-3" id="encounterCardsRow">
-        <div class="col-md-4 d-flex">
-          <div class="enc-card w-100" style="border-left-color:#6f42c1">
-            <div class="ec-title"><i class="fas fa-gavel me-1"></i> หมายฯ (ข้อมูลการพบ)</div>
-            <div id="encNoticeContent"><div class="ec-row"><span class="ec-label">กำลังโหลด...</span></div></div>
-          </div>
-        </div>
-        <div class="col-md-4 d-flex">
-          <div class="enc-card w-100" style="border-left-color:#fd7e14">
-            <div class="ec-title"><i class="fas fa-map-pin me-1"></i> สถานที่ที่พบ</div>
-            <div id="encLocationContent"><div class="ec-row"><span class="ec-label">กำลังโหลด...</span></div></div>
-          </div>
-        </div>
-        <div class="col-md-4 d-flex">
-          <div class="enc-card w-100" style="border-left-color:#198754">
-            <div class="ec-title"><i class="fas fa-camera me-1"></i> รูปถ่าย</div>
-            <div id="encPhotoContent"><div class="ec-row"><span class="ec-label">กำลังโหลด...</span></div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 2: 4 info widgets (3 existing + completeness) -->
+      <!-- Row 2: 3 info widgets -->
       <div class="row g-3 mb-4">
-        <div class="col-lg-3 d-flex">
+        <div class="col-lg-4 d-flex">
           <div class="dash-widget w-100">
             <div class="wg-header"><i class="fas fa-map-marker-alt text-danger"></i> ที่อยู่ปัจจุบัน</div>
             <div id="widgetAddress"><div class="wg-empty"><i class="fas fa-spinner fa-spin"></i></div></div>
           </div>
         </div>
-        <div class="col-lg-3 d-flex">
+        <div class="col-lg-4 d-flex">
           <div class="dash-widget w-100">
             <div class="wg-header"><i class="fas fa-file-alt text-primary"></i> ประเภทเรื่องที่ยื่น</div>
             <div id="widgetTopic"><div class="wg-empty"><i class="fas fa-spinner fa-spin"></i></div></div>
           </div>
         </div>
-        <div class="col-lg-3 d-flex">
+        <div class="col-lg-4 d-flex">
           <div class="dash-widget w-100">
             <div class="wg-header"><i class="fas fa-route text-success"></i> สาเหตุเรื่องที่ยื่น</div>
             <div id="widgetProvince"><div class="wg-empty"><i class="fas fa-spinner fa-spin"></i></div></div>
-          </div>
-        </div>
-        <div class="col-lg-3 d-flex">
-          <div class="dash-widget w-100">
-            <div class="wg-header"><i class="fas fa-tasks text-warning"></i> ความครบถ้วนของข้อมูล</div>
-            <div id="completenessWidgetContent"><div class="wg-empty"><i class="fas fa-spinner fa-spin"></i></div></div>
           </div>
         </div>
       </div>
@@ -363,20 +242,20 @@
       <!-- Table card -->
       <div class="card card-form p-4 shadow-sm">
         <div class="row mb-3 align-items-center">
-          <div class="col-lg-3 mb-2 mb-lg-0">
+          <div class="col-lg-4 mb-3 mb-lg-0">
             <h5 class="mb-0 text-dark"><i class="fas fa-list"></i> รายละเอียดข้อมูล</h5>
-            <small class="text-muted">คลิก <span class="text-primary fw-bold">แถว</span> เพื่อดูข้อมูล</small>
+            <small class="text-muted">คลิกที่ <span class="text-primary fw-bold">แถวรายชื่อ</span> เพื่อดูข้อมูลทั้งหมด</small>
           </div>
-          <div class="col-lg-4 mb-2 mb-lg-0">
+          <div class="col-lg-4 mb-3 mb-lg-0">
             <div class="input-group shadow-sm">
               <span class="input-group-text bg-white border-end-0 text-primary"><i class="fas fa-search"></i></span>
-              <input type="text" id="searchInput" class="form-control border-start-0 search-input" placeholder="ค้นหา: ชื่อ, เลขบัตร, เบอร์, เรื่อง, หมายฯ, เจ้าหน้าที่..." oninput="applyFilters()">
+              <input type="text" id="searchInput" class="form-control border-start-0 search-input" placeholder="ค้นหาทุกฟิลด์: ชื่อ, เลขบัตร, เบอร์, จังหวัด, เรื่อง..." oninput="applyFilters()">
             </div>
           </div>
-          <div class="col-lg-5 d-flex justify-content-lg-end gap-2 flex-wrap align-items-center">
-            <div class="d-flex align-items-center gap-1">
-              <label class="col-form-label fw-bold small">เดือน:</label>
-              <select class="form-select form-select-sm border-secondary" style="width:90px" id="monthFilter" onchange="applyFilters()">
+          <div class="col-lg-4 text-lg-end d-flex justify-content-lg-end gap-2 flex-wrap">
+            <div class="d-flex align-items-center gap-2">
+              <label class="col-form-label fw-bold">เดือน:</label>
+              <select class="form-select border-secondary w-auto" id="monthFilter" onchange="applyFilters()">
                 <option value="all">ทั้งหมด</option>
                 <option value="ม.ค.">ม.ค.</option><option value="ก.พ.">ก.พ.</option><option value="มี.ค.">มี.ค.</option>
                 <option value="เม.ย.">เม.ย.</option><option value="พ.ค.">พ.ค.</option><option value="มิ.ย.">มิ.ย.</option>
@@ -384,120 +263,31 @@
                 <option value="ต.ค.">ต.ค.</option><option value="พ.ย.">พ.ย.</option><option value="ธ.ค.">ธ.ค.</option>
               </select>
             </div>
-            <div class="d-flex align-items-center gap-1">
-              <label class="col-form-label fw-bold small">ปี:</label>
-              <select class="form-select form-select-sm border-secondary" style="width:90px" id="yearFilter" onchange="applyFilters()">
+            <div class="d-flex align-items-center gap-2">
+              <label class="col-form-label fw-bold">ปี:</label>
+              <select class="form-select border-secondary w-auto" id="yearFilter" onchange="applyFilters()">
                 <option value="all">ทุกปี</option>
               </select>
             </div>
-            <button class="btn btn-outline-secondary btn-sm" onclick="toggleAdvFilter()" id="btnAdvFilter">
-              <i class="fas fa-filter"></i> กรองขั้นสูง
-            </button>
           </div>
-        </div>
-
-        <!-- Advanced Filter Panel -->
-        <div class="adv-filter-panel d-none" id="advFilterPanel">
-          <div class="row g-3">
-            <div class="col-md-3">
-              <div class="filter-group-label">หมายฯ</div>
-              <select class="form-select form-select-sm" id="advNoticeFilter" onchange="applyFilters()">
-                <option value="all">ทั้งหมด</option>
-                <option value="มีหมายฯ">มีหมายฯ</option>
-                <option value="ไม่มีหมายฯ">ไม่มีหมายฯ</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <div class="filter-group-label">สถานที่พบ</div>
-              <select class="form-select form-select-sm" id="advLocationFilter" onchange="applyFilters()">
-                <option value="all">ทั้งหมด</option>
-                <option value="จุดคัดกรอง">จุดคัดกรอง</option>
-                <option value="อุโมงค์">อุโมงค์</option>
-                <option value="สน.พระราชวัง">สน.พระราชวัง</option>
-                <option value="อื่น ๆ">อื่น ๆ</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <div class="filter-group-label">รูปถ่าย</div>
-              <select class="form-select form-select-sm" id="advPhotoFilter" onchange="applyFilters()">
-                <option value="all">ทั้งหมด</option>
-                <option value="has">มีรูปอย่างน้อย 1 ประเภท</option>
-                <option value="portrait">มีรูปบุคคล</option>
-                <option value="officer">มีรูปเจ้าหน้าที่</option>
-                <option value="items">มีรูปสิ่งของ/เอกสาร</option>
-                <option value="none">ไม่มีรูปเลย</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <div class="filter-group-label">ข้อมูลเพิ่มเติม (Section 1)</div>
-              <select class="form-select form-select-sm" id="advNewDataFilter" onchange="applyFilters()">
-                <option value="all">ทั้งหมด</option>
-                <option value="has">มีข้อมูล Section 1</option>
-                <option value="none">ยังไม่มีข้อมูล Section 1</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <div class="filter-group-label">ความครบถ้วน</div>
-              <select class="form-select form-select-sm" id="advCompletenessFilter" onchange="applyFilters()">
-                <option value="all">ทั้งหมด</option>
-                <option value="complete">ข้อมูลครบ</option>
-                <option value="incomplete">ยังไม่ครบ</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <div class="filter-group-label">ครั้งที่มา</div>
-              <select class="form-select form-select-sm" id="advVisitFilter" onchange="applyFilters()">
-                <option value="all">ทั้งหมด</option>
-                <option value="first">ครั้งแรก</option>
-                <option value="return">มาซ้ำ</option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <div class="filter-group-label">วันที่พบ (ตั้งแต่)</div>
-              <input type="date" class="form-control form-control-sm" id="advDateFrom" onchange="applyFilters()">
-            </div>
-            <div class="col-md-4">
-              <div class="filter-group-label">วันที่พบ (ถึง)</div>
-              <input type="date" class="form-control form-control-sm" id="advDateTo" onchange="applyFilters()">
-            </div>
-            <div class="col-md-4 d-flex align-items-end">
-              <button class="btn btn-outline-secondary btn-sm w-100" onclick="clearAdvFilters()">
-                <i class="fas fa-times"></i> ล้างตัวกรองขั้นสูง
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Selection Bar -->
-        <div class="selection-bar" id="selectionBar">
-          <span id="selectionCount" class="fw-bold text-primary">0 รายการที่เลือก</span>
-          <button class="btn btn-sm btn-outline-secondary ms-2" onclick="clearSelection()"><i class="fas fa-times"></i> ยกเลิกการเลือก</button>
-          <button class="btn btn-sm btn-success ms-auto" onclick="exportExcel('selected')"><i class="fas fa-file-excel me-1"></i> Export ที่เลือก</button>
         </div>
 
         <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
-          <table class="table table-hover table-bordered mb-0" id="mainTable">
+          <table class="table table-hover table-bordered mb-0">
             <thead class="sticky-top">
               <tr>
-                <th class="text-center" style="width:36px"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" title="เลือกทั้งหมด"></th>
-                <th onclick="sortTable(0,'num')" class="text-center" style="width:52px"># <i class="fas fa-sort" id="icon-0"></i></th>
-                <th onclick="sortTable(1,'str')" style="width:100px">วันที่/เวลา <i class="fas fa-sort" id="icon-1"></i></th>
-                <th onclick="sortTable(4,'str')" style="max-width:160px">ชื่อ-สกุล <i class="fas fa-sort" id="icon-4"></i></th>
-                <th onclick="sortTable(29,'str')" class="text-center" style="width:80px">ครั้งที่มา <i class="fas fa-sort" id="icon-29"></i></th>
-                <th onclick="sortTable(41,'str')" style="width:80px">หมายฯ <i class="fas fa-sort" id="icon-41"></i></th>
-                <th onclick="sortTable(43,'str')">สถานที่พบ <i class="fas fa-sort" id="icon-43"></i></th>
-                <th onclick="sortTable(48,'str')">เจ้าหน้าที่ <i class="fas fa-sort" id="icon-48"></i></th>
-                <th class="text-center" style="width:90px">ความครบถ้วน</th>
-                <th class="text-center" style="width:42px">รูป</th>
-                <th class="text-center" style="width:58px">ดูข้อมูล</th>
+                <th onclick="sortTable(0, 'num')" class="text-center">ลำดับ <i class="fas fa-sort" id="icon-0"></i></th>
+                <th onclick="sortTable(1, 'str')">วันที่ <i class="fas fa-sort" id="icon-1"></i></th>
+                <th onclick="sortTable(2, 'str')">เวลา <i class="fas fa-sort" id="icon-2"></i></th>
+                <th onclick="sortTable(4, 'str')">ชื่อ-สกุล <i class="fas fa-sort" id="icon-4"></i></th>
+                <th onclick="sortTable(17, 'str')">เรื่องโดยสังเขป <i class="fas fa-sort" id="icon-17"></i></th>
               </tr>
             </thead>
             <tbody id="tableBody">
-              <tr><td colspan="11" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr>
+              <tr><td colspan="5" class="text-center py-4">กำลังโหลดข้อมูล...</td></tr>
             </tbody>
           </table>
         </div>
-        <div id="tableFooter" class="mt-2 text-muted small"></div>
       </div>
     </div>
 
@@ -515,228 +305,9 @@
 
       <form id="dataForm" onsubmit="handleFormSubmit(event)" class="mx-auto" style="max-width: 900px;">
 
-        <!-- Section 1: ข้อมูลการพบและการนำส่ง -->
-        <div class="card card-form mb-4 border-top border-4 shadow-sm" style="border-top-color:#6f42c1!important">
-          <div class="card-header" style="color:#6f42c1"><i class="fas fa-search-location"></i> 1. ข้อมูลการพบและการนำส่ง</div>
-          <div class="card-body p-4 bg-white">
-
-            <!-- 1.1 หมายฯ -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">1.1 หมายฯ</label>
-              <div class="d-flex gap-4">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="col42" id="notice_no" value="ไม่มีหมายฯ" checked onchange="onNoticeChange()">
-                  <label class="form-check-label" for="notice_no">ไม่มีหมายฯ</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="col42" id="notice_yes" value="มีหมายฯ" onchange="onNoticeChange()">
-                  <label class="form-check-label" for="notice_yes">มีหมายฯ</label>
-                </div>
-              </div>
-              <div class="cond-field mt-2" id="noticeDetailRow">
-                <input type="text" class="form-control" name="col43" placeholder="หมายฯ (โปรดระบุ)">
-              </div>
-            </div>
-
-            <!-- 1.2 สถานที่ที่พบ -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">1.2 สถานที่ที่พบ</label>
-              <div class="row g-2">
-                <div class="col-auto">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="col44" id="loc_screening" value="จุดคัดกรอง" onchange="onLocationChange()">
-                    <label class="form-check-label" for="loc_screening">จุดคัดกรอง</label>
-                  </div>
-                </div>
-                <div class="col-auto">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="col44" id="loc_tunnel" value="อุโมงค์" onchange="onLocationChange()">
-                    <label class="form-check-label" for="loc_tunnel">อุโมงค์</label>
-                  </div>
-                </div>
-                <div class="col-auto">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="col44" id="loc_station" value="สน.พระราชวัง" onchange="onLocationChange()">
-                    <label class="form-check-label" for="loc_station">สน.พระราชวัง</label>
-                  </div>
-                </div>
-                <div class="col-auto">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="col44" id="loc_other" value="อื่น ๆ" onchange="onLocationChange()">
-                    <label class="form-check-label" for="loc_other">อื่น ๆ</label>
-                  </div>
-                </div>
-              </div>
-              <div class="cond-field mt-2" id="locationDetailRow">
-                <input type="text" class="form-control" name="col45" placeholder="โปรดระบุสถานที่ที่พบ">
-              </div>
-            </div>
-
-            <!-- 1.3 วัน/เวลา/เจ้าหน้าที่ที่พบ -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">1.3 วันเวลาและเจ้าหน้าที่ที่พบ</label>
-              <div class="row g-2 mb-2">
-                <div class="col-md-6 col-6">
-                  <label class="form-label">วันที่พบ</label>
-                  <input type="date" class="form-control" name="col46">
-                </div>
-                <div class="col-md-6 col-6">
-                  <label class="form-label">เวลาที่พบ</label>
-                  <input type="time" class="form-control" name="col47">
-                </div>
-              </div>
-              <div class="row g-2 mb-3">
-                <div class="col-md-4 col-12">
-                  <label class="form-label">ยศ</label>
-                  <input type="text" class="form-control" name="col48" placeholder="ยศ">
-                </div>
-                <div class="col-md-5 col-12">
-                  <label class="form-label">ชื่อ-สกุลเจ้าหน้าที่ที่พบ</label>
-                  <input type="text" class="form-control" name="col49" placeholder="ชื่อ-สกุล">
-                </div>
-                <div class="col-md-3 col-12">
-                  <label class="form-label">เบอร์โทร</label>
-                  <input type="text" class="form-control" name="col50" placeholder="เบอร์โทร">
-                </div>
-              </div>
-
-              <!-- Officer photo upload -->
-              <div class="upload-zone" id="zone_officer_found">
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                  <label class="form-label mb-0 fw-semibold">รูปเจ้าหน้าที่ที่พบ <small class="text-muted fw-normal">(สูงสุด 2 รูป)</small></label>
-                  <button type="button" class="btn btn-outline-primary btn-sm" onclick="triggerFileInput('officer_found')">
-                    <i class="fas fa-camera"></i> เลือกรูป
-                  </button>
-                  <span class="upload-counter" id="counter_officer_found">0 / 2 รูป</span>
-                </div>
-                <div class="upload-thumb-grid" id="thumbGrid_officer_found"></div>
-                <input type="file" id="fileInput_officer_found" accept="image/*" multiple style="display:none" onchange="handleFileSelect(event,'officer_found',2)">
-              </div>
-            </div>
-
-            <!-- วันที่/เวลานำส่ง -->
-            <div class="row g-2">
-              <div class="col-md-6 col-6">
-                <label class="form-label fw-bold">วันที่นำส่ง</label>
-                <input type="date" class="form-control" name="col51">
-              </div>
-              <div class="col-md-6 col-6">
-                <label class="form-label fw-bold">เวลาที่นำส่ง</label>
-                <input type="time" class="form-control" name="col52">
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Section 1 (cont.): จุดที่อยู่สิ่งของและสิ่งของที่นำมายื่นฯ -->
-        <div class="card card-form mb-4 border-top border-4 shadow-sm" style="border-top-color:#fd7e14!important">
-          <div class="card-header" style="color:#fd7e14"><i class="fas fa-box-open"></i> 1. จุดที่อยู่สิ่งของและสิ่งของที่นำมายื่นฯ</div>
-          <div class="card-body p-4 bg-white">
-
-            <!-- การเก็บ/ตำแหน่งของสิ่งของ -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">การเก็บ/ตำแหน่งของสิ่งของ</label>
-              <div class="d-flex gap-4">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="col53" id="vis_visible" value="เห็นเด่นชัด" checked onchange="onVisibilityChange()">
-                  <label class="form-check-label" for="vis_visible">เห็นเด่นชัด</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="col53" id="vis_hidden" value="ซุกซ่อนไว้" onchange="onVisibilityChange()">
-                  <label class="form-check-label" for="vis_hidden">ซุกซ่อนไว้</label>
-                </div>
-              </div>
-              <div class="cond-field mt-2" id="itemHiddenRow">
-                <input type="text" class="form-control" name="col54" placeholder="โปรดระบุ">
-              </div>
-            </div>
-
-            <!-- ลักษณะการนำพา -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">ลักษณะการนำพา</label>
-              <input type="hidden" name="col55" id="carryMethodsInput">
-              <div class="row g-2">
-                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input carry-cb" type="checkbox" value="สะพายข้าง" id="carry_side" onchange="syncCarryMethods()"><label class="form-check-label" for="carry_side">สะพายข้าง</label></div></div>
-                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input carry-cb" type="checkbox" value="สะพายเป้" id="carry_back" onchange="syncCarryMethods()"><label class="form-check-label" for="carry_back">สะพายเป้</label></div></div>
-                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input carry-cb" type="checkbox" value="หิ้ว/ถือ" id="carry_hand" onchange="syncCarryMethods()"><label class="form-check-label" for="carry_hand">หิ้ว/ถือ</label></div></div>
-              </div>
-            </div>
-
-            <!-- ภาชนะ -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">ภาชนะ</label>
-              <input type="hidden" name="col56" id="containerTypesInput">
-              <div class="row g-2">
-                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input container-cb" type="checkbox" value="ถุงผ้า" id="cont_cloth" onchange="syncContainerTypes()"><label class="form-check-label" for="cont_cloth">ถุงผ้า</label></div></div>
-                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input container-cb" type="checkbox" value="ถุงกระดาษ" id="cont_paper" onchange="syncContainerTypes()"><label class="form-check-label" for="cont_paper">ถุงกระดาษ</label></div></div>
-                <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input container-cb" type="checkbox" value="ถุงพลาสติก" id="cont_plastic" onchange="syncContainerTypes()"><label class="form-check-label" for="cont_plastic">ถุงพลาสติก</label></div></div>
-              </div>
-            </div>
-
-            <!-- การใส่ซอง -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">การใส่ซอง</label>
-              <div class="d-flex gap-4">
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="col57" id="env_no" value="ไม่ใส่ซอง" checked onchange="onEnvelopeChange()">
-                  <label class="form-check-label" for="env_no">ไม่ใส่ซอง</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="col57" id="env_yes" value="ใส่ซอง" onchange="onEnvelopeChange()">
-                  <label class="form-check-label" for="env_yes">ใส่ซอง</label>
-                </div>
-              </div>
-              <div class="cond-field mt-3" id="envelopeDetails">
-                <div class="row g-3">
-                  <div class="col-md-6">
-                    <label class="form-label">ขนาด</label>
-                    <div class="d-flex gap-3 flex-wrap">
-                      <div class="form-check"><input class="form-check-input" type="radio" name="col58" id="sz_a4" value="A4" onchange="onEnvSizeChange()"><label class="form-check-label" for="sz_a4">A4</label></div>
-                      <div class="form-check"><input class="form-check-input" type="radio" name="col58" id="sz_a3" value="A3" onchange="onEnvSizeChange()"><label class="form-check-label" for="sz_a3">A3</label></div>
-                      <div class="form-check"><input class="form-check-input" type="radio" name="col58" id="sz_other" value="อื่น ๆ" onchange="onEnvSizeChange()"><label class="form-check-label" for="sz_other">อื่น ๆ</label></div>
-                    </div>
-                    <div class="cond-field mt-2" id="envSizeOtherRow">
-                      <input type="text" class="form-control form-control-sm" name="col59" placeholder="ระบุขนาด">
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label">สี</label>
-                    <div class="d-flex gap-3 flex-wrap">
-                      <div class="form-check"><input class="form-check-input" type="radio" name="col60" id="clr_brown" value="น้ำตาล" onchange="onEnvColorChange()"><label class="form-check-label" for="clr_brown">น้ำตาล</label></div>
-                      <div class="form-check"><input class="form-check-input" type="radio" name="col60" id="clr_white" value="ขาว" onchange="onEnvColorChange()"><label class="form-check-label" for="clr_white">ขาว</label></div>
-                      <div class="form-check"><input class="form-check-input" type="radio" name="col60" id="clr_other" value="สีอื่น ๆ" onchange="onEnvColorChange()"><label class="form-check-label" for="clr_other">สีอื่น ๆ</label></div>
-                    </div>
-                    <div class="cond-field mt-2" id="envColorOtherRow">
-                      <input type="text" class="form-control form-control-sm" name="col61" placeholder="ระบุสี">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- รูปสิ่งของ / เอกสาร (items_evidence, max 10) -->
-            <div class="mt-1">
-              <label class="form-label fw-bold">3.1 รูปสิ่งของ / เอกสาร / ลักษณะการนำพา</label>
-              <div class="upload-zone" id="zone_items_evidence">
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                  <small class="text-muted">สูงสุด 10 รูป — ครอบคลุม การเก็บ/ตำแหน่ง, การนำพา, ภาชนะ, ซอง</small>
-                  <button type="button" class="btn btn-outline-warning btn-sm" onclick="triggerFileInput('items_evidence')">
-                    <i class="fas fa-images"></i> เลือกรูป
-                  </button>
-                  <span class="upload-counter" id="counter_items_evidence">0 / 10 รูป</span>
-                </div>
-                <div class="upload-thumb-grid" id="thumbGrid_items_evidence"></div>
-                <input type="file" id="fileInput_items_evidence" accept="image/*" multiple style="display:none" onchange="handleFileSelect(event,'items_evidence',10)">
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Section 2: Personal Info -->
+        <!-- Section 1: Personal Info -->
         <div class="card card-form mb-4 border-top border-primary border-4 shadow-sm">
-          <div class="card-header text-primary"><i class="fas fa-user"></i> 2. ข้อมูลส่วนตัวเบื้องต้น</div>
+          <div class="card-header text-primary"><i class="fas fa-user"></i> 1. ข้อมูลส่วนตัวเบื้องต้น</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-md-6 mb-3"><label class="form-label">วันเดือนปี</label><input type="date" class="form-control" name="col2" required></div>
@@ -750,34 +321,53 @@
                   <option value="อื่นๆ">อื่นๆ</option>
                 </select>
               </div>
-              <div class="col-md-5 mb-3"><label class="form-label">ชื่อ - สกุล</label><input type="text" class="form-control" name="col5" required oninput="scheduleDupCheck();scheduleCompPanel()"></div>
+              <div class="col-md-5 mb-3"><label class="form-label">ชื่อ - สกุล</label><input type="text" class="form-control" name="col5" required></div>
               <div class="col-md-4 mb-3"><label class="form-label">อายุ</label><input type="number" class="form-control" name="col6"></div>
-              <div class="col-md-6 mb-3"><label class="form-label">เลขบัตร ปชช.</label><input type="text" class="form-control" name="col7" maxlength="13" oninput="scheduleDupCheck();scheduleCompPanel()"></div>
-              <div class="col-md-6 mb-3"><label class="form-label">เบอร์โทร</label><input type="text" class="form-control" name="col9" oninput="scheduleDupCheck();scheduleCompPanel()"></div>
-              <div class="col-12 mb-3"><label class="form-label">ที่อยู่ปัจจุบัน</label><textarea class="form-control" name="col8" rows="2"></textarea></div>
-              <div class="col-12"><label class="form-label">ที่อยู่ภูมิลำเนา</label><textarea class="form-control" name="col38" rows="2"></textarea></div>
-
-              <!-- Portrait photo upload -->
-              <div class="col-12 mt-2">
-                <div class="upload-zone" id="zone_person_portrait">
-                  <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <label class="form-label mb-0 fw-semibold">รูปหน้าตรงบุคคลผู้มาติดต่อ <small class="text-muted fw-normal">(สูงสุด 1 รูป)</small></label>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="triggerFileInput('person_portrait')">
-                      <i class="fas fa-portrait"></i> เลือกรูป
-                    </button>
-                    <span class="upload-counter" id="counter_person_portrait">0 / 1 รูป</span>
+              <div class="col-md-6 mb-3"><label class="form-label">เลขบัตร ปชช.</label><input type="text" class="form-control" name="col7" maxlength="13"></div>
+              <div class="col-md-6 mb-3"><label class="form-label">เบอร์โทร</label><input type="text" class="form-control" name="col9"></div>
+              <!-- ที่อยู่ปัจจุบัน (structured — col64-71) -->
+              <div class="col-12 mb-3">
+                <label class="form-label fw-bold text-primary"><i class="fas fa-map-marker-alt"></i> ที่อยู่ปัจจุบัน</label>
+                <div class="row g-2 mt-1">
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">บ้านเลขที่</label><input type="text" class="form-control form-control-sm" name="col64" placeholder="เช่น 123/4"></div>
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">หมู่ที่</label><input type="text" class="form-control form-control-sm" name="col65" placeholder="เช่น 5"></div>
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">ซอย</label><input type="text" class="form-control form-control-sm" name="col66"></div>
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">ถนน</label><input type="text" class="form-control form-control-sm" name="col67"></div>
+                  <div class="col-6 col-md-4"><label class="form-label form-label-sm">ตำบล/แขวง</label><input type="text" class="form-control form-control-sm" name="col68"></div>
+                  <div class="col-6 col-md-4"><label class="form-label form-label-sm">อำเภอ/เขต</label><input type="text" class="form-control form-control-sm" name="col69"></div>
+                  <div class="col-12 col-md-4"><label class="form-label form-label-sm">จังหวัด</label>
+                    <select class="form-select form-select-sm" name="col70" id="currentAddressProvince">
+                      <option value="">-- เลือกจังหวัด --</option>
+                    </select>
                   </div>
-                  <div class="upload-thumb-grid" id="thumbGrid_person_portrait"></div>
-                  <input type="file" id="fileInput_person_portrait" accept="image/*" style="display:none" onchange="handleFileSelect(event,'person_portrait',1)">
+                  <div class="col-12"><label class="form-label form-label-sm">สถานีตำรวจที่พื้นที่รับผิดชอบ</label><input type="text" class="form-control form-control-sm" name="col71"></div>
+                </div>
+              </div>
+              <!-- ที่อยู่ภูมิลำเนา (structured — col72-79) -->
+              <div class="col-12">
+                <label class="form-label fw-bold text-primary"><i class="fas fa-home"></i> ที่อยู่ภูมิลำเนา</label>
+                <div class="row g-2 mt-1">
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">บ้านเลขที่</label><input type="text" class="form-control form-control-sm" name="col72" placeholder="เช่น 123/4"></div>
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">หมู่ที่</label><input type="text" class="form-control form-control-sm" name="col73" placeholder="เช่น 5"></div>
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">ซอย</label><input type="text" class="form-control form-control-sm" name="col74"></div>
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">ถนน</label><input type="text" class="form-control form-control-sm" name="col75"></div>
+                  <div class="col-6 col-md-4"><label class="form-label form-label-sm">ตำบล/แขวง</label><input type="text" class="form-control form-control-sm" name="col76"></div>
+                  <div class="col-6 col-md-4"><label class="form-label form-label-sm">อำเภอ/เขต</label><input type="text" class="form-control form-control-sm" name="col77"></div>
+                  <div class="col-12 col-md-4"><label class="form-label form-label-sm">จังหวัด</label>
+                    <select class="form-select form-select-sm" name="col78" id="domicileProvince">
+                      <option value="">-- เลือกจังหวัด --</option>
+                    </select>
+                  </div>
+                  <div class="col-12"><label class="form-label form-label-sm">สถานีตำรวจที่พื้นที่รับผิดชอบ</label><input type="text" class="form-control form-control-sm" name="col79"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Section 3: Observation -->
+        <!-- Section 2: Observation -->
         <div class="card card-form mb-4 border-top border-success border-4 shadow-sm">
-          <div class="card-header text-success"><i class="fas fa-eye"></i> 3. การตรวจสอบและสังเกตเบื้องต้น</div>
+          <div class="card-header text-success"><i class="fas fa-eye"></i> 2. การตรวจสอบและสังเกตเบื้องต้น</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-md-4 mb-3">
@@ -804,15 +394,20 @@
           </div>
         </div>
 
-        <!-- Section 4: Complaint -->
+        <!-- Section 3: Complaint -->
         <div class="card card-form mb-4 border-top border-danger border-4 shadow-sm">
-          <div class="card-header text-danger"><i class="fas fa-file-alt"></i> 4. รายละเอียดเรื่องร้องเรียนและการเดินทาง</div>
+          <div class="card-header text-danger"><i class="fas fa-file-alt"></i> 3. รายละเอียดเรื่องร้องเรียนและการเดินทาง</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-12 mb-3"><label class="form-label">1. เป็นเรื่องอะไร โดยสังเขป</label><textarea class="form-control" name="col18" rows="2"></textarea></div>
+              <!-- สถานที่เกิดเรื่อง (col80-84 + reuse col39/40/41) -->
               <div class="col-12 mb-3">
-                <label class="form-label fw-bold text-danger">สถานที่เกิดเรื่อง</label>
+                <label class="form-label fw-bold text-danger"><i class="fas fa-map-pin"></i> สถานที่เกิดเรื่อง</label>
                 <div class="row g-2 mt-1">
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">บ้านเลขที่</label><input type="text" class="form-control form-control-sm" name="col80"></div>
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">หมู่ที่</label><input type="text" class="form-control form-control-sm" name="col81"></div>
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">ซอย</label><input type="text" class="form-control form-control-sm" name="col82"></div>
+                  <div class="col-6 col-md-3"><label class="form-label form-label-sm">ถนน</label><input type="text" class="form-control form-control-sm" name="col83"></div>
                   <div class="col-md-4">
                     <label class="form-label">จังหวัด</label>
                     <select class="form-select" name="col39" id="incidentProvince" onchange="onIncidentProvinceChange(this)">
@@ -831,6 +426,7 @@
                       <option value="">-- เลือกตำบล/แขวง --</option>
                     </select>
                   </div>
+                  <div class="col-12"><label class="form-label form-label-sm">สถานีตำรวจที่พื้นที่รับผิดชอบ</label><input type="text" class="form-control form-control-sm" name="col84"></div>
                 </div>
               </div>
               <div class="col-md-6 mb-3">
@@ -874,15 +470,44 @@
               <div class="col-md-8 mb-3"><label class="form-label">ระบุ (หน่วยใด/ผลอย่างไร)</label><input type="text" class="form-control" name="col20"></div>
               <div class="col-md-6 mb-3"><label class="form-label">5. ทราบเรื่องการถวายฎีกาจากที่ใด</label><input type="text" class="form-control" name="col21"></div>
               <div class="col-md-6 mb-3"><label class="form-label">6. เดินทางมาจากจังหวัดใด</label><input type="text" class="form-control" name="col22"></div>
-              <div class="col-md-6 mb-3"><label class="form-label">7. สถานที่พักในกรุงเทพฯ</label><input type="text" class="form-control" name="col23"></div>
+              <!-- สถานที่พักใน กทม (col85-93 conditional) -->
+              <div class="col-12 mb-3">
+                <label class="form-label fw-bold">7. สถานที่พักในกรุงเทพฯ</label>
+                <div class="d-flex gap-4 mb-2">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="col85" id="bangkokStayNo" value="ไม่มีสถานที่พัก" checked onchange="onBangkokStayToggle()">
+                    <label class="form-check-label" for="bangkokStayNo">ไม่มีสถานที่พัก</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="col85" id="bangkokStayYes" value="มีสถานที่พัก" onchange="onBangkokStayToggle()">
+                    <label class="form-check-label" for="bangkokStayYes">มีสถานที่พัก</label>
+                  </div>
+                </div>
+                <div id="bangkokStayFields" class="d-none border rounded p-3 bg-light">
+                  <div class="row g-2">
+                    <div class="col-6 col-md-3"><label class="form-label form-label-sm">บ้านเลขที่</label><input type="text" class="form-control form-control-sm" name="col86"></div>
+                    <div class="col-6 col-md-3"><label class="form-label form-label-sm">หมู่ที่</label><input type="text" class="form-control form-control-sm" name="col87"></div>
+                    <div class="col-6 col-md-3"><label class="form-label form-label-sm">ซอย</label><input type="text" class="form-control form-control-sm" name="col88"></div>
+                    <div class="col-6 col-md-3"><label class="form-label form-label-sm">ถนน</label><input type="text" class="form-control form-control-sm" name="col89"></div>
+                    <div class="col-6 col-md-4"><label class="form-label form-label-sm">ตำบล/แขวง</label><input type="text" class="form-control form-control-sm" name="col90"></div>
+                    <div class="col-6 col-md-4"><label class="form-label form-label-sm">อำเภอ/เขต</label><input type="text" class="form-control form-control-sm" name="col91"></div>
+                    <div class="col-12 col-md-4"><label class="form-label form-label-sm">จังหวัด</label>
+                      <select class="form-select form-select-sm" name="col92" id="bangkokStayProvince">
+                        <option value="">-- เลือกจังหวัด --</option>
+                      </select>
+                    </div>
+                    <div class="col-12"><label class="form-label form-label-sm">สถานีตำรวจที่พื้นที่รับผิดชอบ</label><input type="text" class="form-control form-control-sm" name="col93"></div>
+                  </div>
+                </div>
+              </div>
               <div class="col-md-6 mb-3"><label class="form-label">8. ใช้ยานพาหนะอะไร</label><input type="text" class="form-control" name="col24"></div>
             </div>
           </div>
         </div>
 
-        <!-- Section 5: Contact -->
+        <!-- Section 4: Contact -->
         <div class="card card-form mb-4 border-top border-warning border-4 shadow-sm">
-          <div class="card-header text-warning text-dark"><i class="fas fa-address-book"></i> 5. บุคคลที่สามารถติดต่อได้</div>
+          <div class="card-header text-warning text-dark"><i class="fas fa-address-book"></i> 4. บุคคลที่สามารถติดต่อได้</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-md-4 mb-3"><label class="form-label">7. ชื่อ - สกุล</label><input type="text" class="form-control" name="col25"></div>
@@ -892,9 +517,9 @@
           </div>
         </div>
 
-        <!-- Section 6: Deep Info -->
+        <!-- Section 5: Deep Info -->
         <div class="card card-form mb-4 border-top border-info border-4 shadow-sm">
-          <div class="card-header text-info text-dark"><i class="fas fa-search"></i> 6. ข้อมูลเชิงลึก</div>
+          <div class="card-header text-info text-dark"><i class="fas fa-search"></i> 5. ข้อมูลเชิงลึก</div>
           <div class="card-body p-4 bg-white">
             <div class="row">
               <div class="col-12 mb-3"><label class="form-label">8. ความตั้งใจในวันนี้</label><textarea class="form-control" name="col28" rows="2"></textarea></div>
@@ -910,33 +535,6 @@
               <div class="col-12 mb-3"><label class="form-label">อื่นๆ (หมายเหตุ)</label><textarea class="form-control" name="col35" rows="2"></textarea></div>
             </div>
           </div>
-        </div>
-
-        <!-- Duplicate Warning Block -->
-        <div id="dupWarningBlock" class="mx-auto" style="max-width:900px"></div>
-
-        <!-- Form Completeness Panel -->
-        <div id="compPanelBlock" class="mx-auto mb-3 d-flex align-items-center gap-3 flex-wrap" style="max-width:900px">
-          <span class="cp-label">ความครบถ้วน:</span>
-          <span id="cpPercent" class="fw-bold">—</span>
-          <span id="cpMissing" class="cp-missing"></span>
-        </div>
-
-        <!-- Pre-submit incomplete warning -->
-        <div id="formIncompleteWarn" class="alert alert-warning d-none mx-auto mb-2" style="max-width:900px">
-          <p class="fw-bold mb-1">⚠️ ข้อมูลบางส่วนยังไม่ครบ</p>
-          <p class="small mb-1">ยังขาด: <span id="fwMissingList" class="fw-semibold"></span></p>
-          <p class="text-muted small mb-2">สามารถบันทึกไว้และกลับมาแก้ไขภายหลังได้</p>
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-warning btn-sm" onclick="formSubmitAnyway()"><i class="fas fa-save me-1"></i>บันทึกต่อ</button>
-            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="formSubmitCancel()">กลับไปตรวจสอบ</button>
-          </div>
-        </div>
-
-        <!-- Upload Progress -->
-        <div id="uploadProgressArea" class="mx-auto mb-3" style="max-width:900px">
-          <div class="fw-bold mb-2 text-success"><i class="fas fa-check-circle"></i> บันทึกข้อมูลหลักสำเร็จ — กำลังอัปโหลดรูป...</div>
-          <div id="uploadProgressList"></div>
         </div>
 
         <!-- Form Action Buttons -->
@@ -972,17 +570,14 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body bg-light" id="detailModalBody"></div>
-        <div class="modal-footer flex-wrap gap-2">
+        <div class="modal-footer">
           <button type="button" class="btn btn-warning" onclick="openEditFromModal()">
             <i class="fas fa-edit"></i> แก้ไขข้อมูล
-          </button>
-          <button type="button" class="btn btn-info text-white" onclick="exportPDFIndividual()">
-            <i class="fas fa-print"></i> พิมพ์/PDF
           </button>
           <button type="button" class="btn btn-danger" onclick="openDeleteConfirm()">
             <i class="fas fa-trash-alt"></i> ลบข้อมูล
           </button>
-          <button type="button" class="btn btn-secondary ms-auto" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             <i class="fas fa-times"></i> ปิด
           </button>
         </div>
@@ -1045,45 +640,28 @@
     </div>
   </div>
 
-  <!-- ===== LIGHTBOX ===== -->
-  <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
-    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-    <img class="lightbox-img" id="lightboxImg" src="" alt="">
-    <div class="lightbox-caption" id="lightboxCaption"></div>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script>
     // ==================== STATE ====================
     let loginModal, detailModal, deleteConfirmModal, toastInstance;
-    let adminToken    = null;        // opaque UUID session token from CacheService
-    let globalData    = [];          // [{ sheetRow: N, data: [...61 cols...] }, ...]
-    let filteredData  = [];
-    let attachmentCounts = {};       // { recordId: { officer_found:N, person_portrait:N, items_evidence:N, total:N } }
-    let selectedRows  = new Set();   // Set of col1 (recordId) strings for checkbox selection
-    let imageCache    = new Map();   // attachmentId → { base64, mimeType, fileName }
-    let currentViewItem = null;      // currently open detail record
-    let editSheetRow  = null;        // null = create mode, number = edit mode
-    let editRecordId  = null;        // col1 value of the record being edited
+    let adminSession = null;        // stores admin password after login
+    let globalData   = [];          // [{ sheetRow: N, data: [...35 cols...] }, ...]
+    let filteredData = [];
+    let currentViewItem = null;     // currently open detail record
+    let editSheetRow = null;        // null = create mode, number = edit mode
     let sortCol = -1;
     let sortAsc = true;
     let activeCardFilter = 'all';
     let activeProvinceFilter = null;
     let activeTopicFilter = null;
     let activeReasonFilter = null;
-    let activeCompletenessFilter = 'all'; // 'all','complete','incomplete','portrait','encounter'
-    let activeVisitFilter = 'all';        // 'all','first','return'
-    let allowIncompleteSubmit = false;    // bypasses pre-submit completeness gate
-    let dupCheckTimer = null;             // debounce handle for duplicate check
-    let compPanelTimer = null;            // debounce handle for form completeness panel
     const PROVINCES_STATIC = [{"id":1,"name":"กรุงเทพมหานคร"},{"id":2,"name":"สมุทรปราการ"},{"id":3,"name":"นนทบุรี"},{"id":4,"name":"ปทุมธานี"},{"id":5,"name":"พระนครศรีอยุธยา"},{"id":6,"name":"อ่างทอง"},{"id":7,"name":"ลพบุรี"},{"id":8,"name":"สิงห์บุรี"},{"id":9,"name":"ชัยนาท"},{"id":10,"name":"สระบุรี"},{"id":11,"name":"ชลบุรี"},{"id":12,"name":"ระยอง"},{"id":13,"name":"จันทบุรี"},{"id":14,"name":"ตราด"},{"id":15,"name":"ฉะเชิงเทรา"},{"id":16,"name":"ปราจีนบุรี"},{"id":17,"name":"นครนายก"},{"id":18,"name":"สระแก้ว"},{"id":19,"name":"นครราชสีมา"},{"id":20,"name":"บุรีรัมย์"},{"id":21,"name":"สุรินทร์"},{"id":22,"name":"ศรีสะเกษ"},{"id":23,"name":"อุบลราชธานี"},{"id":24,"name":"ยโสธร"},{"id":25,"name":"ชัยภูมิ"},{"id":26,"name":"อำนาจเจริญ"},{"id":27,"name":"หนองบัวลำภู"},{"id":28,"name":"ขอนแก่น"},{"id":29,"name":"อุดรธานี"},{"id":30,"name":"เลย"},{"id":31,"name":"หนองคาย"},{"id":32,"name":"มหาสารคาม"},{"id":33,"name":"ร้อยเอ็ด"},{"id":34,"name":"กาฬสินธุ์"},{"id":35,"name":"สกลนคร"},{"id":36,"name":"นครพนม"},{"id":37,"name":"มุกดาหาร"},{"id":38,"name":"เชียงใหม่"},{"id":39,"name":"ลำพูน"},{"id":40,"name":"ลำปาง"},{"id":41,"name":"อุตรดิตถ์"},{"id":42,"name":"แพร่"},{"id":43,"name":"น่าน"},{"id":44,"name":"พะเยา"},{"id":45,"name":"เชียงราย"},{"id":46,"name":"แม่ฮ่องสอน"},{"id":47,"name":"นครสวรรค์"},{"id":48,"name":"อุทัยธานี"},{"id":49,"name":"กำแพงเพชร"},{"id":50,"name":"ตาก"},{"id":51,"name":"สุโขทัย"},{"id":52,"name":"พิษณุโลก"},{"id":53,"name":"พิจิตร"},{"id":54,"name":"เพชรบูรณ์"},{"id":55,"name":"ราชบุรี"},{"id":56,"name":"กาญจนบุรี"},{"id":57,"name":"สุพรรณบุรี"},{"id":58,"name":"นครปฐม"},{"id":59,"name":"สมุทรสาคร"},{"id":60,"name":"สมุทรสงคราม"},{"id":61,"name":"เพชรบุรี"},{"id":62,"name":"ประจวบคีรีขันธ์"},{"id":63,"name":"นครศรีธรรมราช"},{"id":64,"name":"กระบี่"},{"id":65,"name":"พังงา"},{"id":66,"name":"ภูเก็ต"},{"id":67,"name":"สุราษฎร์ธานี"},{"id":68,"name":"ระนอง"},{"id":69,"name":"ชุมพร"},{"id":70,"name":"สงขลา"},{"id":71,"name":"สตูล"},{"id":72,"name":"ตรัง"},{"id":73,"name":"พัทลุง"},{"id":74,"name":"ปัตตานี"},{"id":75,"name":"ยะลา"},{"id":76,"name":"นราธิวาส"},{"id":77,"name":"บึงกาฬ"}];
     let provincesData = null;
     let provinceNameToId = {};
     let amphoeNameToId = {};
 
     // ==================== GAS API ====================
-    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycbzYTwWObeXAGlnY_IqJ_LAsdwoxMIT3wQ9fSJ4NNsMroSzVAD-zybsMTo9FD6WBPhPH/exec';
+    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycby5E9tAwCJBubnOnSLEzBkfCaGFpc0yLihZkmSZ7RI2vjciTEkz-xieMCe7bzHBDg/exec';
     function gasGet(params) {
       return fetch(GAS_API_URL + '?' + new URLSearchParams(params).toString())
         .then(function(r) { return r.json(); });
@@ -1095,41 +673,13 @@
 
     // ==================== INIT ====================
     document.addEventListener("DOMContentLoaded", function() {
-      loginModal         = new bootstrap.Modal(document.getElementById('loginModal'));
-      detailModal        = new bootstrap.Modal(document.getElementById('detailModal'));
+      loginModal       = new bootstrap.Modal(document.getElementById('loginModal'));
+      detailModal      = new bootstrap.Modal(document.getElementById('detailModal'));
       deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
 
       document.getElementById('loginModal').addEventListener('shown.bs.modal', function() {
         document.getElementById('adminPasswordInput').focus();
       });
-
-      // Restore session from sessionStorage (survives page refresh, clears on tab close)
-      var savedToken = sessionStorage.getItem('adminToken');
-      if (savedToken) {
-        adminToken = savedToken;
-        const ed = document.getElementById('exportDropdownWrapper');
-        if (ed) ed.classList.remove('d-none');
-        gasPost({ action: 'dashboard', token: adminToken })
-          .then(function(data) {
-            if (!data.success) {
-              sessionStorage.removeItem('adminToken');
-              adminToken = null;
-              if (ed) ed.classList.add('d-none');
-              return;
-            }
-            globalData       = data.allData || [];
-            attachmentCounts = data.attachmentCounts || {};
-            filteredData     = [...globalData];
-            populateYearDropdown();
-            applyFilters();
-            showView('dashboardView');
-          })
-          .catch(function() {
-            sessionStorage.removeItem('adminToken');
-            adminToken = null;
-            if (ed) ed.classList.add('d-none');
-          });
-      }
     });
 
     // ==================== NAVIGATION ====================
@@ -1149,31 +699,21 @@
         resetFormMode();
       } else {
         btnHome.classList.remove('d-none');
-        if (adminToken) btnLogout.classList.remove('d-none');
+        if (adminSession) btnLogout.classList.remove('d-none');
       }
-      if (viewId === 'formView') { loadProvinces(); setTimeout(updateCompPanel, 200); }
+      if (viewId === 'formView') loadProvinces();
     }
 
     function logout() {
-      var tok = adminToken;
-      adminToken   = null;
-      attachmentCounts = {};
-      selectedRows = new Set();
-      imageCache   = new Map();
-      sessionStorage.removeItem('adminToken');
-      try { if (tok) gasPost({ action: 'logout', token: tok }); } catch(e) {}
-      globalData   = [];
+      adminSession = null;
+      globalData = [];
       filteredData = [];
-      sortCol      = -1;
-      sortAsc      = true;
-      activeCardFilter         = 'all';
-      activeProvinceFilter     = null;
-      activeTopicFilter        = null;
-      activeReasonFilter       = null;
-      activeCompletenessFilter = 'all';
-      activeVisitFilter        = 'all';
-      const ed = document.getElementById('exportDropdownWrapper');
-      if (ed) ed.classList.add('d-none');
+      sortCol = -1;
+      sortAsc = true;
+      activeCardFilter = 'all';
+      activeProvinceFilter = null;
+      activeTopicFilter = null;
+      activeReasonFilter = null;
       showView('welcomeView');
       showToast('ออกจากระบบเรียบร้อยแล้ว', 'secondary');
     }
@@ -1200,27 +740,23 @@
       spinnerEl.classList.remove('d-none');
       btnEl.disabled = true;
 
-      gasPost({ action: 'login', password: pwd })
+      gasGet({ action: 'dashboard', password: pwd })
         .then(function(data) {
           spinnerEl.classList.add('d-none');
           btnEl.disabled = false;
-          if (!data.success) {
+          if (data.error) {
             errorEl.classList.remove('d-none');
-            errorEl.textContent = data.message || 'รหัสผ่านไม่ถูกต้อง!';
+            errorEl.textContent = data.error;
             return;
           }
           errorEl.classList.add('d-none');
           loginModal.hide();
           document.getElementById('adminPasswordInput').value = '';
 
-          adminToken       = data.token;
-          sessionStorage.setItem('adminToken', adminToken);
-          globalData       = data.allData || [];
-          attachmentCounts = data.attachmentCounts || {};
-          filteredData     = [...globalData];
+          adminSession = pwd;
+          globalData   = data.allData;
+          filteredData = [...globalData];
 
-          const ed = document.getElementById('exportDropdownWrapper');
-          if (ed) ed.classList.remove('d-none');
           populateYearDropdown();
           applyFilters();
           showView('dashboardView');
@@ -1235,22 +771,11 @@
 
     // ==================== DASHBOARD HELPERS ====================
     function refreshDashboard() {
-      gasPost({ action: 'dashboard', token: adminToken })
+      gasGet({ action: 'dashboard', password: adminSession })
         .then(function(data) {
-          if (!data.success) {
-            if (data.message && data.message.includes('Session')) {
-              sessionStorage.removeItem('adminToken');
-              adminToken = null;
-              showToast('Session หมดอายุ กรุณาล็อกอินใหม่', 'warning');
-              loginModal.show();
-              return;
-            }
-            showToast('ไม่สามารถโหลดข้อมูลได้: ' + data.message, 'danger'); return;
-          }
-          globalData       = data.allData || [];
-          attachmentCounts = data.attachmentCounts || {};
-          filteredData     = [...globalData];
-          imageCache.clear();
+          if (data.error) { showToast('ไม่สามารถโหลดข้อมูลได้: ' + data.error, 'danger'); return; }
+          globalData   = data.allData;
+          filteredData = [...globalData];
           populateYearDropdown();
           applyFilters();
           showView('dashboardView');
@@ -1302,17 +827,9 @@
     }
 
     function applyFilters() {
-      const mFilter         = document.getElementById('monthFilter').value;
-      const yFilter         = document.getElementById('yearFilter').value;
-      const searchText      = document.getElementById('searchInput').value.toLowerCase().trim();
-      const advNotice       = (document.getElementById('advNoticeFilter')      || {}).value || 'all';
-      const advLocation     = (document.getElementById('advLocationFilter')    || {}).value || 'all';
-      const advPhoto        = (document.getElementById('advPhotoFilter')       || {}).value || 'all';
-      const advNewData      = (document.getElementById('advNewDataFilter')     || {}).value || 'all';
-      const advDateFrom     = (document.getElementById('advDateFrom')          || {}).value || '';
-      const advDateTo       = (document.getElementById('advDateTo')            || {}).value || '';
-      const advCompleteness = (document.getElementById('advCompletenessFilter')|| {}).value || 'all';
-      const advVisit        = (document.getElementById('advVisitFilter')       || {}).value || 'all';
+      const mFilter    = document.getElementById('monthFilter').value;
+      const yFilter    = document.getElementById('yearFilter').value;
+      const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
 
       let result = globalData.filter(item => {
         const dateStr    = item.data[1] || '';
@@ -1343,9 +860,11 @@
       });
 
       if (activeProvinceFilter) {
-        filteredData = filteredData.filter(item =>
-          extractProvince((item.data[7] || '').toString().trim()) === activeProvinceFilter
-        );
+        filteredData = filteredData.filter(item => {
+          const structured = (item.data[69] || '').toString().trim();
+          const p = structured || extractProvince((item.data[7] || '').toString().trim());
+          return p === activeProvinceFilter;
+        });
       }
 
       if (activeTopicFilter) {
@@ -1359,78 +878,6 @@
           (item.data[36] || '').toString().trim() === activeReasonFilter
         );
       }
-
-      // Advanced filters
-      if (advNotice !== 'all') {
-        filteredData = filteredData.filter(item => (item.data[41] || '').toString().trim() === advNotice);
-      }
-      if (advLocation !== 'all') {
-        filteredData = filteredData.filter(item => (item.data[43] || '').toString().trim() === advLocation);
-      }
-      if (advPhoto !== 'all') {
-        filteredData = filteredData.filter(function(item) {
-          var ac = attachmentCounts[String(item.data[0])] || {};
-          if (advPhoto === 'has')      return (ac.total || 0) > 0;
-          if (advPhoto === 'none')     return (ac.total || 0) === 0;
-          if (advPhoto === 'portrait') return (ac.person_portrait  || 0) > 0;
-          if (advPhoto === 'officer')  return (ac.officer_found    || 0) > 0;
-          if (advPhoto === 'items')    return (ac.items_evidence   || 0) > 0;
-          return true;
-        });
-      }
-      if (advNewData !== 'all') {
-        filteredData = filteredData.filter(function(item) {
-          var d = item.data;
-          var hasNew = [41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60].some(function(i) {
-            return (d[i] || '').toString().trim() !== '';
-          });
-          return advNewData === 'has' ? hasNew : !hasNew;
-        });
-      }
-      if (advDateFrom) {
-        filteredData = filteredData.filter(function(item) {
-          var fd = (item.data[45] || '').toString();
-          return fd && fd >= advDateFrom;
-        });
-      }
-      if (advDateTo) {
-        filteredData = filteredData.filter(function(item) {
-          var fd = (item.data[45] || '').toString();
-          return fd && fd <= advDateTo;
-        });
-      }
-
-      // Completeness filter (adv dropdown or dashboard widget click)
-      var compFilter = advCompleteness !== 'all' ? advCompleteness : activeCompletenessFilter;
-      if (compFilter !== 'all') {
-        filteredData = filteredData.filter(function(item) {
-          var c = calculateRecordCompleteness(item, attachmentCounts);
-          if (compFilter === 'complete')   return c.status === 'complete';
-          if (compFilter === 'incomplete') return c.status === 'incomplete';
-          if (compFilter === 'portrait') {
-            return c.status === 'incomplete' &&
-              ((attachmentCounts[String(item.data[0])] || {}).person_portrait || 0) === 0;
-          }
-          if (compFilter === 'encounter') {
-            var d = item.data;
-            return !(d[41]||'').trim() || !(d[43]||'').trim() || !(d[48]||'').trim() || !(d[50]||'').trim();
-          }
-          return true;
-        });
-      }
-
-      // Visit type filter (adv dropdown)
-      var visitFilter = advVisit !== 'all' ? advVisit : activeVisitFilter;
-      if (visitFilter !== 'all') {
-        filteredData = filteredData.filter(function(item) {
-          var isReturn = (item.data[29] || '').toString().trim() === 'เคย';
-          return visitFilter === 'return' ? isReturn : !isReturn;
-        });
-      }
-
-      // Update select-all checkbox state
-      var selAll = document.getElementById('selectAll');
-      if (selAll) selAll.checked = filteredData.length > 0 && filteredData.every(function(item) { return selectedRows.has(String(item.data[0])); });
 
       // Re-apply existing sort without toggling direction
       if (sortCol > -1) {
@@ -1462,9 +909,7 @@
       document.getElementById('femaleCount').textContent    = female;
       document.getElementById('firstTimeCount').textContent = firstTime;
       document.getElementById('returnCount').textContent    = returnee;
-      updateEncounterCards(dataArray);
       updateInfoWidgets(dataArray);
-      updateCompletenessWidget(dataArray);
     }
 
     function updateInfoWidgets(dataArray) {
@@ -1628,7 +1073,9 @@
     function computeTopProvinces(dataArray, topN) {
       const freq = {};
       dataArray.forEach(item => {
-        const p = extractProvince((item.data[7] || '').toString().trim());
+        // Prefer structured col70 (current_address_province, index 69); fallback to text-extract from old col8 (index 7)
+        const structured = (item.data[69] || '').toString().trim();
+        const p = structured || extractProvince((item.data[7] || '').toString().trim());
         if (p) freq[p] = (freq[p] || 0) + 1;
       });
       return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, topN);
@@ -1665,7 +1112,6 @@
       if (icon) icon.className = sortAsc ? 'fas fa-sort-up text-primary' : 'fas fa-sort-down text-primary';
 
       filteredData.sort((a, b) => {
-        if (colIndex === 0) return sortAsc ? a.seqNo - b.seqNo : b.seqNo - a.seqNo;
         const valA = (a.data[colIndex] || '').toString();
         const valB = (b.data[colIndex] || '').toString();
         if (type === 'num') return sortAsc ? Number(valA) - Number(valB) : Number(valB) - Number(valA);
@@ -1676,55 +1122,19 @@
     }
 
     function renderTable(dataArray) {
-      const tbody   = document.getElementById('tableBody');
-      const footer  = document.getElementById('tableFooter');
+      const tbody = document.getElementById('tableBody');
       let html = '';
-      dataArray.forEach(function(item, index) {
-        const d    = item.data;
-        const rid  = String(d[0]);
-        const isChecked = selectedRows.has(rid);
-        const noticeVal = (d[41] || '').toString().trim();
-        const noticeBadge = noticeVal === 'มีหมายฯ'
-          ? '<span class="badge-notice badge-notice-yes">มีหมายฯ</span>'
-          : '<span class="badge-notice badge-notice-no">ไม่มี</span>';
-        const location = (d[43] || '-').toString().trim() || '-';
-        const officer  = ((d[47] || '') + ' ' + (d[48] || '')).trim() || '-';
-        const photoCount = (attachmentCounts[rid] || {}).total || 0;
-        const photoBadge = '<span class="photo-badge' + (photoCount === 0 ? ' zero' : '') + '">' + photoCount + '</span>';
-        // ครั้งที่มา badge
-        const isReturn   = (d[29] || '').toString().trim() === 'เคย';
-        const visitBadge = isReturn
-          ? '<span class="visit-badge visit-return">มาซ้ำ</span>'
-          : '<span class="visit-badge visit-first">ครั้งแรก</span>';
-        // ความครบถ้วน badge
-        const comp = calculateRecordCompleteness(item, attachmentCounts);
-        var compBadge;
-        if (comp.status === 'complete') {
-          compBadge = '<span class="comp-badge comp-complete" title="ข้อมูลครบถ้วน">✓ ครบ</span>';
-        } else {
-          var missTip = 'ขาด: ' + comp.missingFields.join(', ');
-          compBadge = '<span class="comp-badge comp-incomplete" title="' + escHtml(missTip) + '">' + comp.percent + '% · ขาด ' + comp.missingCount + '</span>';
-        }
-        // ชื่อ-สกุล with ellipsis
-        var fullName = escHtml((d[3] || '') + ' ' + (d[4] || '-'));
-        var rawName  = ((d[3] || '') + ' ' + (d[4] || '-')).trim();
-        var nameCell = '<td class="col-name-cell fw-bold text-primary" title="' + escHtml(rawName) + '">' + fullName + '</td>';
+      dataArray.forEach((item, index) => {
+        const d = item.data;
         html += '<tr class="clickable-row" onclick="viewDetails(' + index + ')">' +
-          '<td class="text-center" onclick="event.stopPropagation()"><input type="checkbox" class="row-cb" data-rid="' + escHtml(rid) + '" ' + (isChecked ? 'checked' : '') + ' onchange="toggleRowSelect(\'' + escHtml(rid) + '\',event)"></td>' +
-          '<td class="text-center text-muted small">' + item.seqNo + '</td>' +
-          '<td class="small">' + escHtml(d[1] || '-') + '<br><span class="text-muted">' + escHtml(d[2] || '') + '</span></td>' +
-          nameCell +
-          '<td class="text-center">' + visitBadge + '</td>' +
-          '<td>' + noticeBadge + '</td>' +
-          '<td class="small">' + escHtml(location) + '</td>' +
-          '<td class="small">' + escHtml(officer) + '</td>' +
-          '<td class="text-center">' + compBadge + '</td>' +
-          '<td class="text-center">' + photoBadge + '</td>' +
-          '<td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary py-0 px-2" onclick="viewDetails(' + index + ')"><i class="fas fa-eye"></i></button></td>' +
-          '</tr>';
+                  '<td class="text-center">' + (d[0] || '-') + '</td>' +
+                  '<td>' + (d[1] || '-') + '</td>' +
+                  '<td>' + (d[2] || '-') + '</td>' +
+                  '<td class="fw-bold text-primary">' + (d[3] || '') + ' ' + (d[4] || '-') + '</td>' +
+                  '<td class="text-truncate" style="max-width: 250px;">' + (d[17] || '-') + '</td>' +
+                '</tr>';
       });
-      tbody.innerHTML = html || '<tr><td colspan="11" class="text-center py-4 text-danger fw-bold"><i class="fas fa-search"></i> ไม่พบข้อมูลที่ตรงกับการค้นหา</td></tr>';
-      if (footer) footer.textContent = 'แสดง ' + dataArray.length + ' รายการ จากทั้งหมด ' + globalData.length + ' รายการ';
+      tbody.innerHTML = html || '<tr><td colspan="5" class="text-center py-4 text-danger fw-bold"><i class="fas fa-search"></i> ไม่พบข้อมูลที่ตรงกับการค้นหา</td></tr>';
     }
 
     // ==================== DETAIL MODAL ====================
@@ -1735,39 +1145,12 @@
       const idCard = fixMissingZero(row[6], 'idcard');
       const phone1 = fixMissingZero(row[8], 'phone');
       const phone2 = fixMissingZero(row[26], 'phone');
-      const phone3 = fixMissingZero(row[49], 'phone'); // officer phone col50
 
       document.getElementById('detailModalTitle').textContent = 'ข้อมูล: ' + (row[3] || '') + ' ' + (row[4] || '');
 
       document.getElementById('detailModalBody').innerHTML =
-        // Section 1: Encounter info (col42-col61, data[41-60])
-        '<div class="card p-3 mb-3 border-0 shadow-sm" style="border-left:4px solid #6f42c1!important">' +
-          '<div class="detail-section-title" style="color:#6f42c1;border-color:#6f42c1"><i class="fas fa-search-location"></i> Section 1: ข้อมูลการพบและการนำส่ง</div>' +
-          '<div class="row">' +
-            '<div class="col-md-4"><div class="detail-label">1.1 หมายฯ:</div><div class="detail-value">' + escHtml(row[41]||'-') + '</div></div>' +
-            '<div class="col-md-8"><div class="detail-label">รายละเอียดหมายฯ:</div><div class="detail-value">' + escHtml(row[42]||'-') + '</div></div>' +
-            '<div class="col-md-4"><div class="detail-label">1.2 สถานที่พบ:</div><div class="detail-value">' + escHtml(row[43]||'-') + '</div></div>' +
-            '<div class="col-md-8"><div class="detail-label">รายละเอียดสถานที่:</div><div class="detail-value">' + escHtml(row[44]||'-') + '</div></div>' +
-            '<div class="col-md-4"><div class="detail-label">วันที่พบ:</div><div class="detail-value">' + escHtml(row[45]||'-') + '</div></div>' +
-            '<div class="col-md-4"><div class="detail-label">เวลาที่พบ:</div><div class="detail-value">' + escHtml(row[46]||'-') + '</div></div>' +
-            '<div class="col-md-4"><div class="detail-label">ยศเจ้าหน้าที่:</div><div class="detail-value">' + escHtml(row[47]||'-') + '</div></div>' +
-            '<div class="col-md-5"><div class="detail-label">ชื่อเจ้าหน้าที่:</div><div class="detail-value">' + escHtml(row[48]||'-') + '</div></div>' +
-            '<div class="col-md-3"><div class="detail-label">เบอร์เจ้าหน้าที่:</div><div class="detail-value">' + phone3 + '</div></div>' +
-            '<div class="col-md-6"><div class="detail-label">วันที่นำส่ง:</div><div class="detail-value">' + escHtml(row[50]||'-') + '</div></div>' +
-            '<div class="col-md-6"><div class="detail-label">เวลานำส่ง:</div><div class="detail-value">' + escHtml(row[51]||'-') + '</div></div>' +
-          '</div>' +
-          '<div class="mt-2"><div class="detail-label">การเก็บ/ตำแหน่งสิ่งของ:</div><div class="detail-value">' + escHtml(row[52]||'-') + (row[53] ? ' (' + escHtml(row[53]) + ')' : '') + '</div></div>' +
-          '<div class="row mt-1">' +
-            '<div class="col-md-4"><div class="detail-label">ลักษณะการนำพา:</div><div class="detail-value">' + escHtml(row[54]||'-') + '</div></div>' +
-            '<div class="col-md-4"><div class="detail-label">ภาชนะ:</div><div class="detail-value">' + escHtml(row[55]||'-') + '</div></div>' +
-            '<div class="col-md-4"><div class="detail-label">การใส่ซอง:</div><div class="detail-value">' + escHtml(row[56]||'-') + (row[57] ? ' ขนาด: ' + escHtml(row[57]) + (row[58] ? '/' + escHtml(row[58]) : '') : '') + (row[59] ? ' สี: ' + escHtml(row[59]) + (row[60] ? '/' + escHtml(row[60]) : '') : '') + '</div></div>' +
-          '</div>' +
-          // Photo gallery
-          '<div class="mt-3"><div class="detail-label fw-bold"><i class="fas fa-camera me-1"></i> รูปภาพ Section 1</div><div id="galleryContainer" class="mt-1"><div class="text-muted small">กำลังโหลด...</div></div></div>' +
-        '</div>' +
-
         '<div class="card p-3 mb-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title"><i class="fas fa-user"></i> Section 2: ข้อมูลส่วนตัวเบื้องต้น</div>' +
+          '<div class="detail-section-title"><i class="fas fa-user"></i> 1. ข้อมูลส่วนตัวเบื้องต้น</div>' +
           '<div class="row">' +
             '<div class="col-md-6"><div class="detail-label">วันเดือนปี:</div><div class="detail-value">' + (row[1]||'-') + '</div></div>' +
             '<div class="col-md-6"><div class="detail-label">เวลาประมาณ:</div><div class="detail-value">' + (row[2]||'-') + '</div></div>' +
@@ -1775,13 +1158,43 @@
             '<div class="col-md-6"><div class="detail-label">อายุ:</div><div class="detail-value">' + (row[5] ? row[5]+' ปี' : '-') + '</div></div>' +
             '<div class="col-md-6"><div class="detail-label">เลขบัตร ปชช:</div><div class="detail-value">' + idCard + '</div></div>' +
             '<div class="col-md-6"><div class="detail-label">เบอร์โทร:</div><div class="detail-value">' + phone1 + '</div></div>' +
-            '<div class="col-12"><div class="detail-label">ที่อยู่ปัจจุบัน:</div><div class="detail-value">' + (row[7]||'-') + '</div></div>' +
-            '<div class="col-12"><div class="detail-label">ที่อยู่ภูมิลำเนา:</div><div class="detail-value">' + (row[37]||'-') + '</div></div>' +
+            '<div class="col-12">' +
+              '<div class="detail-label">ที่อยู่ปัจจุบัน:</div>' +
+              (row[7] ? '<div class="text-muted fst-italic mb-1" style="font-size:0.85rem;">' + row[7] + '</div>' : '') +
+              ((row[63]||row[64]||row[65]||row[66]||row[67]||row[68]||row[69]||row[70]) ?
+                '<div class="row g-1">' +
+                (row[63] ? '<div class="col-6 col-md-3"><small class="text-muted">บ้านเลขที่</small><div class="detail-value mb-1">' + row[63] + '</div></div>' : '') +
+                (row[64] ? '<div class="col-6 col-md-3"><small class="text-muted">หมู่ที่</small><div class="detail-value mb-1">' + row[64] + '</div></div>' : '') +
+                (row[65] ? '<div class="col-6 col-md-3"><small class="text-muted">ซอย</small><div class="detail-value mb-1">' + row[65] + '</div></div>' : '') +
+                (row[66] ? '<div class="col-6 col-md-3"><small class="text-muted">ถนน</small><div class="detail-value mb-1">' + row[66] + '</div></div>' : '') +
+                (row[67] ? '<div class="col-6 col-md-4"><small class="text-muted">ตำบล/แขวง</small><div class="detail-value mb-1">' + row[67] + '</div></div>' : '') +
+                (row[68] ? '<div class="col-6 col-md-4"><small class="text-muted">อำเภอ/เขต</small><div class="detail-value mb-1">' + row[68] + '</div></div>' : '') +
+                (row[69] ? '<div class="col-6 col-md-4"><small class="text-muted">จังหวัด</small><div class="detail-value mb-1">' + row[69] + '</div></div>' : '') +
+                (row[70] ? '<div class="col-12"><small class="text-muted">สน.พื้นที่</small><div class="detail-value mb-1">' + row[70] + '</div></div>' : '') +
+                '</div>'
+              : (!row[7] ? '<div class="detail-value">-</div>' : '')) +
+            '</div>' +
+            '<div class="col-12">' +
+              '<div class="detail-label">ที่อยู่ภูมิลำเนา:</div>' +
+              (row[37] ? '<div class="text-muted fst-italic mb-1" style="font-size:0.85rem;">' + row[37] + '</div>' : '') +
+              ((row[71]||row[72]||row[73]||row[74]||row[75]||row[76]||row[77]||row[78]) ?
+                '<div class="row g-1">' +
+                (row[71] ? '<div class="col-6 col-md-3"><small class="text-muted">บ้านเลขที่</small><div class="detail-value mb-1">' + row[71] + '</div></div>' : '') +
+                (row[72] ? '<div class="col-6 col-md-3"><small class="text-muted">หมู่ที่</small><div class="detail-value mb-1">' + row[72] + '</div></div>' : '') +
+                (row[73] ? '<div class="col-6 col-md-3"><small class="text-muted">ซอย</small><div class="detail-value mb-1">' + row[73] + '</div></div>' : '') +
+                (row[74] ? '<div class="col-6 col-md-3"><small class="text-muted">ถนน</small><div class="detail-value mb-1">' + row[74] + '</div></div>' : '') +
+                (row[75] ? '<div class="col-6 col-md-4"><small class="text-muted">ตำบล/แขวง</small><div class="detail-value mb-1">' + row[75] + '</div></div>' : '') +
+                (row[76] ? '<div class="col-6 col-md-4"><small class="text-muted">อำเภอ/เขต</small><div class="detail-value mb-1">' + row[76] + '</div></div>' : '') +
+                (row[77] ? '<div class="col-6 col-md-4"><small class="text-muted">จังหวัด</small><div class="detail-value mb-1">' + row[77] + '</div></div>' : '') +
+                (row[78] ? '<div class="col-12"><small class="text-muted">สน.พื้นที่</small><div class="detail-value mb-1">' + row[78] + '</div></div>' : '') +
+                '</div>'
+              : (!row[37] ? '<div class="detail-value">-</div>' : '')) +
+            '</div>' +
           '</div>' +
         '</div>' +
 
         '<div class="card p-3 mb-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title text-success" style="border-color:#198754"><i class="fas fa-eye"></i> Section 3: การตรวจสอบและสังเกตเบื้องต้น</div>' +
+          '<div class="detail-section-title text-success" style="border-color:#198754"><i class="fas fa-eye"></i> 2. การตรวจสอบและสังเกตเบื้องต้น</div>' +
           '<div class="row">' +
             '<div class="col-md-4"><div class="detail-label">1. การแต่งกาย:</div><div class="detail-value">' + (row[9]||'-') + '</div></div>' +
             '<div class="col-md-8"><div class="detail-label">ระบุรายละเอียด:</div><div class="detail-value">' + (row[10]||'-') + '</div></div>' +
@@ -1795,25 +1208,48 @@
         '</div>' +
 
         '<div class="card p-3 mb-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title text-danger" style="border-color:#dc3545"><i class="fas fa-file-alt"></i> Section 4: รายละเอียดเรื่องร้องเรียน</div>' +
+          '<div class="detail-section-title text-danger" style="border-color:#dc3545"><i class="fas fa-file-alt"></i> 3. รายละเอียดเรื่องร้องเรียน</div>' +
           '<div class="row">' +
             '<div class="col-12"><div class="detail-label">1. เป็นเรื่องอะไร โดยสังเขป:</div><div class="detail-value">' + (row[17]||'-') + '</div></div>' +
-            '<div class="col-md-4"><div class="detail-label">สถานที่เกิดเรื่อง จังหวัด:</div><div class="detail-value">' + (row[38]||'-') + '</div></div>' +
-            '<div class="col-md-4"><div class="detail-label">อำเภอ/เขต:</div><div class="detail-value">' + (row[39]||'-') + '</div></div>' +
-            '<div class="col-md-4"><div class="detail-label">ตำบล/แขวง:</div><div class="detail-value">' + (row[40]||'-') + '</div></div>' +
+            '<div class="col-12"><div class="detail-label">สถานที่เกิดเรื่อง:</div>' +
+              '<div class="row g-1 mt-1">' +
+              (row[79] ? '<div class="col-6 col-md-3"><small class="text-muted">บ้านเลขที่</small><div class="detail-value mb-1">' + row[79] + '</div></div>' : '') +
+              (row[80] ? '<div class="col-6 col-md-3"><small class="text-muted">หมู่ที่</small><div class="detail-value mb-1">' + row[80] + '</div></div>' : '') +
+              (row[81] ? '<div class="col-6 col-md-3"><small class="text-muted">ซอย</small><div class="detail-value mb-1">' + row[81] + '</div></div>' : '') +
+              (row[82] ? '<div class="col-6 col-md-3"><small class="text-muted">ถนน</small><div class="detail-value mb-1">' + row[82] + '</div></div>' : '') +
+              '<div class="col-md-4"><small class="text-muted">จังหวัด</small><div class="detail-value mb-1">' + (row[38]||'-') + '</div></div>' +
+              '<div class="col-md-4"><small class="text-muted">อำเภอ/เขต</small><div class="detail-value mb-1">' + (row[39]||'-') + '</div></div>' +
+              '<div class="col-md-4"><small class="text-muted">ตำบล/แขวง</small><div class="detail-value mb-1">' + (row[40]||'-') + '</div></div>' +
+              (row[83] ? '<div class="col-12"><small class="text-muted">สน.พื้นที่</small><div class="detail-value mb-1">' + row[83] + '</div></div>' : '') +
+              '</div></div>' +
             '<div class="col-md-6"><div class="detail-label">2. ประเภทของเรื่องที่ยื่น:</div><div class="detail-value">' + (row[35]||'-') + '</div></div>' +
             '<div class="col-md-6"><div class="detail-label">3. สาเหตุของเรื่องที่ยื่น:</div><div class="detail-value">' + (row[36]||'-') + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">4. เคยยื่นร้องเรียนหน่วยใด:</div><div class="detail-value">' + (row[18]||'-') + '</div></div>' +
             '<div class="col-md-8"><div class="detail-label">ระบุ (หน่วยใด/ผลอย่างไร):</div><div class="detail-value">' + (row[19]||'-') + '</div></div>' +
             '<div class="col-md-6"><div class="detail-label">5. ทราบเรื่องจากที่ใด:</div><div class="detail-value">' + (row[20]||'-') + '</div></div>' +
             '<div class="col-md-6"><div class="detail-label">6. เดินทางมาจากจังหวัดใด:</div><div class="detail-value">' + (row[21]||'-') + '</div></div>' +
-            '<div class="col-md-6"><div class="detail-label">7. สถานที่พักใน กทม:</div><div class="detail-value">' + (row[22]||'-') + '</div></div>' +
+            '<div class="col-md-6"><div class="detail-label">7. สถานที่พักในกรุงเทพฯ:</div>' +
+              (row[22] ? '<div class="text-muted fst-italic mb-1" style="font-size:0.85rem;">' + row[22] + '</div>' : '') +
+              (row[84] ? '<div class="detail-value mb-1">' + row[84] + '</div>' : '') +
+              ((row[85]||row[91]) ?
+                '<div class="row g-1">' +
+                (row[85] ? '<div class="col-6"><small class="text-muted">บ้านเลขที่</small><div class="detail-value mb-1">' + row[85] + '</div></div>' : '') +
+                (row[86] ? '<div class="col-6"><small class="text-muted">หมู่ที่</small><div class="detail-value mb-1">' + row[86] + '</div></div>' : '') +
+                (row[87] ? '<div class="col-6"><small class="text-muted">ซอย</small><div class="detail-value mb-1">' + row[87] + '</div></div>' : '') +
+                (row[88] ? '<div class="col-6"><small class="text-muted">ถนน</small><div class="detail-value mb-1">' + row[88] + '</div></div>' : '') +
+                (row[89] ? '<div class="col-12"><small class="text-muted">ตำบล/แขวง</small><div class="detail-value mb-1">' + row[89] + '</div></div>' : '') +
+                (row[90] ? '<div class="col-6"><small class="text-muted">อำเภอ/เขต</small><div class="detail-value mb-1">' + row[90] + '</div></div>' : '') +
+                (row[91] ? '<div class="col-6"><small class="text-muted">จังหวัด</small><div class="detail-value mb-1">' + row[91] + '</div></div>' : '') +
+                (row[92] ? '<div class="col-12"><small class="text-muted">สน.พื้นที่</small><div class="detail-value mb-1">' + row[92] + '</div></div>' : '') +
+                '</div>'
+              : (!row[22] && !row[84] ? '<div class="detail-value">-</div>' : '')) +
+            '</div>' +
             '<div class="col-md-6"><div class="detail-label">8. ใช้ยานพาหนะอะไร:</div><div class="detail-value">' + (row[23]||'-') + '</div></div>' +
           '</div>' +
         '</div>' +
 
         '<div class="card p-3 mb-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title text-warning" style="border-color:#ffc107"><i class="fas fa-address-book"></i> Section 5: บุคคลที่สามารถติดต่อได้</div>' +
+          '<div class="detail-section-title text-warning" style="border-color:#ffc107"><i class="fas fa-address-book"></i> 4. บุคคลที่สามารถติดต่อได้</div>' +
           '<div class="row">' +
             '<div class="col-md-4"><div class="detail-label">7. ชื่อ - สกุล:</div><div class="detail-value">' + (row[24]||'-') + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">เกี่ยวข้องเป็น:</div><div class="detail-value">' + (row[25]||'-') + '</div></div>' +
@@ -1822,7 +1258,7 @@
         '</div>' +
 
         '<div class="card p-3 border-0 shadow-sm">' +
-          '<div class="detail-section-title text-info" style="border-color:#0dcaf0"><i class="fas fa-search"></i> Section 6: ข้อมูลเชิงลึก</div>' +
+          '<div class="detail-section-title text-info" style="border-color:#0dcaf0"><i class="fas fa-search"></i> 5. ข้อมูลเชิงลึก</div>' +
           '<div class="row">' +
             '<div class="col-12"><div class="detail-label">8. ความตั้งใจในวันนี้:</div><div class="detail-value">' + (row[27]||'-') + '</div></div>' +
             '<div class="col-12"><div class="detail-label">9. ทราบจากที่ใดว่าวันนี้จะมีขบวนเสด็จฯ:</div><div class="detail-value">' + (row[28]||'-') + '</div></div>' +
@@ -1833,23 +1269,9 @@
             '<div class="col-12"><div class="detail-label">13. กรณีมาติดตามเรื่องเดิม มีหลักฐานความคืบหน้าหรือไม่:</div><div class="detail-value">' + (row[33]||'-') + '</div></div>' +
             '<div class="col-12"><div class="detail-label">อื่นๆ (หมายเหตุ):</div><div class="detail-value">' + (row[34]||'-') + '</div></div>' +
           '</div>' +
-        '</div>' +
-        // Metadata footer
-        (function() {
-          var ca = row[61] || '', ua = row[62] || '';
-          if (!ca && !ua) return '';
-          return '<div class="text-muted small text-end pt-2 border-top mt-2">' +
-            (ca ? 'สร้างเมื่อ: ' + formatMetaDate(ca) : '') +
-            (ca && ua ? ' &nbsp;·&nbsp; ' : '') +
-            (ua ? 'แก้ไขล่าสุด: ' + formatMetaDate(ua) : '') +
-            '</div>';
-        })();
+        '</div>';
 
       detailModal.show();
-
-      // Load gallery async after modal renders
-      var recId = String(row[0]);
-      setTimeout(function() { loadGallery(recId); }, 100);
     }
 
     // ==================== EDIT ====================
@@ -1860,7 +1282,6 @@
 
     function editRecord(sheetRow, rowData) {
       editSheetRow = sheetRow;
-      editRecordId  = rowData[0] || sheetRow;
       const fullName = ((rowData[3] || '') + ' ' + (rowData[4] || '')).trim();
 
       // Update form UI for edit mode
@@ -1878,33 +1299,39 @@
 
     function populateFormForEdit(rowData) {
       const form = document.getElementById('dataForm');
-      // Populate all named inputs col2..col61 (skip col39-41 handled by location restore)
-      for (let n = 2; n <= 61; n++) {
-        const els = form.querySelectorAll('[name="col' + n + '"]');
-        if (!els.length) continue;
+      // col2-col93 (skip col85 which is handled separately as radio buttons)
+      for (let n = 2; n <= 93; n++) {
+        if (n === 85) continue;
+        const el = form.querySelector('[name="col' + n + '"]');
+        if (!el) continue;
         let val = (rowData[n - 1] || '').toString().replace(/^'/, '');
-        els.forEach(function(el) {
-          if (el.type === 'radio') {
-            el.checked = (el.value === val);
-          } else if (el.type === 'checkbox') {
-            // checkboxes handled separately via syncCheckboxStates
-          } else if (el.tagName === 'SELECT') {
-            el.value = val;
-          } else if (el.type === 'date') {
-            el.value = parseDateForInput(val);
-          } else {
-            el.value = val;
-          }
-        });
+        if (el.tagName === 'SELECT') {
+          el.value = val;
+        } else if (el.type === 'date') {
+          el.value = parseDateForInput(val);
+        } else {
+          el.value = val;
+        }
       }
-      // Restore checkbox states from hidden inputs
-      restoreCheckboxStates(
-        (rowData[54] || '').toString(),
-        (rowData[55] || '').toString()
-      );
-      // Update all conditional field visibility
-      syncAllConditionals();
-      // Restore cascading location dropdowns
+      // Handle Bangkok stay radio (col85, rowData index 84)
+      const bangkokStatus = (rowData[84] || '').toString().trim();
+      const bangkokYes    = document.getElementById('bangkokStayYes');
+      const bangkokNo     = document.getElementById('bangkokStayNo');
+      if (bangkokYes && bangkokNo) {
+        if (bangkokStatus === 'มีสถานที่พัก') {
+          bangkokYes.checked = true;
+        } else {
+          bangkokNo.checked = true;
+        }
+        onBangkokStayToggle();
+        // Re-set bangkok province select after toggle shows the panel
+        if (bangkokStatus === 'มีสถานที่พัก') {
+          const bkProv = (rowData[91] || '').toString().replace(/^'/, '');
+          const bkEl   = document.getElementById('bangkokStayProvince');
+          if (bkEl && bkProv) { populateAddressProvinceDropdown('bangkokStayProvince'); bkEl.value = bkProv; }
+        }
+      }
+      // Restore incident location cascade (col39/40/41 = rowData index 38/39/40)
       const province = (rowData[38] || '').toString().replace(/^'/, '');
       const amphoe   = (rowData[39] || '').toString().replace(/^'/, '');
       const tambon   = (rowData[40] || '').toString().replace(/^'/, '');
@@ -1927,20 +1354,18 @@
       resetFormMode();
       document.getElementById('dataForm').reset();
       resetIncidentLocation();
+      resetAddressGroups();
       showView('dashboardView');
     }
 
     function resetFormMode() {
       editSheetRow = null;
-      editRecordId = null;
       document.getElementById('formTitle').innerHTML =
         '<i class="fas fa-file-signature text-primary"></i> แบบฟอร์มลงข้อมูลใหม่';
       document.getElementById('editModeBanner').classList.add('d-none');
       document.getElementById('submitBtn').innerHTML =
         '<i class="fas fa-save"></i> บันทึกข้อมูลเข้าฐานข้อมูล';
       document.getElementById('cancelEditBtn').classList.add('d-none');
-      clearAllUploadPreviews();
-      resetConditionalFields();
     }
 
     // ==================== DELETE ====================
@@ -1956,7 +1381,7 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังลบ...';
 
-      gasPost({ action: 'delete', sheetRow: currentViewItem.sheetRow, token: adminToken })
+      gasPost({ action: 'delete', sheetRow: currentViewItem.sheetRow, password: adminSession })
         .then(function(response) {
           btn.disabled = false;
           btn.innerHTML = '<i class="fas fa-trash-alt"></i> ยืนยันการลบ';
@@ -1978,119 +1403,62 @@
     }
 
     // ==================== FORM SUBMIT (Create & Edit) ====================
-    async function handleFormSubmit(event) {
+    function handleFormSubmit(event) {
       event.preventDefault();
-      const btn    = document.getElementById('submitBtn');
-      const form   = document.getElementById('dataForm');
+      const btn  = document.getElementById('submitBtn');
+      const form = document.getElementById('dataForm');
       const isEdit = editSheetRow !== null;
-
-      // Sync checkbox hidden inputs before FormData collection
-      syncCarryMethods();
-      syncContainerTypes();
-
-      // Completeness gate — warn once, then allow override
-      if (!allowIncompleteSubmit) {
-        const comp = calculateFormCompleteness();
-        if (comp && comp.status === 'incomplete') {
-          showFormIncompleteWarning(comp);
-          return;
-        }
-      }
-      allowIncompleteSubmit = false;
 
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
 
       const formObject = {};
-      new FormData(form).forEach(function(value, key) {
-        formObject[key] = value; // phone leading-zero handled backend via rewritePhoneCells
+      new FormData(form).forEach((value, key) => {
+        // Prepend apostrophe to phone/ID fields to preserve leading zeros in Sheets
+        if ((key === 'col7' || key === 'col9' || key === 'col27') && value !== '') {
+          formObject[key] = "'" + value;
+        } else {
+          formObject[key] = value;
+        }
       });
 
-      const resetBtn = function() {
+      const resetBtn = () => {
         btn.disabled = false;
         btn.innerHTML = isEdit
           ? '<i class="fas fa-save"></i> บันทึกการแก้ไข'
           : '<i class="fas fa-save"></i> บันทึกข้อมูลเข้าฐานข้อมูล';
       };
 
-      // ── Step 1: Save text data ──
-      let recordId;
-      try {
-        let res;
-        if (isEdit) {
-          res = await gasPost(Object.assign({ action: 'update', sheetRow: editSheetRow, token: adminToken }, formObject));
-          recordId = editRecordId;
+      const onSuccess = function(response) {
+        resetBtn();
+        if (response.success) {
+          showToast(response.message, 'success');
+          form.reset();
+          resetIncidentLocation();
+          resetAddressGroups();
+          if (isEdit) {
+            resetFormMode();
+            refreshDashboard();
+          } else {
+            showView('welcomeView');
+          }
         } else {
-          res = await gasPost(Object.assign({ action: 'submit' }, formObject));
-          recordId = res.recordId;
+          showToast(response.message, 'danger');
         }
-        if (!res.success) { resetBtn(); showToast(res.message, 'danger'); return; }
-      } catch(err) {
+      };
+
+      const onFailure = function(error) {
         resetBtn();
-        showToast('เกิดข้อผิดพลาด: ' + (err.message || err), 'danger');
-        return;
-      }
+        showToast('เกิดข้อผิดพลาด: ' + (error.message || error), 'danger');
+      };
 
-      // ── Step 2: Upload images ──
-      const queue = [];
-      ['officer_found','person_portrait','items_evidence'].forEach(function(sec) {
-        (uploadAreas[sec] || []).forEach(function(item) {
-          queue.push({ file: item.file, name: item.name, section: sec });
-        });
-      });
-
-      if (queue.length === 0) {
-        resetBtn();
-        onTextSubmitSuccess(isEdit, form);
-        return;
-      }
-
-      showUploadProgress(queue);
-
-      const failed = [];
-      for (let i = 0; i < queue.length; i++) {
-        updateProgressItem(i, 'uploading');
-        try {
-          const compressed = await compressImage(queue[i].file);
-          const res = await gasPost({
-            action: 'uploadAttachment',
-            recordId: recordId,
-            section: queue[i].section,
-            fileData: compressed.base64,
-            fileName: queue[i].name,
-            mimeType: compressed.mimeType,
-            sizeBytes: queue[i].file.size
-          });
-          if (res.success) { updateProgressItem(i, 'success'); }
-          else { updateProgressItem(i, 'error', res.message); failed.push({ name: queue[i].name, error: res.message }); }
-        } catch(err) {
-          updateProgressItem(i, 'error', err.message);
-          failed.push({ name: queue[i].name, error: err.message });
-        }
-      }
-
-      hideUploadProgress();
-      resetBtn();
-
-      if (failed.length === 0) {
-        onTextSubmitSuccess(isEdit, form);
+      if (isEdit) {
+        gasPost(Object.assign({ action: 'update', sheetRow: editSheetRow, password: adminSession }, formObject))
+          .then(onSuccess).catch(onFailure);
       } else {
-        showToast('บันทึกข้อมูลสำเร็จ แต่อัปโหลดรูปไม่สำเร็จ ' + failed.length + ' ไฟล์ (RecordID: ' + recordId + ')', 'warning');
+        gasPost(Object.assign({ action: 'submit' }, formObject))
+          .then(onSuccess).catch(onFailure);
       }
-    }
-
-    function onTextSubmitSuccess(isEdit, form) {
-      showToast('บันทึกสำเร็จ!', 'success');
-      hideDupWarning();
-      allowIncompleteSubmit = false;
-      var fw = document.getElementById('formIncompleteWarn');
-      if (fw) fw.classList.add('d-none');
-      form.reset();
-      clearAllUploadPreviews();
-      resetConditionalFields();
-      resetIncidentLocation();
-      if (isEdit) { resetFormMode(); refreshDashboard(); }
-      else { showView('welcomeView'); }
     }
 
     // ==================== THAI GEOGRAPHY ====================
@@ -2102,6 +1470,9 @@
         PROVINCES_STATIC.forEach(function(p) { provinceNameToId[p.name] = p.id; });
       }
       populateIncidentProvinceDropdown();
+      populateAddressProvinceDropdown('currentAddressProvince');
+      populateAddressProvinceDropdown('domicileProvince');
+      populateAddressProvinceDropdown('bangkokStayProvince');
     }
 
     function populateIncidentProvinceDropdown() {
@@ -2114,6 +1485,36 @@
       });
       el.disabled = false;
       if (cur) el.value = cur;
+    }
+
+    function populateAddressProvinceDropdown(elemId) {
+      const el = document.getElementById(elemId);
+      if (!el || !provincesData) return;
+      const cur = el.value;
+      el.innerHTML = '<option value="">-- เลือกจังหวัด --</option>';
+      provincesData.forEach(function(p) {
+        el.innerHTML += '<option value="' + p.name + '">' + p.name + '</option>';
+      });
+      if (cur) el.value = cur;
+    }
+
+    function onBangkokStayToggle() {
+      const hasStay = document.getElementById('bangkokStayYes').checked;
+      const fields  = document.getElementById('bangkokStayFields');
+      if (!fields) return;
+      if (hasStay) {
+        fields.classList.remove('d-none');
+        populateAddressProvinceDropdown('bangkokStayProvince');
+      } else {
+        fields.classList.add('d-none');
+      }
+    }
+
+    function resetAddressGroups() {
+      const bangkokNo = document.getElementById('bangkokStayNo');
+      if (bangkokNo) bangkokNo.checked = true;
+      const bangkokFields = document.getElementById('bangkokStayFields');
+      if (bangkokFields) bangkokFields.classList.add('d-none');
     }
 
     function onIncidentProvinceChange(el) {
@@ -2222,626 +1623,6 @@
       if (tambEl) { tambEl.innerHTML = '<option value="">-- เลือกตำบล/แขวง --</option>'; tambEl.disabled = true; }
     }
 
-    // ==================== IMAGE UPLOAD AREAS ====================
-    const uploadAreas = { officer_found: [], person_portrait: [], items_evidence: [] };
-    const uploadMaxes = { officer_found: 2,  person_portrait: 1,  items_evidence: 10 };
-
-    function triggerFileInput(sectionType) {
-      document.getElementById('fileInput_' + sectionType).click();
-    }
-
-    function handleFileSelect(event, sectionType, maxFiles) {
-      const files = Array.from(event.target.files || []);
-      event.target.value = ''; // reset so same file can be re-selected after removal
-      const existing = uploadAreas[sectionType];
-      const available = maxFiles - existing.length;
-      if (available <= 0) {
-        showToast('ครบ ' + maxFiles + ' รูปแล้ว', 'warning'); return;
-      }
-      const toAdd = files.slice(0, available);
-      const rejected = files.length - toAdd.length;
-      toAdd.forEach(function(file) {
-        const allowed = ['image/jpeg','image/jpg','image/png','image/gif','image/webp','image/heic','image/heif','image/bmp'];
-        if (allowed.indexOf(file.type.toLowerCase()) === -1) {
-          showToast('ไม่รองรับไฟล์: ' + file.name, 'warning'); return;
-        }
-        const dataUrl = URL.createObjectURL(file);
-        existing.push({ file: file, dataUrl: dataUrl, name: file.name });
-      });
-      if (rejected > 0) showToast('เกินจำนวนสูงสุด — เพิ่มได้อีก ' + (maxFiles - (existing.length - toAdd.length)) + ' รูป เลือกมา ' + files.length + ' รูป', 'warning');
-      renderThumbGrid(sectionType);
-    }
-
-    function removeUploadFile(sectionType, index) {
-      const arr = uploadAreas[sectionType];
-      if (arr[index] && arr[index].dataUrl) URL.revokeObjectURL(arr[index].dataUrl);
-      arr.splice(index, 1);
-      renderThumbGrid(sectionType);
-    }
-
-    function renderThumbGrid(sectionType) {
-      const arr   = uploadAreas[sectionType];
-      const max   = uploadMaxes[sectionType];
-      const grid  = document.getElementById('thumbGrid_' + sectionType);
-      const ctr   = document.getElementById('counter_' + sectionType);
-      const zone  = document.getElementById('zone_' + sectionType);
-
-      ctr.textContent = arr.length + ' / ' + max + ' รูป';
-      ctr.className   = 'upload-counter' + (arr.length >= max ? ' at-limit' : '');
-      zone.classList.toggle('has-files', arr.length > 0);
-
-      grid.innerHTML = arr.map(function(item, i) {
-        return '<div class="upload-thumb">' +
-          '<img src="' + item.dataUrl + '" alt="' + item.name + '">' +
-          '<button type="button" class="remove-btn" onclick="removeUploadFile(\'' + sectionType + '\',' + i + ')" title="ลบรูป">✕</button>' +
-          '</div>';
-      }).join('');
-    }
-
-    function clearAllUploadPreviews() {
-      ['officer_found','person_portrait','items_evidence'].forEach(function(sec) {
-        uploadAreas[sec].forEach(function(item) { if (item.dataUrl) URL.revokeObjectURL(item.dataUrl); });
-        uploadAreas[sec] = [];
-        renderThumbGrid(sec);
-      });
-    }
-
-    // ==================== IMAGE COMPRESSION ====================
-    function compressImage(file, maxDim, quality) {
-      maxDim   = maxDim   || 1920;
-      quality  = quality  || 0.85;
-      return new Promise(function(resolve, reject) {
-        var reader = new FileReader();
-        reader.onerror = reject;
-        reader.onload = function(e) {
-          var img = new Image();
-          img.onerror = reject;
-          img.onload = function() {
-            var w = img.width, h = img.height;
-            if (w > maxDim || h > maxDim) {
-              if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
-              else { w = Math.round(w * maxDim / h); h = maxDim; }
-            }
-            var canvas = document.createElement('canvas');
-            canvas.width = w; canvas.height = h;
-            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-            var dataUrl = canvas.toDataURL('image/jpeg', quality);
-            resolve({ base64: dataUrl.split(',')[1], mimeType: 'image/jpeg', dataUrl: dataUrl });
-          };
-          img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // ==================== CHECKBOX SYNC ====================
-    function syncCarryMethods() {
-      var vals = Array.from(document.querySelectorAll('.carry-cb:checked')).map(function(el) { return el.value; });
-      document.getElementById('carryMethodsInput').value = vals.join(',');
-    }
-
-    function syncContainerTypes() {
-      var vals = Array.from(document.querySelectorAll('.container-cb:checked')).map(function(el) { return el.value; });
-      document.getElementById('containerTypesInput').value = vals.join(',');
-    }
-
-    function restoreCheckboxStates(carryStr, containerStr) {
-      var carryVals     = carryStr.split(',').filter(Boolean);
-      var containerVals = containerStr.split(',').filter(Boolean);
-      document.querySelectorAll('.carry-cb').forEach(function(el) { el.checked = carryVals.indexOf(el.value) !== -1; });
-      document.querySelectorAll('.container-cb').forEach(function(el) { el.checked = containerVals.indexOf(el.value) !== -1; });
-      syncCarryMethods(); syncContainerTypes();
-    }
-
-    // ==================== CONDITIONAL FIELD VISIBILITY ====================
-    function setVisible(id, show) {
-      var el = document.getElementById(id);
-      if (el) el.classList.toggle('visible', show);
-    }
-
-    function onNoticeChange() {
-      var val = document.querySelector('[name="col42"]:checked');
-      setVisible('noticeDetailRow', val && val.value === 'มีหมายฯ');
-      if (val && val.value !== 'มีหมายฯ') { var i = document.querySelector('[name="col43"]'); if (i) i.value = ''; }
-    }
-
-    function onLocationChange() {
-      var val = document.querySelector('[name="col44"]:checked');
-      var needsDetail = val && val.value !== 'สน.พระราชวัง';
-      setVisible('locationDetailRow', needsDetail);
-      if (!needsDetail) { var i = document.querySelector('[name="col45"]'); if (i) i.value = ''; }
-    }
-
-    function onVisibilityChange() {
-      var val = document.querySelector('[name="col53"]:checked');
-      setVisible('itemHiddenRow', val && val.value === 'ซุกซ่อนไว้');
-      if (val && val.value !== 'ซุกซ่อนไว้') { var i = document.querySelector('[name="col54"]'); if (i) i.value = ''; }
-    }
-
-    function onEnvelopeChange() {
-      var val = document.querySelector('[name="col57"]:checked');
-      setVisible('envelopeDetails', val && val.value === 'ใส่ซอง');
-    }
-
-    function onEnvSizeChange() {
-      var val = document.querySelector('[name="col58"]:checked');
-      setVisible('envSizeOtherRow', val && val.value === 'อื่น ๆ');
-      if (val && val.value !== 'อื่น ๆ') { var i = document.querySelector('[name="col59"]'); if (i) i.value = ''; }
-    }
-
-    function onEnvColorChange() {
-      var val = document.querySelector('[name="col60"]:checked');
-      setVisible('envColorOtherRow', val && val.value === 'สีอื่น ๆ');
-      if (val && val.value !== 'สีอื่น ๆ') { var i = document.querySelector('[name="col61"]'); if (i) i.value = ''; }
-    }
-
-    function syncAllConditionals() {
-      onNoticeChange(); onLocationChange(); onVisibilityChange();
-      onEnvelopeChange(); onEnvSizeChange(); onEnvColorChange();
-    }
-
-    function resetConditionalFields() {
-      // Reset radio groups to defaults
-      var noNotice = document.getElementById('notice_no');     if (noNotice) noNotice.checked = true;
-      var noEnv    = document.getElementById('env_no');        if (noEnv)    noEnv.checked    = true;
-      var visVis   = document.getElementById('vis_visible');   if (visVis)   visVis.checked   = true;
-      // Uncheck location and envelope size/color radios
-      ['col44','col58','col60'].forEach(function(name) {
-        document.querySelectorAll('[name="' + name + '"]').forEach(function(el) { el.checked = false; });
-      });
-      // Uncheck all checkboxes
-      document.querySelectorAll('.carry-cb, .container-cb').forEach(function(el) { el.checked = false; });
-      syncCarryMethods(); syncContainerTypes();
-      syncAllConditionals();
-    }
-
-    // ==================== UPLOAD PROGRESS UI ====================
-    function showUploadProgress(queue) {
-      var area = document.getElementById('uploadProgressArea');
-      var list = document.getElementById('uploadProgressList');
-      area.style.display = 'block';
-      list.innerHTML = queue.map(function(item, i) {
-        return '<div class="upload-progress-row" id="prg_' + i + '">' +
-          '<span class="prg-icon"><i class="fas fa-clock text-secondary"></i></span>' +
-          '<span class="prg-name">' + escHtml(item.name) + '</span>' +
-          '<span class="prg-status text-muted">รอ...</span>' +
-          '</div>';
-      }).join('');
-      document.getElementById('uploadProgressArea').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    function updateProgressItem(i, status, msg) {
-      var row = document.getElementById('prg_' + i);
-      if (!row) return;
-      var icons   = { uploading: '<i class="fas fa-spinner fa-spin text-primary"></i>', success: '<i class="fas fa-check-circle text-success"></i>', error: '<i class="fas fa-times-circle text-danger"></i>' };
-      var labels  = { uploading: 'กำลังอัปโหลด...', success: 'สำเร็จ', error: (msg || 'ล้มเหลว') };
-      var colors  = { uploading: 'text-primary', success: 'text-success', error: 'text-danger' };
-      row.querySelector('.prg-icon').innerHTML  = icons[status]  || '';
-      row.querySelector('.prg-status').innerHTML = '<span class="' + (colors[status] || '') + '">' + escHtml(labels[status] || '') + '</span>';
-    }
-
-    function hideUploadProgress() {
-      document.getElementById('uploadProgressArea').style.display = 'none';
-    }
-
-    function escHtml(str) {
-      return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    // ==================== ENCOUNTER INFO CARDS ====================
-    function updateEncounterCards(dataArray) {
-      var noticeYes = 0, noticeNo = 0, noticeBlank = 0;
-      var locCounts = {}, locBlank = 0;
-      var photoPortrait = 0, photoOfficer = 0, photoItems = 0, photoNone = 0;
-
-      dataArray.forEach(function(item) {
-        var d = item.data;
-        var recId = String(d[0]);
-
-        // Notice (data[41] = col42): three-way split
-        var notice = (d[41] || '').toString().trim();
-        if      (notice === 'มีหมายฯ')    noticeYes++;
-        else if (notice === 'ไม่มีหมายฯ') noticeNo++;
-        else                               noticeBlank++;
-
-        // Location (data[43] = col44)
-        var loc = (d[43] || '').toString().trim();
-        if (loc) { locCounts[loc] = (locCounts[loc] || 0) + 1; }
-        else     { locBlank++; }
-
-        // Photos: per-section breakdown
-        var ac = attachmentCounts[recId] || {};
-        var prt = (ac.person_portrait  || 0) > 0;
-        var ofc = (ac.officer_found    || 0) > 0;
-        var itm = (ac.items_evidence   || 0) > 0;
-        if (prt) photoPortrait++;
-        if (ofc) photoOfficer++;
-        if (itm) photoItems++;
-        if (!prt && !ofc && !itm) photoNone++;
-      });
-
-      // Notice card
-      var nc = document.getElementById('encNoticeContent');
-      if (nc) nc.innerHTML =
-        '<div class="ec-row"><span class="ec-label">มีหมายฯ</span><span class="ec-val text-danger">' + noticeYes + ' ราย</span></div>' +
-        '<div class="ec-row"><span class="ec-label">ไม่มีหมายฯ</span><span class="ec-val text-secondary">' + noticeNo + ' ราย</span></div>' +
-        (noticeBlank ? '<div class="ec-row"><span class="ec-label text-muted">ยังไม่มีข้อมูล</span><span class="ec-val text-muted">' + noticeBlank + ' ราย</span></div>' : '');
-
-      // Location card (known values first, ยังไม่มีข้อมูล last)
-      var lc = document.getElementById('encLocationContent');
-      if (lc) {
-        var locEntries = Object.entries(locCounts).sort(function(a,b){ return b[1]-a[1]; }).slice(0,4);
-        var rows = locEntries.map(function(e){ return '<div class="ec-row"><span class="ec-label">' + escHtml(e[0]) + '</span><span class="ec-val">' + e[1] + '</span></div>'; }).join('');
-        if (locBlank) rows += '<div class="ec-row"><span class="ec-label text-muted">ยังไม่มีข้อมูล</span><span class="ec-val text-muted">' + locBlank + '</span></div>';
-        lc.innerHTML = rows || '<div class="ec-row"><span class="ec-label text-muted">ไม่มีข้อมูล</span></div>';
-      }
-
-      // Photo card: per-section breakdown
-      var pc = document.getElementById('encPhotoContent');
-      if (pc) pc.innerHTML =
-        '<div class="ec-row"><span class="ec-label">รูปบุคคล</span><span class="ec-val text-success">' + photoPortrait + ' ราย</span></div>' +
-        '<div class="ec-row"><span class="ec-label">รูปเจ้าหน้าที่</span><span class="ec-val text-primary">' + photoOfficer + ' ราย</span></div>' +
-        '<div class="ec-row"><span class="ec-label">รูปสิ่งของ/เอกสาร</span><span class="ec-val text-warning">' + photoItems + ' ราย</span></div>' +
-        '<div class="ec-row"><span class="ec-label text-muted">ไม่มีรูปเลย</span><span class="ec-val text-muted">' + photoNone + ' ราย</span></div>';
-    }
-
-    // ==================== ADVANCED FILTER ====================
-    function toggleAdvFilter() {
-      var panel = document.getElementById('advFilterPanel');
-      var btn   = document.getElementById('btnAdvFilter');
-      if (panel.classList.toggle('d-none')) {
-        btn.classList.remove('btn-secondary');
-        btn.classList.add('btn-outline-secondary');
-      } else {
-        btn.classList.remove('btn-outline-secondary');
-        btn.classList.add('btn-secondary');
-      }
-    }
-
-    function clearAdvFilters() {
-      document.getElementById('advNoticeFilter').value      = 'all';
-      document.getElementById('advLocationFilter').value    = 'all';
-      document.getElementById('advPhotoFilter').value       = 'all';
-      document.getElementById('advNewDataFilter').value     = 'all';
-      document.getElementById('advDateFrom').value          = '';
-      document.getElementById('advDateTo').value            = '';
-      var cf = document.getElementById('advCompletenessFilter');
-      if (cf) cf.value = 'all';
-      var vf = document.getElementById('advVisitFilter');
-      if (vf) vf.value = 'all';
-      activeCompletenessFilter = 'all';
-      activeVisitFilter        = 'all';
-      applyFilters();
-    }
-
-    // ==================== CHECKBOX SELECTION ====================
-    function toggleSelectAll(el) {
-      var checked = el.checked;
-      filteredData.forEach(function(item) {
-        var rid = String(item.data[0]);
-        if (checked) selectedRows.add(rid); else selectedRows.delete(rid);
-      });
-      updateSelectionUI();
-      renderTable(filteredData);
-    }
-
-    function toggleRowSelect(rid, el) {
-      el.stopPropagation();
-      if (selectedRows.has(rid)) selectedRows.delete(rid); else selectedRows.add(rid);
-      updateSelectionUI();
-      var allCbs = document.querySelectorAll('.row-cb');
-      var allChecked = filteredData.length > 0 && filteredData.every(function(item) { return selectedRows.has(String(item.data[0])); });
-      var selAll = document.getElementById('selectAll');
-      if (selAll) selAll.checked = allChecked;
-    }
-
-    function clearSelection() {
-      selectedRows.clear();
-      var selAll = document.getElementById('selectAll');
-      if (selAll) selAll.checked = false;
-      updateSelectionUI();
-      renderTable(filteredData);
-    }
-
-    function updateSelectionUI() {
-      var bar   = document.getElementById('selectionBar');
-      var count = document.getElementById('selectionCount');
-      if (!bar) return;
-      var n = selectedRows.size;
-      if (n > 0) {
-        bar.classList.add('show');
-        count.textContent = n + ' รายการที่เลือก';
-      } else {
-        bar.classList.remove('show');
-      }
-    }
-
-    // ==================== GALLERY / LIGHTBOX ====================
-    function openLightbox(src, caption) {
-      var overlay = document.getElementById('lightboxOverlay');
-      var img     = document.getElementById('lightboxImg');
-      var cap     = document.getElementById('lightboxCaption');
-      img.src     = src;
-      cap.textContent = caption || '';
-      overlay.classList.add('show');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightboxOverlay').classList.remove('show');
-      document.body.style.overflow = '';
-    }
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeLightbox();
-    });
-
-    async function loadGallery(recordId) {
-      var container = document.getElementById('galleryContainer');
-      if (!container) return;
-      container.innerHTML = '<div class="text-muted small py-2"><i class="fas fa-spinner fa-spin"></i> กำลังโหลดรูปภาพ...</div>';
-
-      var res;
-      try {
-        res = await gasPost({ action: 'listAttachments', recordId: recordId, token: adminToken });
-      } catch(e) {
-        container.innerHTML = '<div class="text-danger small">โหลดรายการรูปล้มเหลว</div>';
-        return;
-      }
-      if (!res.success || !res.attachments || !res.attachments.length) {
-        container.innerHTML = '<div class="text-muted small py-1">ไม่มีรูปภาพ</div>';
-        return;
-      }
-
-      var sections = {
-        officer_found:    { label: '1.3 รูปเจ้าหน้าที่ที่พบ', items: [] },
-        person_portrait:  { label: '2. รูปบุคคล',              items: [] },
-        items_evidence:   { label: '1. รูปสิ่งของ/เอกสาร',    items: [] }
-      };
-      res.attachments.forEach(function(att) {
-        if (sections[att.section]) sections[att.section].items.push(att);
-      });
-
-      var html = '';
-      Object.values(sections).forEach(function(sec) {
-        if (!sec.items.length) return;
-        html += '<div class="gallery-section-title">' + sec.label + '</div><div class="gallery-grid">';
-        sec.items.forEach(function(att) {
-          html += '<div class="gallery-thumb" id="gthumb_' + att.attachmentId + '" onclick="openGalleryImage(\'' + att.attachmentId + '\',\'' + escHtml(att.fileName) + '\')">' +
-                  '<div class="gal-loading"><i class="fas fa-spinner fa-spin"></i></div></div>';
-        });
-        html += '</div>';
-      });
-      container.innerHTML = html;
-
-      // Load images async
-      res.attachments.forEach(async function(att) {
-        var thumb = document.getElementById('gthumb_' + att.attachmentId);
-        if (!thumb) return;
-        try {
-          var imgData = await getAttachmentImage(att.attachmentId);
-          var src = 'data:' + imgData.mimeType + ';base64,' + imgData.base64;
-          thumb.innerHTML = '<img src="' + src + '" alt="' + escHtml(att.fileName) + '">';
-        } catch(e) {
-          if (thumb) thumb.innerHTML = '<div class="gal-error"><i class="fas fa-exclamation-triangle"></i><br>โหลดไม่ได้</div>';
-        }
-      });
-    }
-
-    async function getAttachmentImage(attachmentId) {
-      if (imageCache.has(attachmentId)) return imageCache.get(attachmentId);
-      var res = await gasPost({ action: 'getAttachmentData', attachmentId: attachmentId, token: adminToken });
-      if (!res.success) throw new Error(res.message);
-      imageCache.set(attachmentId, res);
-      return res;
-    }
-
-    async function openGalleryImage(attachmentId, fileName) {
-      try {
-        var img = document.getElementById('gthumb_' + attachmentId);
-        if (img) { var existing = img.querySelector('img'); if (existing) { openLightbox(existing.src, fileName); return; } }
-        var data = await getAttachmentImage(attachmentId);
-        openLightbox('data:' + data.mimeType + ';base64,' + data.base64, fileName);
-      } catch(e) {
-        showToast('ไม่สามารถโหลดรูปได้: ' + e.message, 'danger');
-      }
-    }
-
-    // ==================== EXCEL EXPORT ====================
-    function getExportData(scope) {
-      if (scope === 'all')      return globalData;
-      if (scope === 'selected') return globalData.filter(function(item) { return selectedRows.has(String(item.data[0])); });
-      return filteredData;
-    }
-
-    function exportExcel(scope) {
-      var data = getExportData(scope);
-      if (!data.length) { showToast('ไม่มีข้อมูลที่จะส่งออก', 'warning'); return; }
-      if (typeof XLSX === 'undefined') { showToast('โหลด SheetJS ไม่สำเร็จ', 'danger'); return; }
-
-      var headers = [
-        'ลำดับ','RecordID','วันที่','เวลา','คำนำหน้า','ชื่อ-สกุล','อายุ','เลขบัตร ปชช','ที่อยู่ปัจจุบัน','เบอร์โทร',
-        'การแต่งกาย','ระบุ(แต่งกาย)','กระเป๋า/อุปกรณ์','ระบุ(กระเป๋า)','พูดคุยรู้เรื่อง','ระบุ(พูดคุย)',
-        'เคยมารับเสด็จ','ระบุ(รับเสด็จ)','เรื่องโดยสังเขป','เคยยื่นร้องเรียน','ระบุ(หน่วย/ผล)',
-        'ทราบจากที่ใด','เดินทางจากจังหวัด','สถานที่พักกทม','ยานพาหนะ','ชื่อผู้ติดต่อ','ความเกี่ยวข้อง',
-        'เบอร์ผู้ติดต่อ','ความตั้งใจวันนี้','ทราบขบวนเสด็จจาก','เคยมายื่นฎีกาที่นี่','ระบุ(เคยมา)',
-        'ยื่นที่อื่นก่อนมาสน.','เคยมายื่นที่อื่น','หลักฐานความคืบหน้า','หมายเหตุ',
-        'ประเภทเรื่อง','สาเหตุเรื่อง','ที่อยู่ภูมิลำเนา','จังหวัดเกิดเหตุ','อำเภอเกิดเหตุ','ตำบลเกิดเหตุ',
-        'หมายฯ','รายละเอียดหมายฯ','สถานที่พบ','รายละเอียดสถานที่','วันที่พบ','เวลาที่พบ',
-        'ยศเจ้าหน้าที่','ชื่อเจ้าหน้าที่','เบอร์เจ้าหน้าที่','วันที่นำส่ง','เวลานำส่ง',
-        'การเก็บสิ่งของ','รายละเอียด(การเก็บ)','ลักษณะการนำพา','ภาชนะ','การใส่ซอง','ขนาดซอง',
-        'ขนาดอื่นๆ','สีซอง','สีอื่นๆ',
-        'ครั้งที่มา','ความครบถ้วน (%)','จำนวน field ที่ขาด','CreatedAt','UpdatedAt'
-      ];
-      // Phone cols shift +1 because ลำดับ is now col 0; original 0-idx 6,8,26,49 become 7,9,27,50
-      var PHONE_COLS_0IDX = new Set([7, 9, 27, 50]);
-
-      var wsData = [headers];
-      data.forEach(function(item) {
-        var row = item.data;
-        var comp     = calculateRecordCompleteness(item, attachmentCounts);
-        var isReturn = (row[29] || '').toString().trim() === 'เคย';
-        // Slice to first 61 data columns so new 63-col records don't double-add CreatedAt/UpdatedAt
-        var core = row.slice(0, 61);
-        var xlRow = [item.seqNo].concat(core.map(function(cell, i) {
-          var v = (cell === null || cell === undefined) ? '' : cell.toString().replace(/^'/, '');
-          if (PHONE_COLS_0IDX.has(i + 1)) return { v: v, t: 's' }; // i+1 for seqNo offset
-          return v;
-        }));
-        xlRow.push(isReturn ? 'มาซ้ำ' : 'ครั้งแรก');
-        xlRow.push(comp.percent);
-        xlRow.push(comp.missingCount);
-        xlRow.push((row[61] || '').toString()); // CreatedAt
-        xlRow.push((row[62] || '').toString()); // UpdatedAt
-        wsData.push(xlRow);
-      });
-
-      var ws = XLSX.utils.aoa_to_sheet(wsData);
-
-      // Force phone columns as string type (shifted +1 for seqNo prepend)
-      var range = XLSX.utils.decode_range(ws['!ref']);
-      for (var r = 1; r <= range.e.r; r++) {
-        PHONE_COLS_0IDX.forEach(function(ci) {
-          var addr = XLSX.utils.encode_cell({ r: r, c: ci });
-          if (ws[addr]) ws[addr].t = 's';
-        });
-      }
-
-      var wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'ข้อมูล');
-      var now = new Date();
-      var fname = 'RW01_' + now.getFullYear() + ('0'+(now.getMonth()+1)).slice(-2) + ('0'+now.getDate()).slice(-2) + '_' + scope + '.xlsx';
-      XLSX.writeFile(wb, fname);
-      showToast('ส่งออก Excel ' + data.length + ' รายการแล้ว', 'success');
-    }
-
-    // ==================== PDF EXPORT ====================
-    function exportPDFSummary(scope) {
-      var data = getExportData(scope);
-      if (!data.length) { showToast('ไม่มีข้อมูลที่จะส่งออก', 'warning'); return; }
-
-      var now     = new Date();
-      var nowStr  = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
-      var scopeLabel = scope === 'all' ? 'ข้อมูลทั้งหมด' : 'ข้อมูลที่กรอง';
-
-      var rows = data.map(function(item) {
-        var d = item.data;
-        return '<tr>' +
-          '<td>' + item.seqNo + '</td>' +
-          '<td>' + escHtml(d[1] || '') + ' ' + escHtml(d[2] || '') + '</td>' +
-          '<td>' + escHtml((d[3] || '') + ' ' + (d[4] || '')) + '</td>' +
-          '<td>' + escHtml(d[17] || '') + '</td>' +
-          '<td>' + escHtml(d[41] || '') + '</td>' +
-          '<td>' + escHtml(d[43] || '') + '</td>' +
-          '<td>' + escHtml((d[47] || '') + ' ' + (d[48] || '')) + '</td>' +
-          '</tr>';
-      }).join('');
-
-      var html = '<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">' +
-        '<title>สรุปข้อมูล สน.พระราชวัง</title>' +
-        '<style>@page{size:A4 landscape;margin:15mm}body{font-family:Sarabun,sans-serif;font-size:10pt;color:#222}' +
-        'h1{font-size:14pt;text-align:center;margin-bottom:4px}p.sub{text-align:center;color:#555;font-size:9pt;margin-bottom:12px}' +
-        'table{width:100%;border-collapse:collapse}th,td{border:1px solid #999;padding:4px 6px;font-size:9pt}' +
-        'th{background:#e9ecef;font-weight:700}tr:nth-child(even){background:#f9f9f9}' +
-        '@media print{button{display:none}}' +
-        '</style></head><body>' +
-        '<h1>ระบบฐานข้อมูลผู้มาติดต่อ สน.พระราชวัง</h1>' +
-        '<p class="sub">สรุปผล: ' + scopeLabel + ' | จำนวน ' + data.length + ' ราย | วันที่พิมพ์: ' + nowStr + '</p>' +
-        '<table><thead><tr><th>#</th><th>วันที่/เวลา</th><th>ชื่อ-สกุล</th><th>เรื่องโดยสังเขป</th><th>หมายฯ</th><th>สถานที่พบ</th><th>เจ้าหน้าที่</th></tr></thead>' +
-        '<tbody>' + rows + '</tbody></table>' +
-        '<script>window.onload=function(){window.print();}<\/script>' +
-        '</body></html>';
-
-      var win = window.open('', '_blank');
-      if (!win) { showToast('กรุณาอนุญาต Pop-up ก่อน', 'warning'); return; }
-      win.document.write(html);
-      win.document.close();
-    }
-
-    async function exportPDFIndividual() {
-      if (!currentViewItem) return;
-      var d = currentViewItem.data;
-      var recId = String(d[0]);
-      showToast('กำลังเตรียม PDF...', 'info');
-
-      // Load all images for this record
-      var imgSections = {};
-      try {
-        var listRes = await gasPost({ action: 'listAttachments', recordId: recId, token: adminToken });
-        if (listRes.success && listRes.attachments.length) {
-          for (var att of listRes.attachments) {
-            try {
-              var imgData = await getAttachmentImage(att.attachmentId);
-              if (!imgSections[att.section]) imgSections[att.section] = [];
-              imgSections[att.section].push({ src: 'data:' + imgData.mimeType + ';base64,' + imgData.base64, name: att.fileName });
-            } catch(e) {}
-          }
-        }
-      } catch(e) {}
-
-      function imgBlock(sec, label) {
-        var imgs = imgSections[sec];
-        if (!imgs || !imgs.length) return '';
-        return '<div style="margin-top:10px"><strong>' + label + '</strong><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">' +
-          imgs.map(function(im) { return '<img src="' + im.src + '" style="width:120px;height:120px;object-fit:cover;border:1px solid #ccc;border-radius:4px">'; }).join('') +
-          '</div></div>';
-      }
-
-      var phone1 = fixMissingZero(d[8], 'phone');
-      var phone2 = fixMissingZero(d[26], 'phone');
-      var idCard  = fixMissingZero(d[6], 'idcard');
-
-      var html = '<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>ข้อมูลผู้มาติดต่อ</title>' +
-        '<style>@page{size:A4;margin:15mm}body{font-family:Sarabun,sans-serif;font-size:10pt;color:#222}' +
-        'h1{font-size:13pt;border-bottom:2px solid #333;padding-bottom:4px;margin-bottom:10px}' +
-        'h2{font-size:10pt;color:#0d6efd;border-bottom:1px solid #0d6efd;padding-bottom:2px;margin:12px 0 6px}' +
-        '.row{display:flex;flex-wrap:wrap;gap:4px 16px}.field{min-width:180px;flex:1}' +
-        '.label{color:#777;font-size:8.5pt}.val{font-weight:600}' +
-        '@media print{button{display:none}}' +
-        '</style></head><body>' +
-        '<h1>ระบบฐานข้อมูลผู้มาติดต่อ สน.พระราชวัง — บันทึกรายบุคคล</h1>' +
-        '<h2>Section 1: ข้อมูลการพบและการนำส่ง</h2><div class="row">' +
-        '<div class="field"><div class="label">หมายฯ</div><div class="val">' + escHtml(d[41]||'-') + (d[42] ? ' (' + escHtml(d[42]) + ')' : '') + '</div></div>' +
-        '<div class="field"><div class="label">สถานที่พบ</div><div class="val">' + escHtml(d[43]||'-') + (d[44] ? ' (' + escHtml(d[44]) + ')' : '') + '</div></div>' +
-        '<div class="field"><div class="label">วันที่/เวลาพบ</div><div class="val">' + escHtml(d[45]||'-') + ' ' + escHtml(d[46]||'') + '</div></div>' +
-        '<div class="field"><div class="label">เจ้าหน้าที่ที่พบ</div><div class="val">' + escHtml((d[47]||'') + ' ' + (d[48]||'')) + '</div></div>' +
-        '<div class="field"><div class="label">เบอร์เจ้าหน้าที่</div><div class="val">' + fixMissingZero(d[49],'phone') + '</div></div>' +
-        '<div class="field"><div class="label">วันที่/เวลานำส่ง</div><div class="val">' + escHtml(d[50]||'-') + ' ' + escHtml(d[51]||'') + '</div></div>' +
-        '</div>' +
-        imgBlock('officer_found','รูปเจ้าหน้าที่ที่พบ') +
-        imgBlock('items_evidence','รูปสิ่งของ/เอกสาร') +
-        '<h2>Section 2: ข้อมูลส่วนตัว</h2><div class="row">' +
-        '<div class="field"><div class="label">วันที่/เวลา</div><div class="val">' + escHtml(d[1]||'-') + ' ' + escHtml(d[2]||'') + '</div></div>' +
-        '<div class="field"><div class="label">ชื่อ-สกุล</div><div class="val">' + escHtml((d[3]||'') + ' ' + (d[4]||'')) + '</div></div>' +
-        '<div class="field"><div class="label">อายุ</div><div class="val">' + escHtml(d[5]||'-') + '</div></div>' +
-        '<div class="field"><div class="label">เลขบัตร</div><div class="val">' + idCard + '</div></div>' +
-        '<div class="field"><div class="label">เบอร์โทร</div><div class="val">' + phone1 + '</div></div>' +
-        '<div class="field" style="min-width:300px"><div class="label">ที่อยู่ปัจจุบัน</div><div class="val">' + escHtml(d[7]||'-') + '</div></div>' +
-        '</div>' +
-        imgBlock('person_portrait','รูปบุคคล') +
-        '<h2>Section 4: รายละเอียดเรื่องร้องเรียน</h2><div class="row">' +
-        '<div class="field" style="min-width:100%"><div class="label">เรื่องโดยสังเขป</div><div class="val">' + escHtml(d[17]||'-') + '</div></div>' +
-        '<div class="field"><div class="label">ประเภทเรื่อง</div><div class="val">' + escHtml(d[35]||'-') + '</div></div>' +
-        '<div class="field"><div class="label">สาเหตุ</div><div class="val">' + escHtml(d[36]||'-') + '</div></div>' +
-        '</div>' +
-        (function() {
-          var ca = d[61] || '', ua = d[62] || '';
-          if (!ca && !ua) return '';
-          return '<div style="border-top:1px solid #ddd;margin-top:14px;padding-top:6px;color:#888;font-size:8pt;text-align:right">' +
-            (ca ? 'สร้างเมื่อ: ' + ca : '') +
-            (ca && ua ? ' · ' : '') +
-            (ua ? 'แก้ไขล่าสุด: ' + ua : '') +
-            '</div>';
-        })() +
-        '<script>window.onload=function(){window.print();}<\/script>' +
-        '</body></html>';
-
-      var win = window.open('', '_blank');
-      if (!win) { showToast('กรุณาอนุญาต Pop-up ก่อน', 'warning'); return; }
-      win.document.write(html);
-      win.document.close();
-    }
-
     // ==================== UTILITIES ====================
     function fixMissingZero(val, type) {
       if (!val) return '-';
@@ -2849,286 +1630,6 @@
       if (type === 'phone'  && /^[1-9]\d{7,8}$/.test(str)) return '0' + str;
       if (type === 'idcard' && /^[1-9]\d{11}$/.test(str))  return '0' + str;
       return str || '-';
-    }
-
-    // ==================== COMPLETENESS ENGINE ====================
-    // Single centralized function — dashboard, table, form, filter all use this.
-    function calculateRecordCompleteness(record, attachmentMeta) {
-      var d = record.data;
-      var recId = String(d[0]);
-      var ac = attachmentMeta[recId] || {};
-
-      var required = [];
-      var missing  = [];
-      function check(label, value) {
-        required.push(label);
-        if (!value || value.toString().trim() === '') missing.push(label);
-      }
-
-      // Core fields — always checked
-      check('วันที่',             d[1]);
-      check('เวลา',               d[2]);
-      check('คำนำหน้า',           d[3]);
-      check('ชื่อ-สกุล',          d[4]);
-      check('เลขบัตร ปชช.',       d[6]);
-      check('เบอร์โทร',           d[8]);
-      check('หมายฯ (สถานะ)',      d[41]);
-      check('สถานที่พบ',          d[43]);
-      check('ชื่อเจ้าหน้าที่พบ',  d[48]);
-      check('วันที่นำส่ง',        d[50]);
-
-      // Portrait photo — counted as missing if no person_portrait attachment
-      required.push('รูปหน้าตรงบุคคล');
-      if ((ac.person_portrait || 0) === 0) missing.push('รูปหน้าตรงบุคคล');
-
-      // Conditional: notice detail
-      var notice = (d[41] || '').toString().trim();
-      if (notice === 'มีหมายฯ') check('รายละเอียดหมายฯ', d[42]);
-
-      // Conditional: location detail (for non-station locations)
-      var loc = (d[43] || '').toString().trim();
-      if (loc === 'จุดคัดกรอง' || loc === 'อุโมงค์' || loc === 'อื่น ๆ') {
-        check('รายละเอียดสถานที่', d[44]);
-      }
-
-      // Conditional: item hidden detail
-      var vis = (d[52] || '').toString().trim();
-      if (vis === 'ซุกซ่อนไว้') check('รายละเอียดการซุกซ่อน', d[53]);
-
-      // Conditional: envelope details
-      var env = (d[56] || '').toString().trim();
-      if (env === 'ใส่ซอง') {
-        var envSize  = (d[57] || '').toString().trim();
-        var envColor = (d[59] || '').toString().trim();
-        check('ขนาดซอง', envSize);
-        check('สีซอง',   envColor);
-        if (envSize  === 'อื่น ๆ')   check('ขนาดซองอื่นๆ', d[58]);
-        if (envColor === 'สีอื่น ๆ') check('สีซองอื่นๆ',   d[60]);
-      }
-
-      var total   = required.length;
-      var percent = total > 0 ? Math.round((total - missing.length) / total * 100) : 100;
-      return {
-        percent:       percent,
-        status:        missing.length === 0 ? 'complete' : 'incomplete',
-        missingCount:  missing.length,
-        missingFields: missing
-      };
-    }
-
-    // Same logic but reads live form values — used for form panel & pre-submit gate
-    function calculateFormCompleteness() {
-      var form = document.getElementById('dataForm');
-      if (!form) return null;
-      function fv(name) {
-        var el = form.querySelector('[name="' + name + '"]:checked') || form.querySelector('[name="' + name + '"]');
-        return el ? (el.value || '').toString().trim() : '';
-      }
-
-      var required = [], missing = [];
-      function check(label, val) {
-        required.push(label);
-        if (!val) missing.push(label);
-      }
-
-      check('วันที่',             fv('col2'));
-      check('เวลา',               fv('col3'));
-      check('คำนำหน้า',           fv('col4'));
-      check('ชื่อ-สกุล',          fv('col5'));
-      check('เลขบัตร ปชช.',       fv('col7'));
-      check('เบอร์โทร',           fv('col9'));
-      var notice = fv('col42');
-      check('หมายฯ (สถานะ)',      notice);
-      if (notice === 'มีหมายฯ')   check('รายละเอียดหมายฯ', fv('col43'));
-      var loc = fv('col44');
-      check('สถานที่พบ',          loc);
-      if (loc === 'จุดคัดกรอง' || loc === 'อุโมงค์' || loc === 'อื่น ๆ') {
-        check('รายละเอียดสถานที่', fv('col45'));
-      }
-      check('ชื่อเจ้าหน้าที่พบ',  fv('col49'));
-      check('วันที่นำส่ง',        fv('col51'));
-      var vis = fv('col53');
-      if (vis === 'ซุกซ่อนไว้')   check('รายละเอียดการซุกซ่อน', fv('col54'));
-      var env = fv('col57');
-      if (env === 'ใส่ซอง') {
-        var es = fv('col58'), ec = fv('col60');
-        check('ขนาดซอง', es); check('สีซอง', ec);
-        if (es === 'อื่น ๆ')   check('ขนาดซองอื่นๆ', fv('col59'));
-        if (ec === 'สีอื่น ๆ') check('สีซองอื่นๆ',   fv('col61'));
-      }
-
-      // Portrait: new pending uploads OR existing (edit mode)
-      required.push('รูปหน้าตรงบุคคล');
-      var hasPortrait = (uploadAreas.person_portrait || []).length > 0;
-      if (!hasPortrait && editRecordId) {
-        hasPortrait = (attachmentCounts[String(editRecordId)] || {}).person_portrait > 0;
-      }
-      if (!hasPortrait) missing.push('รูปหน้าตรงบุคคล');
-
-      var total = required.length;
-      return {
-        percent:       total > 0 ? Math.round((total - missing.length) / total * 100) : 100,
-        status:        missing.length === 0 ? 'complete' : 'incomplete',
-        missingCount:  missing.length,
-        missingFields: missing
-      };
-    }
-
-    function getVisitType(item) {
-      return (item.data[29] || '').toString().trim() === 'เคย' ? 'return' : 'first';
-    }
-
-    function formatMetaDate(str) {
-      if (!str) return '—';
-      try {
-        var d = new Date(str);
-        return d.toLocaleString('th-TH', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-      } catch(e) { return str; }
-    }
-
-    // ==================== FORM COMPLETENESS PANEL ====================
-    function scheduleCompPanel() {
-      clearTimeout(compPanelTimer);
-      compPanelTimer = setTimeout(updateCompPanel, 350);
-    }
-
-    function updateCompPanel() {
-      var block = document.getElementById('compPanelBlock');
-      if (!block) return;
-      var c = calculateFormCompleteness();
-      if (!c) return;
-      var pctEl = document.getElementById('cpPercent');
-      var misEl = document.getElementById('cpMissing');
-      if (!pctEl || !misEl) return;
-      if (c.status === 'complete') {
-        pctEl.textContent = '100% ✓';
-        pctEl.style.color = '#198754';
-        misEl.textContent = 'ข้อมูลครบถ้วน';
-      } else {
-        pctEl.textContent = c.percent + '%';
-        pctEl.style.color = '#d97706';
-        misEl.textContent = 'ยังขาด: ' + c.missingFields.slice(0, 5).join(', ') + (c.missingFields.length > 5 ? '...' : '');
-      }
-    }
-
-    // ==================== FORM INCOMPLETE WARNING ====================
-    function showFormIncompleteWarning(comp) {
-      var el = document.getElementById('formIncompleteWarn');
-      if (!el) return;
-      document.getElementById('fwMissingList').textContent = comp.missingFields.join(', ');
-      el.classList.remove('d-none');
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    function formSubmitAnyway() {
-      allowIncompleteSubmit = true;
-      document.getElementById('formIncompleteWarn').classList.add('d-none');
-      document.getElementById('dataForm').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-    }
-
-    function formSubmitCancel() {
-      document.getElementById('formIncompleteWarn').classList.add('d-none');
-    }
-
-    // ==================== DUPLICATE CHECK ====================
-    function scheduleDupCheck() {
-      clearTimeout(dupCheckTimer);
-      dupCheckTimer = setTimeout(runDupCheck, 700);
-    }
-
-    async function runDupCheck() {
-      var form = document.getElementById('dataForm');
-      if (!form) return;
-      var idCard = (form.querySelector('[name="col7"]') || {}).value || '';
-      var phone  = (form.querySelector('[name="col9"]') || {}).value || '';
-      var prefix = (form.querySelector('[name="col4"]') || form.querySelector('[name="col4"] option:checked') || {}).value || '';
-      var name   = (form.querySelector('[name="col5"]') || {}).value || '';
-      var full   = (prefix + ' ' + name).trim();
-      var normId = idCard.trim().replace(/\s/g, '');
-      var normPh = phone.trim().replace(/\D/g, '');
-      if (!normId && normPh.length < 8 && full.length < 3) { hideDupWarning(); return; }
-      try {
-        var isAdmin = !!adminToken;
-        var payload = { action: isAdmin ? 'checkDuplicate' : 'checkDuplicatePublic',
-                        idCard: normId, phone: phone.trim(), name: full,
-                        excludeRecordId: editRecordId ? String(editRecordId) : '' };
-        if (isAdmin) payload.token = adminToken;
-        var res = await gasPost(payload);
-        if (res.rateLimited) { return; } // rate limited — stay silent, don't disrupt form
-        if (!res.success || !res.candidates || !res.candidates.length) { hideDupWarning(); return; }
-        showDupWarning(res.candidates, isAdmin);
-      } catch(e) { hideDupWarning(); }
-    }
-
-    function showDupWarning(candidates, isAdmin) {
-      var el = document.getElementById('dupWarningBlock');
-      if (!el) return;
-      var html = '<div class="alert alert-warning border-warning mx-auto mb-2" style="max-width:900px">' +
-        '<div class="fw-bold mb-1"><i class="fas fa-exclamation-triangle me-1"></i>พบข้อมูลบุคคลที่อาจเป็นรายเดิม</div>';
-      candidates.forEach(function(c) {
-        var displayName = isAdmin ? escHtml(c.name || '') : escHtml(c.maskedName || '***');
-        var viewBtn = isAdmin
-          ? '<button type="button" class="btn btn-sm btn-outline-dark ms-auto" onclick="viewDupRecord(\'' + c.recordId + '\')">ดูข้อมูลเดิม</button>'
-          : '';
-        html += '<div class="border-top pt-2 mt-1 d-flex align-items-start gap-3 flex-wrap">' +
-          '<div><div class="fw-bold">' + displayName + '</div>' +
-          '<div class="small text-muted">วันที่: ' + escHtml(c.date) + (isAdmin ? ' · Record #' + escHtml(String(c.recordId)) : '') + '</div>' +
-          '<div class="small"><span class="badge bg-secondary">' + escHtml(c.matchReason.join(', ')) + '</span></div></div>' +
-          viewBtn + '</div>';
-      });
-      html += '<div class="mt-2"><button type="button" class="btn btn-sm btn-warning" onclick="hideDupWarning()">ดำเนินการเพิ่มข้อมูลต่อ</button></div></div>';
-      el.innerHTML = html;
-    }
-
-    function hideDupWarning() {
-      var el = document.getElementById('dupWarningBlock');
-      if (el) el.innerHTML = '';
-    }
-
-    function viewDupRecord(recordId) {
-      if (!adminToken) { showToast('กรุณาล็อกอิน Admin เพื่อดูข้อมูลเดิม', 'warning'); return; }
-      var item = globalData.find(function(i) { return String(i.data[0]) === String(recordId); });
-      if (!item) { showToast('ไม่พบข้อมูล Record #' + recordId, 'warning'); return; }
-      var saved = filteredData;
-      filteredData = [item];
-      viewDetails(0);
-      filteredData = saved;
-    }
-
-    // ==================== COMPLETENESS DASHBOARD WIDGET ====================
-    function updateCompletenessWidget(dataArray) {
-      var el = document.getElementById('completenessWidgetContent');
-      if (!el) return;
-      var complete = 0, incomplete = 0, missingPortrait = 0, missingEncounter = 0;
-      dataArray.forEach(function(item) {
-        var c = calculateRecordCompleteness(item, attachmentCounts);
-        if (c.status === 'complete') { complete++; }
-        else {
-          incomplete++;
-          if ((attachmentCounts[String(item.data[0])] || {}).person_portrait === 0 ||
-              !(attachmentCounts[String(item.data[0])] || {}).person_portrait) {
-            missingPortrait++;
-          }
-          var d = item.data;
-          var hasEncounter = (d[41]||'').trim() && (d[43]||'').trim() && (d[48]||'').trim() && (d[50]||'').trim();
-          if (!hasEncounter) missingEncounter++;
-        }
-      });
-      function wgItem(label, count, filterKey) {
-        var isAct = activeCompletenessFilter === filterKey;
-        return '<div class="wg-item wg-clickable' + (isAct ? ' active' : '') + '" onclick="filterByCompleteness(\'' + filterKey + '\')">' +
-          '<div class="wg-text">' + label + '</div><div class="wg-badge">' + count + ' ราย</div></div>';
-      }
-      el.innerHTML =
-        wgItem('✓ ข้อมูลครบ',        complete,        'complete') +
-        wgItem('ยังไม่ครบ',           incomplete,      'incomplete') +
-        wgItem('ขาดรูปบุคคล',        missingPortrait, 'portrait') +
-        wgItem('ข้อมูลการพบยังขาด',  missingEncounter,'encounter');
-    }
-
-    function filterByCompleteness(type) {
-      activeCompletenessFilter = (activeCompletenessFilter === type) ? 'all' : type;
-      applyFilters();
     }
   </script>
 </body>
