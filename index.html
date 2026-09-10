@@ -150,9 +150,14 @@
     .up-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; min-height: 4px; }
     .up-thumb { position: relative; width: 76px; height: 76px; flex-shrink: 0; }
     .up-thumb img { width: 76px; height: 76px; object-fit: cover; border-radius: 6px; border: 1px solid #dee2e6; display: block; }
+    .up-thumb-failed img { opacity: 0.5; border-color: #dc3545; }
     .up-del { position: absolute; top: -6px; right: -6px; background: #dc3545; color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; z-index: 1; }
-    .up-tag { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.55); color: #fff; font-size: 9px; text-align: center; border-radius: 0 0 5px 5px; padding: 1px 0; }
+    .up-tag { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.55); color: #fff; font-size: 9px; text-align: center; border-radius: 0 0 5px 5px; padding: 1px 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .up-ph { width: 76px; height: 76px; background: #e9ecef; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #adb5bd; }
+    .up-status-spin,.up-status-ok,.up-status-fail { position: absolute; top: 3px; left: 3px; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; z-index: 2; }
+    .up-status-spin { background: rgba(0,0,0,0.55); color: #fff; }
+    .up-status-ok   { background: #198754; color: #fff; }
+    .up-status-fail { background: #dc3545; color: #fff; cursor: help; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
@@ -204,12 +209,29 @@
         <button class="btn btn-outline-light btn-sm d-none" id="btnChangePassword" onclick="openChangePasswordModal()">
           <i class="fas fa-key"></i> เปลี่ยนรหัสผ่าน
         </button>
+        <button class="btn btn-outline-info btn-sm d-none" id="btnBulkPanel" onclick="openBulkPanel()">
+          <i class="fas fa-images"></i> เพิ่มรูปแบบเร็ว
+        </button>
+        <button id="btnUploadBadge" class="btn btn-sm d-none ms-0" onclick="bgTogglePanel()" title="คิวอัปโหลด" style="font-size:0.75rem; min-width:56px;">
+          <i class="fas fa-upload"></i> <span id="upBadgeText"></span>
+        </button>
         <button class="btn btn-outline-danger btn-sm d-none" id="btnLogout" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
         </button>
       </div>
     </div>
   </nav>
+
+  <!-- ===== UPLOAD QUEUE PANEL (Bootstrap offcanvas) ===== -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="queuePanel" style="width:420px;max-width:95vw;">
+    <div class="offcanvas-header bg-dark text-white py-2">
+      <h6 class="offcanvas-title mb-0 small"><i class="fas fa-upload me-2"></i>คิวอัปโหลด</h6>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+      <div id="queuePanelContent" style="height:100%;overflow-y:auto;padding:0.75rem;"></div>
+    </div>
+  </div>
 
   <div class="container pb-5 mt-2">
 
@@ -370,7 +392,7 @@
           <div class="col-lg-4 mb-3 mb-lg-0">
             <div class="input-group shadow-sm">
               <span class="input-group-text bg-white border-end-0 text-primary"><i class="fas fa-search"></i></span>
-              <input type="text" id="searchInput" class="form-control border-start-0 search-input" placeholder="ค้นหาทุกฟิลด์: ชื่อ, เลขบัตร, เบอร์, จังหวัด, เรื่อง..." oninput="applyFilters()">
+              <input type="text" id="searchInput" class="form-control border-start-0 search-input" placeholder="ค้นหาทุกฟิลด์: ชื่อ, เลขบัตร, เบอร์, จังหวัด, เรื่อง...">
             </div>
           </div>
           <div class="col-lg-4 text-lg-end d-flex justify-content-lg-end gap-2 flex-wrap">
@@ -1059,6 +1081,54 @@
       </form>
     </div>
 
+    <!-- ===== BULK PANEL VIEW ===== -->
+    <div id="bulkPanelView" class="d-none">
+      <div class="card shadow-sm border-0 mt-3">
+        <div class="card-header bg-dark text-white d-flex align-items-center gap-2">
+          <i class="fas fa-images text-warning"></i>
+          <span class="fw-bold">เพิ่มรูปแบบเร็ว</span>
+          <span id="bulkCapacityBadge" class="badge bg-secondary ms-auto small"></span>
+        </div>
+        <div class="card-body">
+          <!-- Search -->
+          <div class="mb-3">
+            <label class="form-label small text-muted">ค้นหา Record (RecordID หรือ ชื่อ-สกุล)</label>
+            <div class="input-group">
+              <input type="text" id="bulkSearchInput" class="form-control" placeholder="เช่น 42 หรือ สมชาย" oninput="bulkSearch()">
+              <button class="btn btn-outline-secondary" onclick="bulkSearch()"><i class="fas fa-search"></i></button>
+            </div>
+            <div id="bulkResultsList" class="list-group mt-1" style="max-height:200px;overflow-y:auto;"></div>
+          </div>
+          <!-- Selected record + add area -->
+          <div id="bulkSelectedInfo" class="d-none mb-3 p-2 border rounded bg-light">
+            <div class="fw-bold small" id="bulkSelectedLabel"></div>
+          </div>
+          <div id="bulkAddArea" class="d-none">
+            <div class="row g-2 mb-2">
+              <div class="col-sm-5">
+                <label class="form-label small text-muted">หัวข้อรูป</label>
+                <select id="bulkSectionSelect" class="form-select form-select-sm">
+                  <option value="">-- เลือกหัวข้อรูป --</option>
+                </select>
+              </div>
+              <div class="col-sm-7">
+                <label class="form-label small text-muted">เลือกรูป</label>
+                <input type="file" id="bulkFileInput" class="form-control form-control-sm" accept="image/*" multiple>
+              </div>
+            </div>
+            <button id="bulkAddBtn" class="btn btn-primary btn-sm" onclick="bulkAddToQueue()">
+              <i class="fas fa-plus me-1"></i>เพิ่มเข้าคิว
+            </button>
+            <span id="bulkQueueFull" class="text-danger small ms-2 d-none">คิวเต็ม กรุณารอสักครู่</span>
+          </div>
+          <!-- Activity -->
+          <hr class="my-3">
+          <h6 class="small text-muted text-uppercase">กิจกรรมล่าสุด</h6>
+          <div id="bulkActivityList"></div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /container -->
 
   <!-- ===== TOAST NOTIFICATION ===== -->
@@ -1069,6 +1139,14 @@
         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
     </div>
+  </div>
+
+  <!-- ===== ATTACHMENT LIGHTBOX ===== -->
+  <div id="detailLightbox" onclick="closeDetailLightbox()"
+       style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:10500;align-items:center;justify-content:center">
+    <img id="detailLightboxImg" style="max-width:92vw;max-height:92vh;object-fit:contain;border-radius:4px;box-shadow:0 4px 32px rgba(0,0,0,.6)" src="">
+    <button onclick="event.stopPropagation();closeDetailLightbox()"
+            style="position:absolute;top:14px;right:18px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:1.5rem;line-height:1;padding:4px 10px;border-radius:50%;cursor:pointer">&#x2715;</button>
   </div>
 
   <!-- ===== DETAIL MODAL ===== -->
@@ -1445,6 +1523,8 @@
     let globalData   = [];
     let filteredData = [];
     let globalAttachmentCounts = {};
+    let _tablePage = 0;
+    const TABLE_PAGE_SIZE = 50;
     let currentViewItem = null;
     let editSheetRow = null;
     let currentEditRecordId = null;
@@ -1502,14 +1582,20 @@
     let amphoeNameToId = {};
 
     // ==================== GAS API ====================
-    const GAS_API_URL = 'https://script.google.com/macros/s/AKfycby5E9tAwCJBubnOnSLEzBkfCaGFpc0yLihZkmSZ7RI2vjciTEkz-xieMCe7bzHBDg/exec';
+    const GAS_API_URL  = 'https://script.google.com/macros/s/AKfycby5E9tAwCJBubnOnSLEzBkfCaGFpc0yLihZkmSZ7RI2vjciTEkz-xieMCe7bzHBDg/exec';
+    const GAS_TIMEOUT  = 55000; // 55s — GAS max exec is 6 min; cut off stalled requests early
+    function _gasReq(url, opts) {
+      const ctrl  = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), GAS_TIMEOUT);
+      return fetch(url, Object.assign({ signal: ctrl.signal }, opts))
+        .then(function(r) { clearTimeout(timer); if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .catch(function(e) { clearTimeout(timer); throw e; });
+    }
     function gasGet(params) {
-      return fetch(GAS_API_URL + '?' + new URLSearchParams(params).toString())
-        .then(function(r) { return r.json(); });
+      return _gasReq(GAS_API_URL + '?' + new URLSearchParams(params).toString(), { method: 'GET' });
     }
     function gasPost(data) {
-      return fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(data) })
-        .then(function(r) { return r.json(); });
+      return _gasReq(GAS_API_URL, { method: 'POST', body: JSON.stringify(data) });
     }
 
     // ==================== INIT ====================
@@ -1557,11 +1643,18 @@
       } catch(e) {
         showView('loginView');
       }
+
+      // Debounced search — 250ms delay prevents re-render on every keystroke
+      (function() {
+        var _st;
+        var el = document.getElementById('searchInput');
+        if (el) el.addEventListener('input', function() { clearTimeout(_st); _st = setTimeout(applyFilters, 250); });
+      })();
     });
 
     // ==================== NAVIGATION ====================
     function showView(viewId) {
-      ['loginView', 'welcomeView', 'dashboardView', 'formView'].forEach(id => {
+      ['loginView', 'welcomeView', 'dashboardView', 'formView', 'bulkPanelView'].forEach(id => {
         document.getElementById(id).classList.add('d-none');
       });
       document.getElementById(viewId).classList.remove('d-none');
@@ -1586,8 +1679,17 @@
         btnHome.classList.remove('d-none');
         if (adminSession) btnLogout.classList.remove('d-none');
       }
-      if (viewId === 'formView') loadProvinces();
+      if (viewId === 'formView') { loadProvinces(); initUploadState(); }
     }
+
+    // Warn before page leave if bg queue has pending work
+    window.addEventListener('beforeunload', function(e) {
+      if (hasPendingBgWork()) {
+        e.preventDefault();
+        e.returnValue = 'ยังมีรูปที่กำลังอัปโหลดหรือรออัปโหลดอยู่ หากออกจากหน้านี้งานที่ค้างอาจสูญหาย';
+        return e.returnValue;
+      }
+    });
 
     function navBrandClick() {
       if (adminSession) showView('welcomeView'); else showView('loginView');
@@ -1615,6 +1717,9 @@
     }
 
     function logout() {
+      if (hasPendingBgWork()) {
+        if (!confirm('ยังมีรูปที่กำลังอัปโหลดหรือรออัปโหลดอยู่\nหากออกจากระบบตอนนี้งานที่ค้างอาจสูญหาย\n\nต้องการออกจากระบบหรือไม่?')) return;
+      }
       if (adminSession) gasPost({ action: 'logout', token: adminSession }).catch(function() {});
       clearSession();
       updateNavUserDisplay();
@@ -1660,6 +1765,8 @@
         if (hasClientPerm('delete_record')) btnTR.classList.remove('d-none');
         else btnTR.classList.add('d-none');
       }
+      const btnBulk = document.getElementById('btnBulkPanel');
+      if (btnBulk) btnBulk.classList.toggle('d-none', !adminSession);
     }
 
     function applyRoleUI() {
@@ -1954,6 +2061,7 @@
         });
       }
 
+      _tablePage = 0; // reset to first page on every filter/search change
       renderTable(filteredData);
     }
 
@@ -2269,8 +2377,15 @@
     function renderTable(dataArray) {
       var tbody  = document.getElementById('tableBody');
       var footer = document.getElementById('tableFooter');
+      // Clamp page to valid range
+      var totalPages = Math.max(1, Math.ceil(dataArray.length / TABLE_PAGE_SIZE));
+      _tablePage = Math.min(Math.max(0, _tablePage), totalPages - 1);
+      var pageStart = _tablePage * TABLE_PAGE_SIZE;
+      var pageItems = dataArray.slice(pageStart, pageStart + TABLE_PAGE_SIZE);
+
       var html = '';
-      dataArray.forEach(function(item, index) {
+      pageItems.forEach(function(item, pageIdx) {
+        var globalIndex = pageStart + pageIdx; // index into filteredData for viewDetails
         var d   = item.data;
         var rid = String(d[0]);
         var isChecked   = selectedRows.has(rid);
@@ -2293,10 +2408,10 @@
           : '<span class="comp-badge comp-incomplete" title="ขาด: ' + escHtml(comp.missingFields.join(', ')) + '">' + comp.percent + '% · ขาด ' + comp.missingCount + '</span>';
         var fullName = escHtml((d[3] || '') + ' ' + (d[4] || '-'));
         var rawName  = ((d[3] || '') + ' ' + (d[4] || '-')).trim();
-        html += '<tr class="clickable-row" onclick="viewDetails(' + index + ')">' +
+        html += '<tr class="clickable-row" onclick="viewDetails(' + globalIndex + ')">' +
           '<td class="text-center" onclick="event.stopPropagation()"><input type="checkbox" class="row-cb" data-rid="' + escHtml(rid) + '" ' + (isChecked ? 'checked' : '') + ' onchange="toggleRowSelect(\'' + escHtml(rid) + '\',event)"></td>' +
           '<td class="text-center text-muted small">' + escHtml(d[0] || '-') + '</td>' +
-          '<td class="small">' + escHtml(d[1] || '-') + '<br><span class="text-muted">' + escHtml(d[2] || '') + '</span></td>' +
+          '<td class="small">' + escHtml(displayEventDate(d[1])) + '<br><span class="text-muted">' + escHtml(d[2] || '') + '</span></td>' +
           '<td class="col-name-cell fw-bold text-primary" title="' + escHtml(rawName) + '">' + fullName + '</td>' +
           '<td class="text-center">' + visitBadge + '</td>' +
           '<td>' + noticeBadge + '</td>' +
@@ -2304,15 +2419,29 @@
           '<td class="small">' + escHtml(officer) + '</td>' +
           '<td class="text-center">' + compBadge + '</td>' +
           '<td class="text-center">' + photoBadge + '</td>' +
-          '<td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary py-0 px-2" onclick="event.stopPropagation();viewDetails(' + index + ')"><i class="fas fa-eye"></i></button></td>' +
+          '<td class="text-center"><button type="button" class="btn btn-sm btn-outline-primary py-0 px-2" onclick="event.stopPropagation();viewDetails(' + globalIndex + ')"><i class="fas fa-eye"></i></button></td>' +
           '</tr>';
       });
       tbody.innerHTML = html || '<tr><td colspan="11" class="text-center py-4 text-danger fw-bold"><i class="fas fa-search"></i> ไม่พบข้อมูลที่ตรงกับการค้นหา</td></tr>';
-      if (footer) footer.textContent = 'แสดง ' + dataArray.length + ' รายการ จากทั้งหมด ' + globalData.length + ' รายการ';
-      // sync select-all checkbox
+
+      // Footer with pagination controls
+      if (footer) {
+        var showing = dataArray.length === 0 ? 0 : pageStart + pageItems.length;
+        var pageInfo = 'แสดง ' + (dataArray.length ? pageStart + 1 : 0) + '–' + showing + ' จาก ' + dataArray.length + ' รายการ (ทั้งหมด ' + globalData.length + ')';
+        var pagNav = totalPages > 1
+          ? ' &nbsp;|&nbsp; <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="_tblPrev()" ' + (_tablePage === 0 ? 'disabled' : '') + '>‹</button>'
+            + ' <span class="small mx-1">หน้า ' + (_tablePage + 1) + '/' + totalPages + '</span>'
+            + '<button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="_tblNext(' + dataArray.length + ')" ' + (_tablePage >= totalPages - 1 ? 'disabled' : '') + '>›</button>'
+          : '';
+        footer.innerHTML = pageInfo + pagNav;
+      }
+      // Sync select-all checkbox (across current page only)
       var selAll = document.getElementById('selectAll');
-      if (selAll) selAll.checked = dataArray.length > 0 && dataArray.every(function(item) { return selectedRows.has(String(item.data[0])); });
+      if (selAll) selAll.checked = pageItems.length > 0 && pageItems.every(function(item) { return selectedRows.has(String(item.data[0])); });
     }
+
+    function _tblPrev() { _tablePage = Math.max(0, _tablePage - 1); renderTable(filteredData); }
+    function _tblNext(total) { _tablePage = Math.min(Math.ceil(total / TABLE_PAGE_SIZE) - 1, _tablePage + 1); renderTable(filteredData); }
 
     // ==================== DETAIL MODAL ====================
     function viewDetails(index) {
@@ -2347,7 +2476,7 @@
         '<div class="card p-3 mb-3 border-0 shadow-sm">' +
           '<div class="detail-section-title"><i class="fas fa-calendar-alt"></i> 1. วัน/เดือน/ปี/หมายเสด็จ</div>' +
           '<div class="row">' +
-            '<div class="col-md-4"><div class="detail-label">วันที่:</div><div class="detail-value">' + v(1) + '</div></div>' +
+            '<div class="col-md-4"><div class="detail-label">วันที่:</div><div class="detail-value">' + displayEventDate(row[1]) + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">เวลา:</div><div class="detail-value">' + v(2) + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">หมายเสด็จ:</div><div class="detail-value">' + v(41) + (row[42] ? ' — ' + row[42] : '') + '</div></div>' +
           '</div>' +
@@ -2391,8 +2520,22 @@
             '<div class="col-md-4"><div class="detail-label">บิดา:</div><div class="detail-value">' + v(105) + (row[106] ? ' / ' + fixMissingZero(row[106],'phone') : '') + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">มารดา:</div><div class="detail-value">' + v(107) + (row[108] ? ' / ' + fixMissingZero(row[108],'phone') : '') + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">ผู้ปกครอง:</div><div class="detail-value">' + v(109) + (row[110] ? ' / ' + fixMissingZero(row[110],'phone') : '') + '</div></div>' +
-            '<div class="col-12"><div class="detail-label">ที่อยู่ปัจจุบัน:</div>' + addrBlock([63,64,65,66,67,68,69,70]) + '</div>' +
-            '<div class="col-12"><div class="detail-label">ที่อยู่ภูมิลำเนา:</div>' + addrBlock([71,72,73,74,75,76,77,78]) + '</div>' +
+            (function(){
+              var si = [63,64,65,66,67,68,69,70];
+              var hasS = si.some(function(i){ return row[i] && String(row[i]).trim() !== ''; });
+              if (hasS) return '<div class="col-12"><div class="detail-label">ที่อยู่ปัจจุบัน:</div>' + addrBlock([63,64,65,66,67,68,69,70]) + '</div>';
+              var leg = (row[7] || '').toString().replace(/^'/, '').trim();
+              if (leg) return '<div class="col-12"><div class="detail-label">ที่อยู่ปัจจุบัน: <span class="badge bg-warning text-dark ms-1 fw-normal" style="font-size:.7em">ข้อมูลเดิม</span></div><div class="detail-value">' + leg + '</div></div>';
+              return '<div class="col-12"><div class="detail-label">ที่อยู่ปัจจุบัน:</div><div class="detail-value">-</div></div>';
+            })() +
+            (function(){
+              var si = [71,72,73,74,75,76,77,78];
+              var hasS = si.some(function(i){ return row[i] && String(row[i]).trim() !== ''; });
+              if (hasS) return '<div class="col-12"><div class="detail-label">ที่อยู่ภูมิลำเนา:</div>' + addrBlock([71,72,73,74,75,76,77,78]) + '</div>';
+              var leg = (row[37] || '').toString().replace(/^'/, '').trim();
+              if (leg) return '<div class="col-12"><div class="detail-label">ที่อยู่ภูมิลำเนา: <span class="badge bg-warning text-dark ms-1 fw-normal" style="font-size:.7em">ข้อมูลเดิม</span></div><div class="detail-value">' + leg + '</div></div>';
+              return '<div class="col-12"><div class="detail-label">ที่อยู่ภูมิลำเนา:</div><div class="detail-value">-</div></div>';
+            })() +
             '<div class="col-md-4"><div class="detail-label">ติดต่อสำรอง:</div><div class="detail-value">' + v(24) + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">เกี่ยวข้องเป็น:</div><div class="detail-value">' + v(25) + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">เบอร์สำรอง:</div><div class="detail-value">' + phone2 + '</div></div>' +
@@ -2447,9 +2590,172 @@
             '<div class="col-12"><div class="detail-label">7.8 อื่น ๆ:</div><div class="detail-value">' + v(34) + '</div></div>' +
             '<div class="col-12"><div class="detail-label">7.9 เมื่อยื่นเสร็จจะเดินทางไป:</div><div class="detail-value">' + v(151) + '</div></div>' +
           '</div>' +
+        '</div>' +
+        // Attachment section — populated async by loadDetailAttachments()
+        '<div class="card p-3 mt-3 border-0 shadow-sm" id="detailAttachSection">' +
+          '<div class="detail-section-title" style="border-color:#6c757d;color:#495057">' +
+            '<i class="fas fa-image me-1"></i> รูปประกอบ' +
+          '</div>' +
+          '<div class="text-muted small py-1"><i class="fas fa-spinner fa-spin me-1"></i> กำลังโหลดรูป...</div>' +
         '</div>';
 
       detailModal.show();
+      const _rid = String(row[0] || '');
+      if (_rid) loadDetailAttachments(_rid);
+    }
+
+    // ==================== DETAIL ATTACHMENTS ====================
+    // ---- Detail attachment cache config ----
+    const DETAIL_IMAGE_CONCURRENCY    = 3;  // max parallel getAttachmentData calls
+    const DETAIL_IMG_CACHE_MAX_RECORDS = 10; // max records worth of base64 kept in memory
+
+    // Metadata cache: unbounded (small JSON, negligible memory)
+    const _detailAttMetaCache = {}; // recordId → [attachment metadata]
+
+    // Image cache: LRU-bounded by record count
+    const _detailAttImageCache = {}; // attachmentId → base64
+    const _detailImgLruOrder   = []; // [recordId, ...] oldest→newest for eviction
+    const _detailImgByRecord   = {}; // recordId → [attachmentId, ...] for eviction
+
+    function _detailImgCacheSet(recordId, attachmentId, b64) {
+      if (!_detailImgByRecord[recordId]) {
+        // Evict oldest record's images if at limit
+        if (_detailImgLruOrder.length >= DETAIL_IMG_CACHE_MAX_RECORDS) {
+          const evict = _detailImgLruOrder.shift();
+          (_detailImgByRecord[evict] || []).forEach(function(id) { delete _detailAttImageCache[id]; });
+          delete _detailImgByRecord[evict];
+        }
+        _detailImgLruOrder.push(recordId);
+        _detailImgByRecord[recordId] = [];
+      }
+      if (!_detailAttImageCache[attachmentId]) { // don't double-push same att
+        _detailAttImageCache[attachmentId] = b64;
+        _detailImgByRecord[recordId].push(attachmentId);
+      }
+    }
+
+    // Bounded concurrency pool: runs tasks (functions returning Promises) with at most
+    // `limit` active at once. Errors inside tasks must be caught by the task itself.
+    async function _concurrentRun(tasks, limit) {
+      let idx = 0;
+      async function worker() {
+        while (idx < tasks.length) { await tasks[idx++](); }
+      }
+      await Promise.allSettled(
+        Array.from({ length: Math.min(limit, tasks.length) }, worker)
+      );
+    }
+
+    async function loadDetailAttachments(recordId) {
+      const container = document.getElementById('detailAttachSection');
+      if (!container) return;
+
+      // Phase 1: metadata (fast, no image bytes)
+      let meta = _detailAttMetaCache[recordId];
+      if (!meta) {
+        try {
+          const res = await gasPost({ action: 'listAttachments', recordId: recordId, token: adminSession });
+          if (!container.isConnected) return;
+          if (!res.success) {
+            container.querySelector('div + div').textContent = 'โหลดข้อมูลรูปไม่สำเร็จ';
+            return;
+          }
+          meta = (res.attachments || []).filter(function(a) { return a.status === 'active'; });
+          _detailAttMetaCache[recordId] = meta;
+        } catch(e) {
+          if (container.isConnected) container.innerHTML =
+            '<div class="detail-section-title" style="border-color:#6c757d;color:#495057"><i class="fas fa-image me-1"></i> รูปประกอบ</div>' +
+            '<div class="text-danger small py-1">โหลดรูปไม่สำเร็จ</div>';
+          return;
+        }
+      }
+      if (!container.isConnected) return;
+
+      const sectionOrder = Object.keys(UPLOAD_LIMITS);
+      const grouped = {};
+      sectionOrder.forEach(function(k) { grouped[k] = []; });
+      meta.forEach(function(att) { if (grouped[att.section]) grouped[att.section].push(att); });
+      const activeSections = sectionOrder.filter(function(k) { return grouped[k].length > 0; });
+
+      if (activeSections.length === 0) {
+        container.innerHTML =
+          '<div class="detail-section-title" style="border-color:#6c757d;color:#495057"><i class="fas fa-image me-1"></i> รูปประกอบ</div>' +
+          '<div class="text-muted small py-1">ไม่มีรูปแนบ</div>';
+        return;
+      }
+
+      // Phase 1 render: section headers + skeleton placeholders (no image data yet)
+      const safeId = function(attId) { return 'att-' + attId.replace(/[^a-z0-9]/gi, '-'); };
+      let html =
+        '<div class="detail-section-title" style="border-color:#6c757d;color:#495057">' +
+          '<i class="fas fa-image me-1"></i> รูปประกอบ (' + meta.length + ' รูป)' +
+        '</div>';
+      activeSections.forEach(function(sKey) {
+        const atts  = grouped[sKey];
+        const label = (SECTION_LABELS && SECTION_LABELS[sKey]) ? SECTION_LABELS[sKey] : sKey;
+        html += '<div class="mb-3">' +
+          '<div class="small fw-semibold text-secondary mb-2">' + escHtml(label) + ' — ' + atts.length + ' รูป</div>' +
+          '<div class="d-flex flex-wrap gap-2">';
+        atts.forEach(function(att) {
+          const sid = safeId(att.attachmentId);
+          html +=
+            '<div id="att-wrap-' + sid + '" title="' + escHtml(att.fileName) + '" ' +
+              'style="width:80px;height:80px;border-radius:6px;overflow:hidden;background:#e9ecef;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center">' +
+              '<i id="att-ph-' + sid + '" class="fas fa-image" style="color:#ced4da;font-size:1.4rem"></i>' +
+              '<img id="att-img-' + sid + '" src="" loading="lazy" ' +
+                'style="display:none;width:80px;height:80px;object-fit:cover" ' +
+                'onclick="openDetailLightbox(this.src)">' +
+            '</div>';
+        });
+        html += '</div></div>';
+      });
+      container.innerHTML = html;
+
+      // Phase 2: bounded-concurrency lazy load (max DETAIL_IMAGE_CONCURRENCY parallel)
+      await _concurrentRun(meta.map(function(att) {
+        return function() {
+          return _loadAttThumb(recordId, att.attachmentId, att.mimeType, safeId(att.attachmentId));
+        };
+      }), DETAIL_IMAGE_CONCURRENCY);
+    }
+
+    async function _loadAttThumb(recordId, attachmentId, mimeType, sid) {
+      let b64 = _detailAttImageCache[attachmentId];
+      if (!b64) {
+        try {
+          const res = await gasPost({ action: 'getAttachmentData', attachmentId: attachmentId, token: adminSession });
+          if (!res.success || !res.base64) { _showAttError(sid); return; }
+          b64 = res.base64;
+          _detailImgCacheSet(recordId, attachmentId, b64); // LRU-bounded store
+        } catch(e) { _showAttError(sid); return; }
+      }
+      const imgEl = document.getElementById('att-img-' + sid);
+      const phEl  = document.getElementById('att-ph-' + sid);
+      if (!imgEl || !imgEl.isConnected) return; // modal closed while loading
+      imgEl.src   = 'data:' + (mimeType || 'image/jpeg') + ';base64,' + b64;
+      imgEl.style.display = 'block';
+      if (phEl) phEl.style.display = 'none';
+    }
+
+    function _showAttError(sid) {
+      const wrap = document.getElementById('att-wrap-' + sid);
+      if (!wrap || !wrap.isConnected) return;
+      wrap.innerHTML = '<span style="font-size:0.6rem;color:#dc3545;text-align:center;padding:4px;line-height:1.2">โหลดรูปไม่สำเร็จ</span>';
+    }
+
+    function openDetailLightbox(src) {
+      const lb  = document.getElementById('detailLightbox');
+      const img = document.getElementById('detailLightboxImg');
+      if (!lb || !img || !src) return;
+      img.src = src;
+      lb.style.display = 'flex';
+    }
+
+    function closeDetailLightbox() {
+      const lb  = document.getElementById('detailLightbox');
+      const img = document.getElementById('detailLightboxImg');
+      if (lb)  lb.style.display  = 'none';
+      if (img) img.src = '';
     }
 
     // ==================== EDIT ====================
@@ -2600,14 +2906,28 @@
 
     function parseDateForInput(str) {
       if (!str) return '';
-      if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str; // already ISO
-      const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      // ISO with optional time component — extract date part only (handles JSON-serialized Date objects)
+      const isoM = String(str).match(/^(\d{4}-\d{2}-\d{2})/);
+      if (isoM) return isoM[1];
+      const m = String(str).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
       if (m) {
         let y = parseInt(m[3]);
         if (y > 2400) y -= 543; // Buddhist Era → Gregorian
         return y + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0');
       }
       return '';
+    }
+
+    // Converts stored DD/MM/BBBB → YYYY-MM-DD for HTML date inputs.
+    function storageDateToHtmlDate(value) { return parseDateForInput(value); }
+
+    // Formats col2 (Event Date) from any stored format to DD/MM/BBBB for UI display.
+    // Works for JSON-serialized Date objects ("2025-08-06T00:00:00.000Z"), ISO strings,
+    // and all legacy text formats handled by normalizePersonDate.
+    function displayEventDate(raw) {
+      if (!raw) return '-';
+      var nd = normalizePersonDate(raw);
+      return nd.valid ? nd.display : (String(raw).replace(/^'/, '') || '-');
     }
 
     function cancelEdit() {
@@ -2627,11 +2947,15 @@
       if (editHeartbeatInterval) { clearInterval(editHeartbeatInterval); editHeartbeatInterval = null; }
       editSheetRow = null;
       currentEditRecordId = null;
+      _currentFormSubmitId = null; // clear so next Save for a new record gets a fresh ID
       document.getElementById('formTitle').innerHTML =
         '<i class="fas fa-file-signature text-primary"></i> แบบฟอร์มลงข้อมูลใหม่';
       document.getElementById('editModeBanner').classList.add('d-none');
-      document.getElementById('submitBtn').innerHTML =
-        '<i class="fas fa-save"></i> บันทึกข้อมูลเข้าฐานข้อมูล';
+      const submitBtn = document.getElementById('submitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> บันทึกข้อมูลเข้าฐานข้อมูล';
+      }
       document.getElementById('cancelEditBtn').classList.add('d-none');
     }
 
@@ -2672,16 +2996,48 @@
     // ==================== FORM SUBMIT (Create & Edit) ====================
     function handleFormSubmit(event) {
       event.preventDefault();
-      const btn  = document.getElementById('submitBtn');
-      const form = document.getElementById('dataForm');
+      const btn    = document.getElementById('submitBtn');
+      const form   = document.getElementById('dataForm');
       const isEdit = editSheetRow !== null;
+
+      if (btn.disabled) return;
+
+      // Block Save while compression is still running (race guard)
+      if (_compressBusy > 0) {
+        showToast('กำลังประมวลผลรูปภาพ กรุณารอสักครู่...', 'warning');
+        return;
+      }
+
+      // Count files and bytes for capacity pre-flight
+      const sections = Object.keys(UPLOAD_LIMITS);
+      const filesToQueue = [];
+      sections.forEach(function(s) {
+        (pendingFiles[s] || []).forEach(function(item) { filesToQueue.push({ section: s, item: item }); });
+      });
+      const totalPendingFiles = filesToQueue.length;
+      const totalPendingBytes = filesToQueue.reduce(function(n, t) {
+        return n + (t.item.compressedBlob ? t.item.compressedBlob.size : 0);
+      }, 0);
+
+      console.log('[SAVE] start isEdit=' + isEdit + ' files=' + totalPendingFiles + ' bytes=' + totalPendingBytes);
+
+      // Atomic capacity check before submitting metadata
+      if (totalPendingFiles > 0 && !bgHasCapacity(totalPendingFiles, totalPendingBytes)) {
+        showToast('คิวอัปโหลดกำลังเต็ม กรุณารอสักครู่แล้วลองใหม่', 'warning');
+        return;
+      }
 
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
 
+      if (!_currentFormSubmitId) {
+        _currentFormSubmitId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : (Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 11));
+      }
+
       const formObject = {};
       new FormData(form).forEach((value, key) => {
-        // Prepend apostrophe to phone/ID fields to preserve leading zeros in Sheets
         if (['col7','col9','col27','col50','col107','col109','col111','col117','col132'].includes(key) && value !== '') {
           formObject[key] = "'" + value;
         } else {
@@ -2689,31 +3045,44 @@
         }
       });
 
-      const resetBtn = () => {
+      const resetBtn = function() {
         btn.disabled = false;
         btn.innerHTML = isEdit
           ? '<i class="fas fa-save"></i> บันทึกการแก้ไข'
           : '<i class="fas fa-save"></i> บันทึกข้อมูลเข้าฐานข้อมูล';
       };
 
-      const onSuccess = async function(response) {
+      const onFailure = function(error) {
+        console.error('[SAVE] onFailure', error);
         resetBtn();
-        if (response.success) {
-          const rid = response.recordId || currentEditRecordId;
-          let upErrs = [];
-          if (rid) {
-            showToast('กำลังอัปโหลดรูปภาพ...', 'info');
-            upErrs = await upFlushPending(rid);
+        showToast('เกิดข้อผิดพลาด: ' + (error.message || String(error)), 'danger');
+      };
+
+      const onSuccess = function(response) {
+        console.log('[SAVE] response', response);
+        if (!response.success) { onFailure({ message: response.message }); return; }
+
+        const rid        = response.recordId || currentEditRecordId;
+        const recordName = ((formObject.col4 || '') + ' ' + (formObject.col5 || '')).trim() || ('#' + rid);
+        let   toastMsg   = 'บันทึกข้อมูลแล้ว';
+        console.log('[SAVE] rid=' + rid + ' pending=' + totalPendingFiles);
+
+        try {
+          if (totalPendingFiles > 0) {
+            console.log('[SAVE] enqueue start');
+            const enqueued = bgEnqueueFormFiles(rid, recordName);
+            console.log('[SAVE] enqueue done count=' + enqueued);
+            if (enqueued > 0) toastMsg += ' • เพิ่ม ' + enqueued + ' รูปเข้าคิวแล้ว';
           }
-          if (upErrs.length > 0) {
-            showToast('บันทึกสำเร็จ แต่รูปบางรูปล้มเหลว: ' + upErrs.slice(0, 2).join('; '), 'warning');
-          } else {
-            showToast(response.message, 'success');
-          }
+
+          showToast(toastMsg, 'success');
+          resetBtn();
           form.reset();
           resetIncidentLocation();
           resetAddressGroups();
           initUploadState();
+          _currentFormSubmitId = null;
+
           if (isEdit) {
             if (currentLockToken && currentEditRecordId) {
               gasPost({ action: 'releaseEditLock', token: adminSession, recordId: currentEditRecordId, lockToken: currentLockToken }).catch(function() {});
@@ -2723,22 +3092,20 @@
           } else {
             showView('welcomeView');
           }
-        } else {
-          showToast(response.message, 'danger');
+          console.log('[SAVE] done — form closed');
+        } catch(err) {
+          console.error('[SAVE] onSuccess threw:', err);
+          onFailure(err);
         }
       };
 
-      const onFailure = function(error) {
-        resetBtn();
-        showToast('เกิดข้อผิดพลาด: ' + (error.message || error), 'danger');
-      };
-
+      console.log('[SAVE] posting action=' + (isEdit ? 'update' : 'submit'));
       if (isEdit) {
         var editPayload = Object.assign({ action: 'update', sheetRow: editSheetRow, token: adminSession }, formObject);
         editPayload.lockToken = currentLockToken;
         gasPost(editPayload).then(onSuccess).catch(onFailure);
       } else {
-        gasPost(Object.assign({ action: 'submit', token: adminSession }, formObject))
+        gasPost(Object.assign({ action: 'submit', token: adminSession, formSubmitId: _currentFormSubmitId }, formObject))
           .then(onSuccess).catch(onFailure);
       }
     }
@@ -3129,15 +3496,605 @@
       source_profile_71: 1, source_post_71: 3, source_other_71: 3,
       source_profile_72: 1, source_post_72: 3, source_other_72: 3
     };
-    let pendingFiles = {};
+    const SECTION_LABELS = {
+      officer_found:     'ถ่ายภาพบุคคลตรวจพบ',
+      person_portrait:   'ถ่ายภาพผู้ยื่นถวายฎีกา',
+      items_evidence:    'ถ่ายภาพสิ่งของ/หลักฐาน',
+      appearance_photo:  'ถ่ายภาพการแต่งกาย',
+      source_profile_71: 'รูปผู้ใช้/เพจ (ข้อ 7.1)',
+      source_post_71:    'รูปโพสต์ (ข้อ 7.1)',
+      source_other_71:   'รูปอื่น ๆ (ข้อ 7.1)',
+      source_profile_72: 'รูปผู้ใช้/เพจ (ข้อ 7.2)',
+      source_post_72:    'รูปโพสต์ (ข้อ 7.2)',
+      source_other_72:   'รูปอื่น ๆ (ข้อ 7.2)',
+    };
+    let pendingFiles = {};  // { section: [{ compressedBlob, previewObjectUrl, origName, origType, status, errorMsg }] }
     let existingAtts = {};
+    let _currentFormSubmitId = null; // stable per logical submission; reused on timeout-retry; cleared on success/reset
+    let _compressBusy = 0; // incremented while upFileSelected is compressing; Save is blocked until 0
+
+    // ==================== BACKGROUND UPLOAD QUEUE ====================
+    const BG_QUEUE_MAX_FILES = 50;
+    const BG_QUEUE_MAX_BYTES = 300 * 1024 * 1024; // 300 MB compressed
+
+    const BG_QUEUE = {
+      items:   [],  // QueueItem[] — active queue (queued + uploading)
+      failed:  [],  // FailedItem[] — persistent failed list
+      _active: 0,   // currently uploading slots in use
+    };
+    const BG_CONCURRENCY = 2;
+
+    function _bgNewId() {
+      return (typeof crypto !== 'undefined' && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : (Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 11));
+    }
+
+    function bgActiveBytes() {
+      return BG_QUEUE.items.reduce(function(s, i) { return s + (i.sizeBytes || 0); }, 0);
+    }
+
+    function bgHasCapacity(count, bytes) {
+      return (BG_QUEUE.items.length + count) <= BG_QUEUE_MAX_FILES &&
+             (bgActiveBytes() + bytes) <= BG_QUEUE_MAX_BYTES;
+    }
+
+    function hasPendingBgWork() {
+      return BG_QUEUE.items.length > 0 || BG_QUEUE.failed.length > 0;
+    }
+
+    // Move all pendingFiles for a record into BG_QUEUE.
+    // Capacity already verified by caller. Clears pendingFiles, revokes preview URLs.
+    // Returns count of items enqueued.
+    function bgEnqueueFormFiles(recordId, recordLabel) {
+      const sections = Object.keys(UPLOAD_LIMITS);
+      let count = 0;
+      sections.forEach(function(s) {
+        (pendingFiles[s] || []).forEach(function(item) {
+          // Revoke preview URL — Queue Panel shows filenames, not image previews
+          try { URL.revokeObjectURL(item.previewObjectUrl); } catch(e) {}
+          BG_QUEUE.items.push({
+            qid:             _bgNewId(),
+            recordId:        recordId,
+            recordLabel:     recordLabel || ('#' + recordId),
+            section:         s,
+            uploadReqId:     item.uploadReqId,
+            compressedBlob:  item.compressedBlob,
+            origName:        item.origName,
+            origType:        item.origType,
+            sizeBytes:       item.compressedBlob ? item.compressedBlob.size : 0,
+            status:          'queued',
+            attempts:        0,
+            errorMsg:        '',
+            addedAt:         Date.now(),
+          });
+          count++;
+        });
+        pendingFiles[s] = []; // clear — blobs now owned by BG_QUEUE
+      });
+      if (count > 0) { bgStartWorker(); bgRenderBadge(); }
+      return count;
+    }
+
+    // Trigger-based worker: fill active slots up to BG_CONCURRENCY
+    function bgStartWorker() {
+      while (BG_QUEUE._active < BG_CONCURRENCY) {
+        const next = BG_QUEUE.items.find(function(i) { return i.status === 'queued'; });
+        if (!next) break;
+        next.status = 'uploading';
+        BG_QUEUE._active++;
+        bgRenderBadge();
+        _bgUploadOne(next).finally(function() {
+          // Prune completed items to keep array lean
+          BG_QUEUE.items = BG_QUEUE.items.filter(function(i) { return i.status !== 'done'; });
+          BG_QUEUE._active = Math.max(0, BG_QUEUE._active - 1);
+          bgRenderBadge();
+          bgRenderPanel();
+          bgStartWorker(); // pick up next item
+        });
+      }
+    }
+
+    async function _bgUploadOne(item) {
+      const fileT0 = Date.now();
+      let succeeded = false;
+
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (attempt > 0) {
+          await new Promise(function(r) { setTimeout(r, Math.pow(2, attempt - 1) * 1000); });
+        }
+        item.attempts = attempt + 1;
+        bgRenderPanel();
+        try {
+          const base64 = await blobToBase64(item.compressedBlob);
+          const netT0  = Date.now();
+          const res    = await gasPost({
+            action: 'uploadAttachment', token: adminSession,
+            uploadReqId: item.uploadReqId,
+            recordId: item.recordId, section: item.section,
+            fileData: base64, fileName: item.origName,
+            mimeType: item.origType || 'image/jpeg', sizeBytes: item.sizeBytes
+          });
+          const netMs = Date.now() - netT0;
+          if (res.success) {
+            succeeded = true;
+            console.log('[bgQueue] OK', item.origName, 'rec=' + item.recordId,
+              'net=' + netMs + 'ms attempt=' + item.attempts + ' total=' + (Date.now() - fileT0) + 'ms');
+            break;
+          }
+          item.errorMsg = res.message || 'ล้มเหลว';
+          console.warn('[bgQueue] FAIL attempt=' + item.attempts, item.origName, 'msg:', res.message);
+        } catch(e) {
+          item.errorMsg = (e.name === 'AbortError') ? 'Timeout — เน็ตช้า/หมดเวลา' : 'เชื่อมต่อไม่ได้';
+          console.warn('[bgQueue] ERROR attempt=' + item.attempts, item.origName, e.name + ':', e.message);
+        }
+      }
+
+      if (succeeded) {
+        item.status = 'done';
+        item.compressedBlob = null; // release memory immediately
+
+        // Call finalizeRecord once when this is the last pending item for the record
+        const stillPending = BG_QUEUE.items.some(function(i) {
+          return i !== item && i.recordId === item.recordId &&
+                 (i.status === 'queued' || i.status === 'uploading');
+        });
+        if (!stillPending) {
+          gasPost({ action: 'finalizeRecord', recordId: item.recordId, token: adminSession })
+            .catch(function() {});
+        }
+      } else {
+        // Move to persistent failed list
+        BG_QUEUE.failed.push({
+          qid:            item.qid,
+          recordId:       item.recordId,
+          recordLabel:    item.recordLabel,
+          section:        item.section,
+          uploadReqId:    item.uploadReqId,  // SAME UUID — reuse on retry for idempotency
+          compressedBlob: item.compressedBlob, // kept for retry
+          origName:       item.origName,
+          origType:       item.origType,
+          sizeBytes:      item.sizeBytes,
+          errorMsg:       item.errorMsg,
+          attempts:       item.attempts,
+          failedAt:       Date.now(),
+        });
+        item.status = 'done'; // will be pruned from items array
+        console.error('[bgQueue] FINAL FAIL', item.origName, '—', item.errorMsg);
+      }
+    }
+
+    // Retry a failed item — reuses original uploadReqId for idempotency
+    function bgRetry(qid) {
+      const idx = BG_QUEUE.failed.findIndex(function(f) { return f.qid === qid; });
+      if (idx === -1) return;
+      const f = BG_QUEUE.failed.splice(idx, 1)[0];
+      BG_QUEUE.items.push({
+        qid:            f.qid,
+        recordId:       f.recordId,
+        recordLabel:    f.recordLabel,
+        section:        f.section,
+        uploadReqId:    f.uploadReqId,  // same UUID
+        compressedBlob: f.compressedBlob,
+        origName:       f.origName,
+        origType:       f.origType,
+        sizeBytes:      f.sizeBytes,
+        status:         'queued',
+        attempts:       0,
+        errorMsg:       '',
+        addedAt:        Date.now(),
+      });
+      bgStartWorker();
+      bgRenderBadge();
+      bgRenderPanel();
+    }
+
+    // Dismiss a failed item and release its blob
+    function bgDismissFailed(qid) {
+      const idx = BG_QUEUE.failed.findIndex(function(f) { return f.qid === qid; });
+      if (idx === -1) return;
+      const f = BG_QUEUE.failed.splice(idx, 1)[0];
+      f.compressedBlob = null;
+      bgRenderBadge();
+      bgRenderPanel();
+    }
+
+    // ---- UI rendering ----
+    let _queuePanelBS = null;
+
+    function bgTogglePanel() {
+      if (!_queuePanelBS) {
+        const el = document.getElementById('queuePanel');
+        if (!el) return;
+        _queuePanelBS = new bootstrap.Offcanvas(el);
+      }
+      _queuePanelBS.toggle();
+      bgRenderPanel();
+    }
+
+    function bgRenderBadge() {
+      const badge    = document.getElementById('btnUploadBadge');
+      const textEl   = document.getElementById('upBadgeText');
+      if (!badge) return;
+      const queued    = BG_QUEUE.items.filter(function(i) { return i.status === 'queued'; }).length;
+      const uploading = BG_QUEUE.items.filter(function(i) { return i.status === 'uploading'; }).length;
+      const failedCnt = BG_QUEUE.failed.length;
+      const hasWork   = BG_QUEUE.items.length > 0 || failedCnt > 0;
+
+      if (!hasWork) { badge.classList.add('d-none'); return; }
+      badge.classList.remove('d-none');
+
+      if (failedCnt > 0 && queued === 0 && uploading === 0) {
+        badge.className = 'btn btn-danger btn-sm ms-0';
+        if (textEl) textEl.textContent = '❌ ' + failedCnt;
+      } else {
+        badge.className = 'btn btn-warning btn-sm ms-0';
+        const active = uploading + queued;
+        const txt = failedCnt > 0 ? active + ' • ❌' + failedCnt : active + ' รอ';
+        if (textEl) textEl.innerHTML = (uploading > 0 ? '<i class="fas fa-spinner fa-spin me-1"></i>' : '') + txt;
+      }
+      // Refresh bulk activity if panel open
+      if (document.getElementById('bulkActivityList')) renderBulkActivity();
+      if (document.getElementById('bulkCapacityBadge')) {
+        document.getElementById('bulkCapacityBadge').textContent =
+          BG_QUEUE.items.length + '/' + BG_QUEUE_MAX_FILES + ' ไฟล์';
+      }
+    }
+
+    function bgRenderPanel() {
+      const content = document.getElementById('queuePanelContent');
+      if (!content || !content.offsetParent) return; // not visible
+      const uploading = BG_QUEUE.items.filter(function(i) { return i.status === 'uploading'; });
+      const queued    = BG_QUEUE.items.filter(function(i) { return i.status === 'queued'; });
+      let html = '';
+      // Summary row
+      html += '<div class="d-flex gap-2 mb-3 flex-wrap small">';
+      html += '<span class="badge bg-warning text-dark"><i class="fas fa-spinner fa-spin me-1"></i>' + uploading.length + ' อัปโหลด</span>';
+      html += '<span class="badge bg-secondary">' + queued.length + ' รอ</span>';
+      if (BG_QUEUE.failed.length > 0) html += '<span class="badge bg-danger">' + BG_QUEUE.failed.length + ' ล้มเหลว</span>';
+      html += '</div>';
+      // Active items
+      const active = uploading.concat(queued);
+      if (active.length > 0) {
+        html += '<p class="small text-muted text-uppercase mb-1">กำลังดำเนินการ</p>';
+        active.forEach(function(item) {
+          const icon = item.status === 'uploading'
+            ? '<i class="fas fa-spinner fa-spin text-warning me-2"></i>'
+            : '<i class="fas fa-clock text-secondary me-2"></i>';
+          html += '<div class="border rounded p-2 mb-1 small">' + icon +
+            '<strong>#' + item.recordId + '</strong> ' + escHtml(item.recordLabel) + '<br>' +
+            '<span class="text-muted">' + escHtml(item.section) + ' / ' + escHtml(item.origName) + '</span>' +
+            (item.status === 'uploading' ? '<br><span class="text-warning small">ครั้งที่ ' + item.attempts + '</span>' : '') +
+            '</div>';
+        });
+      }
+      // Failed items
+      if (BG_QUEUE.failed.length > 0) {
+        html += '<p class="small text-danger text-uppercase mb-1 mt-2">ล้มเหลว</p>';
+        BG_QUEUE.failed.forEach(function(f) {
+          html += '<div class="border border-danger rounded p-2 mb-1 small">' +
+            '<i class="fas fa-times-circle text-danger me-2"></i>' +
+            '<strong>#' + f.recordId + '</strong> ' + escHtml(f.recordLabel) + '<br>' +
+            '<span class="text-muted">' + escHtml(f.section) + ' / ' + escHtml(f.origName) + '</span><br>' +
+            '<span class="text-danger">' + escHtml(f.errorMsg) + '</span><br>' +
+            '<div class="d-flex gap-1 mt-1">' +
+            '<button class="btn btn-sm btn-outline-warning py-0" onclick="bgRetry(\'' + f.qid + '\')"><i class="fas fa-redo me-1"></i>Retry</button>' +
+            '<button class="btn btn-sm btn-outline-secondary py-0" onclick="bgDismissFailed(\'' + f.qid + '\')">ยกเลิก</button>' +
+            '</div></div>';
+        });
+      }
+      if (active.length === 0 && BG_QUEUE.failed.length === 0) {
+        html += '<div class="text-center text-muted py-4 small"><i class="fas fa-check-circle fa-2x mb-2 d-block"></i>ไม่มีงานค้าง</div>';
+      }
+      content.innerHTML = html;
+    }
+
+    // ==================== BULK PANEL ====================
+    let bulkSearchResults = [];
+    let bulkSelectedRecord = null;
+    let bulkExistingCounts = {}; // { section: N } loaded from listAttachments after record select
+
+    // Render the section dropdown. When a record is selected, shows live counts
+    // (existing + in-queue). When no record selected, shows static max counts.
+    function renderBulkDropdown() {
+      const sel = document.getElementById('bulkSectionSelect');
+      if (!sel) return;
+      const currentVal = sel.value;
+      const rid = bulkSelectedRecord ? String(bulkSelectedRecord.data[0]) : null;
+
+      function makeOpt(value, label, limit) {
+        if (rid) {
+          const existing = bulkExistingCounts[value] || 0;
+          const inQueue  = BG_QUEUE.items.filter(function(i) {
+            return String(i.recordId) === rid && i.section === value;
+          }).length;
+          const used = existing + inQueue;
+          const full = used >= limit;
+          const suffix = full
+            ? ' — ' + used + '/' + limit + ' รูป • ครบแล้ว'
+            : ' — ' + used + '/' + limit + ' รูป • เพิ่มได้อีก ' + (limit - used);
+          return '<option value="' + value + '"' + (full ? ' disabled' : '') + '>' + escHtml(label + suffix) + '</option>';
+        }
+        return '<option value="' + value + '">' + escHtml(label + ' (สูงสุด ' + limit + ' รูป)') + '</option>';
+      }
+
+      sel.innerHTML =
+        '<option value="">-- เลือกหัวข้อรูป --</option>' +
+        makeOpt('officer_found',    'ถ่ายภาพบุคคลตรวจพบ',     2) +
+        makeOpt('person_portrait',  'ถ่ายภาพผู้ยื่นถวายฎีกา', 1) +
+        makeOpt('items_evidence',   'ถ่ายภาพสิ่งของ/หลักฐาน', 10) +
+        makeOpt('appearance_photo', 'ถ่ายภาพการแต่งกาย',       3) +
+        '<optgroup label="ข้อ 7.1 — ทราบเรื่องการถวายฎีกาจากที่ใด">' +
+        makeOpt('source_profile_71', 'รูปผู้ใช้/เพจ',  1) +
+        makeOpt('source_post_71',    'รูปโพสต์',       3) +
+        makeOpt('source_other_71',   'รูปอื่น ๆ',      3) +
+        '</optgroup>' +
+        '<optgroup label="ข้อ 7.2 — ทราบจากที่ใดว่าวันนี้จะมีขบวนเสด็จฯ">' +
+        makeOpt('source_profile_72', 'รูปผู้ใช้/เพจ',  1) +
+        makeOpt('source_post_72',    'รูปโพสต์',       3) +
+        makeOpt('source_other_72',   'รูปอื่น ๆ',      3) +
+        '</optgroup>';
+
+      // Restore previous selection if still valid
+      if (currentVal) sel.value = currentVal;
+    }
+
+    function openBulkPanel() {
+      if (!adminSession) { showToast('กรุณาเข้าสู่ระบบก่อน', 'warning'); return; }
+      showView('bulkPanelView');
+      renderBulkDropdown();
+      renderBulkActivity();
+      renderBulkCapacityBadge();
+    }
+
+    function bulkSearch() {
+      const q = (document.getElementById('bulkSearchInput').value || '').trim().toLowerCase();
+      const el = document.getElementById('bulkResultsList');
+      if (!el) return;
+      if (!q) { el.innerHTML = ''; bulkSearchResults = []; return; }
+      bulkSearchResults = (globalData || []).filter(function(item) {
+        const rid  = String(item.data[0] || '').toLowerCase();
+        const name = ((item.data[3] || '') + ' ' + (item.data[4] || '')).toLowerCase();
+        return rid.includes(q) || name.includes(q);
+      }).slice(0, 20);
+      if (bulkSearchResults.length === 0) {
+        el.innerHTML = '<div class="list-group-item text-muted small">ไม่พบข้อมูล</div>';
+        return;
+      }
+      let html = '';
+      bulkSearchResults.forEach(function(item, i) {
+        const rid   = item.data[0];
+        const name  = ((item.data[3] || '') + ' ' + (item.data[4] || '')).trim();
+        const date  = item.data[1] || '';
+        const topic = item.data[35] || '';
+        html += '<button class="list-group-item list-group-item-action py-2 px-3 text-start" onclick="bulkSelectRecord(' + i + ')">' +
+          '<div class="fw-bold small">#' + escHtml(String(rid)) + ' — ' + escHtml(name) + '</div>' +
+          '<div class="text-muted" style="font-size:0.75rem">' + escHtml(String(date)) + (topic ? ' • ' + escHtml(String(topic)) : '') + '</div>' +
+          '</button>';
+      });
+      el.innerHTML = html;
+    }
+
+    function bulkSelectRecord(idx) {
+      bulkSelectedRecord = bulkSearchResults[idx];
+      const rid  = bulkSelectedRecord.data[0];
+      const name = ((bulkSelectedRecord.data[3] || '') + ' ' + (bulkSelectedRecord.data[4] || '')).trim();
+      const infoEl = document.getElementById('bulkSelectedInfo');
+      const labelEl = document.getElementById('bulkSelectedLabel');
+      const addEl  = document.getElementById('bulkAddArea');
+      if (labelEl) labelEl.textContent = '#' + rid + ' — ' + name;
+      if (infoEl)  infoEl.classList.remove('d-none');
+      if (addEl)   addEl.classList.remove('d-none');
+      document.getElementById('bulkResultsList').innerHTML = '';
+
+      // Reset and reload existing attachment counts for this record
+      bulkExistingCounts = {};
+      renderBulkDropdown(); // render immediately (shows 0/* while loading)
+      gasPost({ action: 'listAttachments', recordId: rid, token: adminSession })
+        .then(function(res) {
+          if (res && res.success) {
+            bulkExistingCounts = {};
+            (res.attachments || []).forEach(function(att) {
+              if (att.status === 'active') {
+                bulkExistingCounts[att.section] = (bulkExistingCounts[att.section] || 0) + 1;
+              }
+            });
+          }
+          renderBulkDropdown();
+        })
+        .catch(function() { /* backend still guards — silent fail is OK */ });
+    }
+
+    function bulkAddToQueue() {
+      if (!bulkSelectedRecord) { showToast('กรุณาเลือก Record ก่อน', 'warning'); return; }
+      const section = document.getElementById('bulkSectionSelect').value;
+      const input   = document.getElementById('bulkFileInput');
+      if (!section) { showToast('กรุณาเลือกหัวข้อรูปก่อน', 'warning'); return; }
+      if (!input || !input.files || input.files.length === 0) { showToast('กรุณาเลือกรูปก่อน', 'warning'); return; }
+
+      const rid    = bulkSelectedRecord.data[0];
+      const rLabel = ((bulkSelectedRecord.data[3] || '') + ' ' + (bulkSelectedRecord.data[4] || '')).trim() || ('#' + rid);
+
+      // Section capacity check: existing (confirmed) + queued/uploading (reserved) for this record+section
+      const limit    = UPLOAD_LIMITS[section] || 5;
+      const existing = bulkExistingCounts[section] || 0;
+      const inQueue  = BG_QUEUE.items.filter(function(i) {
+        return String(i.recordId) === String(rid) && i.section === section;
+      }).length;
+      const used     = existing + inQueue;
+      const room     = limit - used;
+      const newFiles = input.files.length;
+
+      if (room <= 0) {
+        showToast('หัวข้อนี้มีรูปครบจำนวนสูงสุดแล้ว (' + used + '/' + limit + ' รูป)', 'warning');
+        return;
+      }
+      if (newFiles > room) {
+        showToast('หัวข้อนี้มี ' + used + '/' + limit + ' รูป เพิ่มได้อีก ' + room + ' รูป — กรุณาเลือกไม่เกิน ' + room + ' รูป', 'warning');
+        return;
+      }
+
+      const files  = Array.from(input.files);
+      input.value  = '';
+      _bulkCompressAndEnqueue(rid, rLabel, section, files);
+    }
+
+    async function _bulkCompressAndEnqueue(rid, recordLabel, section, files) {
+      const btn = document.getElementById('bulkAddBtn');
+      const fullEl = document.getElementById('bulkQueueFull');
+      if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>กำลังประมวลผล...'; }
+      if (fullEl) fullEl.classList.add('d-none');
+
+      let enqueued = 0, skipped = 0;
+      for (const file of files) {
+        if (!bgHasCapacity(1, file.size)) {
+          if (fullEl) fullEl.classList.remove('d-none');
+          if (skipped === 0) showToast('คิวเต็ม — ' + (files.length - enqueued - skipped) + ' รูปที่เหลือไม่ถูกเพิ่ม', 'warning');
+          skipped++;
+          continue;
+        }
+        const compressed = await compressImage(file);
+        if (compressed.compressedBlob.size > 8 * 1024 * 1024) {
+          const mb = (compressed.compressedBlob.size / (1024 * 1024)).toFixed(1);
+          try { URL.revokeObjectURL(compressed.previewObjectUrl); } catch(e) {}
+          showToast('"' + file.name.substring(0, 20) + '" (' + mb + ' MB) ใหญ่เกินไป', 'danger');
+          skipped++;
+          continue;
+        }
+        // Revoke preview — Queue Panel doesn't need image previews
+        try { URL.revokeObjectURL(compressed.previewObjectUrl); } catch(e) {}
+        BG_QUEUE.items.push({
+          qid:            _bgNewId(),
+          recordId:       rid,
+          recordLabel:    recordLabel,
+          section:        section,
+          uploadReqId:    _bgNewId(),
+          compressedBlob: compressed.compressedBlob,
+          origName:       compressed.origName,
+          origType:       compressed.origType,
+          sizeBytes:      compressed.compressedBlob.size,
+          status:         'queued',
+          attempts:       0,
+          errorMsg:       '',
+          addedAt:        Date.now(),
+        });
+        enqueued++;
+      }
+
+      if (enqueued > 0) {
+        bgStartWorker();
+        bgRenderBadge();
+        showToast('เพิ่ม ' + enqueued + ' รูปเข้าคิวแล้ว' + (skipped > 0 ? ' (' + skipped + ' รูปข้าม)' : ''), 'success');
+      }
+      renderBulkActivity();
+      renderBulkCapacityBadge();
+      renderBulkDropdown(); // refresh counts to reflect newly queued items
+      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-plus me-1"></i>เพิ่มเข้าคิว'; }
+    }
+
+    function renderBulkActivity() {
+      const el = document.getElementById('bulkActivityList');
+      if (!el) return;
+      // Group by recordId: combine items + failed
+      const grouped = {};
+      BG_QUEUE.items.forEach(function(i) {
+        if (!grouped[i.recordId]) grouped[i.recordId] = { label: i.recordLabel, q: 0, up: 0, fail: 0 };
+        if (i.status === 'uploading') grouped[i.recordId].up++;
+        else grouped[i.recordId].q++;
+      });
+      BG_QUEUE.failed.forEach(function(f) {
+        if (!grouped[f.recordId]) grouped[f.recordId] = { label: f.recordLabel, q: 0, up: 0, fail: 0 };
+        grouped[f.recordId].fail++;
+      });
+      const keys = Object.keys(grouped);
+      if (keys.length === 0) { el.innerHTML = '<div class="text-muted small text-center py-1">ยังไม่มีกิจกรรม</div>'; return; }
+      let html = '';
+      keys.slice(-15).reverse().forEach(function(rid) {
+        const g = grouped[rid];
+        const icon = g.fail > 0 ? '❌' : g.up > 0 ? '⏳' : g.q > 0 ? '📋' : '✅';
+        const info = g.fail > 0 ? 'ล้มเหลว ' + g.fail
+          : g.up > 0 ? 'อัปโหลด ' + g.up + (g.q > 0 ? ' รอ ' + g.q : '')
+          : g.q > 0 ? 'รอ ' + g.q
+          : 'เสร็จ';
+        html += '<div class="d-flex justify-content-between py-1 border-bottom small">' +
+          '<span>' + icon + ' <strong>#' + escHtml(rid) + '</strong> ' + escHtml(g.label) + '</span>' +
+          '<span class="text-muted">' + info + '</span></div>';
+      });
+      el.innerHTML = html;
+    }
+
+    function renderBulkCapacityBadge() {
+      const el = document.getElementById('bulkCapacityBadge');
+      if (!el) return;
+      const cur   = BG_QUEUE.items.length;
+      const bytes = bgActiveBytes();
+      el.textContent = cur + '/' + BG_QUEUE_MAX_FILES + ' ไฟล์ • ' +
+        Math.round(bytes / (1024 * 1024)) + '/' + Math.round(BG_QUEUE_MAX_BYTES / (1024 * 1024)) + ' MB';
+    }
+
+    // Resize + compress image using Canvas. Falls back to original for HEIC / decode failures.
+    // Returns { compressedBlob, previewObjectUrl, origName, origType }
+    function compressImage(file) {
+      const MAX_PX = 1920, QUALITY = 0.82;
+      return new Promise(function(resolve) {
+        if (!file.type.startsWith('image/')) {
+          resolve({ compressedBlob: file, previewObjectUrl: URL.createObjectURL(file), origName: file.name, origType: file.type });
+          return;
+        }
+        const img    = new Image();
+        const objUrl = URL.createObjectURL(file);
+        img.onload = function() {
+          URL.revokeObjectURL(objUrl);
+          let w = img.naturalWidth, h = img.naturalHeight;
+          if (w > MAX_PX || h > MAX_PX) {
+            if (w >= h) { h = Math.round(h * MAX_PX / w); w = MAX_PX; }
+            else        { w = Math.round(w * MAX_PX / h); h = MAX_PX; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.toBlob(function(blob) {
+            if (!blob) {
+              // Canvas encode failed (can happen with HEIC on some browsers) — use original
+              resolve({ compressedBlob: file, previewObjectUrl: URL.createObjectURL(file), origName: file.name, origType: file.type });
+              return;
+            }
+            resolve({ compressedBlob: blob, previewObjectUrl: URL.createObjectURL(blob), origName: file.name, origType: 'image/jpeg' });
+          }, 'image/jpeg', QUALITY);
+        };
+        img.onerror = function() {
+          // HEIC or unsupported type — pass through without compression
+          URL.revokeObjectURL(objUrl);
+          resolve({ compressedBlob: file, previewObjectUrl: URL.createObjectURL(file), origName: file.name, origType: file.type });
+        };
+        img.src = objUrl;
+      });
+    }
+
+    // Convert a Blob to base64 string (without the data: prefix)
+    function blobToBase64(blob) {
+      return new Promise(function(resolve, reject) {
+        const reader = new FileReader();
+        reader.onload  = function(e) { resolve(e.target.result.split(',')[1]); };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
 
     function initUploadState() {
-      Object.keys(UPLOAD_LIMITS).forEach(s => { pendingFiles[s] = []; existingAtts[s] = []; });
+      // Revoke any lingering Object URLs before clearing
+      Object.keys(UPLOAD_LIMITS).forEach(function(s) {
+        (pendingFiles[s] || []).forEach(function(item) {
+          if (item.previewObjectUrl) try { URL.revokeObjectURL(item.previewObjectUrl); } catch(e) {}
+        });
+        pendingFiles[s] = [];
+        existingAtts[s] = [];
+      });
+      _currentFormSubmitId = null;
       renderAllUploadZones();
     }
 
-    function upFileSelected(section, input) {
+    async function upFileSelected(section, input) {
       const files = Array.from(input.files);
       input.value = '';
       const limit = UPLOAD_LIMITS[section] || 5;
@@ -3146,18 +4103,45 @@
       if (room <= 0) { showToast('ครบจำนวนสูงสุด ' + limit + ' รูปแล้ว', 'warning'); return; }
       const take = files.slice(0, room);
       if (take.length < files.length) showToast('รับได้อีก ' + room + ' รูปเท่านั้น', 'warning');
-      take.forEach(function(file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          pendingFiles[section].push({ file: file, previewUrl: e.target.result });
+      _compressBusy++;
+      try {
+        for (const file of take) {
+          const compressed = await compressImage(file);
+          const sizeMB     = (compressed.compressedBlob.size / (1024 * 1024)).toFixed(1);
+          if (compressed.compressedBlob.size > 8 * 1024 * 1024) {
+            try { URL.revokeObjectURL(compressed.previewObjectUrl); } catch(e) {}
+            showToast('รูป "' + compressed.origName.substring(0, 30) + '" (' + sizeMB + ' MB) ใหญ่เกินไป กรุณาลดขนาดให้ต่ำกว่า 8 MB', 'danger');
+            continue;
+          }
+          if (compressed.compressedBlob.size > 4 * 1024 * 1024) {
+            showToast('รูป "' + compressed.origName.substring(0, 20) + '" (' + sizeMB + ' MB) ขนาดใหญ่ อาจใช้เวลานาน', 'warning');
+          }
+          const uploadReqId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : (Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 11));
+          if (!pendingFiles[section]) pendingFiles[section] = [];
+          pendingFiles[section].push({
+            compressedBlob:   compressed.compressedBlob,
+            previewObjectUrl: compressed.previewObjectUrl,
+            origName:         compressed.origName,
+            origType:         compressed.origType,
+            uploadReqId:      uploadReqId,
+            status:           'waiting',
+            errorMsg:         ''
+          });
           renderUploadZone(section);
-        };
-        reader.readAsDataURL(file);
-      });
+        }
+      } finally {
+        _compressBusy = Math.max(0, _compressBusy - 1);
+      }
     }
 
     function upRemovePending(section, idx) {
-      if (pendingFiles[section]) { pendingFiles[section].splice(idx, 1); renderUploadZone(section); }
+      if (!pendingFiles[section]) return;
+      const item = pendingFiles[section][idx];
+      if (item && item.previewObjectUrl) try { URL.revokeObjectURL(item.previewObjectUrl); } catch(e) {}
+      pendingFiles[section].splice(idx, 1);
+      renderUploadZone(section);
     }
 
     function upRemoveExisting(section, idx) {
@@ -3191,44 +4175,22 @@
           '<span class="up-tag">เดิม</span></div>';
       });
       pending.forEach(function(item, i) {
-        html += '<div class="up-thumb">' +
-          '<img src="' + item.previewUrl + '" alt="">' +
-          '<button type="button" class="up-del" onclick="upRemovePending(\'' + section + '\',' + i + ')">×</button>' +
-          '<span class="up-tag">ใหม่</span></div>';
+        const canDelete = item.status !== 'uploading';
+        const statusBadge = item.status === 'uploading' ? '<span class="up-status-spin"><i class="fas fa-spinner fa-spin"></i></span>'
+                          : item.status === 'failed'    ? '<span class="up-status-fail" title="' + escHtml(item.errorMsg) + '">✗</span>'
+                          : item.status === 'success'   ? '<span class="up-status-ok">✓</span>'
+                          : '';
+        html += '<div class="up-thumb' + (item.status === 'failed' ? ' up-thumb-failed' : '') + '">' +
+          '<img src="' + item.previewObjectUrl + '" alt="">' +
+          (canDelete ? '<button type="button" class="up-del" onclick="upRemovePending(\'' + section + '\',' + i + ')">×</button>' : '') +
+          statusBadge +
+          '<span class="up-tag">' + escHtml((item.origName || '').substring(0, 12)) + '</span></div>';
       });
       thumbsEl.innerHTML = html;
     }
 
     function renderAllUploadZones() {
       Object.keys(UPLOAD_LIMITS).forEach(renderUploadZone);
-    }
-
-    async function upFlushPending(recordId) {
-      const errors = [];
-      for (const section of Object.keys(UPLOAD_LIMITS)) {
-        const items = (pendingFiles[section] || []).slice();
-        for (const item of items) {
-          try {
-            const base64 = item.previewUrl.split(',')[1];
-            const res = await gasPost({
-              action: 'uploadAttachment',
-              token: adminSession,
-              recordId: recordId,
-              section: section,
-              fileData: base64,
-              fileName: item.file.name,
-              mimeType: item.file.type || 'image/jpeg',
-              sizeBytes: item.file.size
-            });
-            if (!res.success) errors.push(section + '/' + item.file.name + ': ' + res.message);
-          } catch(e) {
-            errors.push(section + '/' + item.file.name + ': เชื่อมต่อไม่ได้');
-          }
-        }
-        pendingFiles[section] = [];
-      }
-      renderAllUploadZones();
-      return errors;
     }
 
     async function upLoadExisting(recordId) {
@@ -3424,16 +4386,19 @@
         return r3 || INVALID('INVALID_DMY_HYPHEN');
       }
 
-      // Format 4: Thai textual "3 เม.ย.2026" / "3 เมษายน 2026" / "3 เม.ย.2569"
+      // Format 4: Thai textual "3 เม.ย.2026" / "3 เมษายน 2026" / "3 เม.ย.2569" / "24 มี.ค.26"
       for (var ki=0; ki<THAI_MONTH_KEYS.length; ki++) {
         var mname=THAI_MONTH_KEYS[ki];
         var idx=s.indexOf(mname);
         if (idx===-1) continue;
         var before=s.substring(0,idx).trim();
         var after=s.substring(idx+mname.length).trim();
-        var d4=parseInt(before), y4=parseInt(after);
-        if (isNaN(d4)||isNaN(y4)||before.replace(/\d/g,'').length>0||y4<1000) continue;
-        var r4=build(ceYear(y4),THAI_MONTHS[mname],d4,y4>=2400?'BE':'CE','THAI_TEXT');
+        var d4=parseInt(before), y4raw=parseInt(after);
+        if (isNaN(d4)||isNaN(y4raw)||before.replace(/\d/g,'').length>0) continue;
+        // 2-digit year: treat as 20YY CE (e.g. 26 → 2026 CE)
+        var y4ce = y4raw < 100 ? 2000 + y4raw : ceYear(y4raw);
+        var cal4 = y4raw < 100 ? 'CE' : (y4raw >= 2400 ? 'BE' : 'CE');
+        var r4=build(y4ce,THAI_MONTHS[mname],d4,cal4,'THAI_TEXT');
         return r4 || INVALID('INVALID_THAI');
       }
 
