@@ -1144,7 +1144,10 @@
   <!-- ===== ATTACHMENT LIGHTBOX ===== -->
   <div id="detailLightbox" onclick="closeDetailLightbox()"
        style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:10500;align-items:center;justify-content:center">
-    <img id="detailLightboxImg" style="max-width:92vw;max-height:92vh;object-fit:contain;border-radius:4px;box-shadow:0 4px 32px rgba(0,0,0,.6)" src="">
+    <div id="detailLightboxLoading" style="display:none;color:#fff;font-size:1rem;align-items:center">
+      <i class="fas fa-spinner fa-spin me-2"></i>กำลังโหลดรูปขนาดเต็ม...
+    </div>
+    <img id="detailLightboxImg" style="display:none;max-width:92vw;max-height:92vh;object-fit:contain;border-radius:4px;box-shadow:0 4px 32px rgba(0,0,0,.6)" src="">
     <button onclick="event.stopPropagation();closeDetailLightbox()"
             style="position:absolute;top:14px;right:18px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:1.5rem;line-height:1;padding:4px 10px;border-radius:50%;cursor:pointer">&#x2715;</button>
   </div>
@@ -2482,7 +2485,7 @@
           '</div>' +
         '</div>' +
         // S2
-        '<div class="card p-3 mb-3 border-0 shadow-sm">' +
+        '<div class="card p-3 mb-3 border-0 shadow-sm" id="detailCard2">' +
           '<div class="detail-section-title text-primary" style="border-color:#0d6efd"><i class="fas fa-search-location"></i> 2. ข้อมูลการตรวจพบและการนำส่ง</div>' +
           '<div class="row">' +
             '<div class="col-md-4"><div class="detail-label">สถานที่ตรวจพบ:</div><div class="detail-value">' + v(43) + (row[44] ? ' — ' + row[44] : '') + '</div></div>' +
@@ -2492,10 +2495,11 @@
             '<div class="col-md-4"><div class="detail-label">ชื่อเจ้าหน้าที่:</div><div class="detail-value">' + v(48) + '</div></div>' +
             '<div class="col-md-3"><div class="detail-label">โทรศัพท์:</div><div class="detail-value">' + fixMissingZero(row[49],'phone') + '</div></div>' +
             '<div class="col-md-2"><div class="detail-label">ตำแหน่ง:</div><div class="detail-value">' + v(93) + '</div></div>' +
+            '<div id="detailCard2Attach" class="col-12"></div>' +
           '</div>' +
         '</div>' +
         // S3
-        '<div class="card p-3 mb-3 border-0 shadow-sm">' +
+        '<div class="card p-3 mb-3 border-0 shadow-sm" id="detailCard3">' +
           '<div class="detail-section-title text-warning" style="border-color:#ffc107"><i class="fas fa-box-open"></i> 3. จุดที่อยู่สิ่งของและสิ่งของที่นำมายื่นฯ</div>' +
           '<div class="row">' +
             '<div class="col-md-4"><div class="detail-label">การเก็บ/ตำแหน่ง:</div><div class="detail-value">' + v(52) + (row[53] ? ' — ' + row[53] : '') + '</div></div>' +
@@ -2504,10 +2508,11 @@
               (row[95] || row[96] ? ' (' + [row[95]||'',row[96]||''].filter(Boolean).join('×') + ' ซม.)' : '') + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">ซองเอกสาร:</div><div class="detail-value">' + v(56) +
               (row[98] || row[99] ? ' (' + [row[98]||'',row[99]||''].filter(Boolean).join('×') + ' ซม.)' : '') + '</div></div>' +
+            '<div id="detailCard3Attach" class="col-12"></div>' +
           '</div>' +
         '</div>' +
         // S4
-        '<div class="card p-3 mb-3 border-0 shadow-sm">' +
+        '<div class="card p-3 mb-3 border-0 shadow-sm" id="detailCard4">' +
           '<div class="detail-section-title text-danger" style="border-color:#dc3545"><i class="fas fa-user-circle"></i> 4. ข้อมูลส่วนตัวของผู้ถวายฎีกา</div>' +
           '<div class="row">' +
             '<div class="col-md-6"><div class="detail-label">ชื่อ - สกุล:</div><div class="detail-value">' + v(3) + ' ' + v(4) + '</div></div>' +
@@ -2539,15 +2544,17 @@
             '<div class="col-md-4"><div class="detail-label">ติดต่อสำรอง:</div><div class="detail-value">' + v(24) + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">เกี่ยวข้องเป็น:</div><div class="detail-value">' + v(25) + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">เบอร์สำรอง:</div><div class="detail-value">' + phone2 + '</div></div>' +
+            '<div id="detailCard4Attach" class="col-12"></div>' +
           '</div>' +
         '</div>' +
         // S5
-        '<div class="card p-3 mb-3 border-0 shadow-sm">' +
+        '<div class="card p-3 mb-3 border-0 shadow-sm" id="detailCard5">' +
           '<div class="detail-section-title text-success" style="border-color:#198754"><i class="fas fa-eye"></i> 5. การตรวจสอบและการสังเกตเบื้องต้น</div>' +
           '<div class="row">' +
             '<div class="col-md-4"><div class="detail-label">การแต่งกาย:</div><div class="detail-value">' + v(9) + (row[10] ? ' — ' + row[10] : '') + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">การสนทนา:</div><div class="detail-value">' + v(13) + (row[14] ? ' — ' + row[14] : '') + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">เคยมารับเสด็จ:</div><div class="detail-value">' + v(15) + (row[111] ? ' (' + row[111] + ' ครั้ง)' : '') + (row[16] ? ' — ' + row[16] : '') + '</div></div>' +
+            '<div id="detailCard5Attach" class="col-12"></div>' +
           '</div>' +
         '</div>' +
         // S6
@@ -2580,6 +2587,8 @@
               (row[113] ? ' — ชื่อ: ' + row[113] : '') + '</div></div>' +
             '<div class="col-md-6"><div class="detail-label">7.2 แหล่งข้อมูล 2:</div><div class="detail-value">' + v(28) +
               (row[128] ? ' — ชื่อ: ' + row[128] : '') + '</div></div>' +
+            '<div id="detailCard71Attach" class="col-12"></div>' +
+            '<div id="detailCard72Attach" class="col-12"></div>' +
             '<div class="col-12"><div class="detail-label">7.3 ความตั้งใจในวันนี้:</div><div class="detail-value">' + v(27) + '</div></div>' +
             '<div class="col-md-4"><div class="detail-label">7.4 เคยยื่นพระบรมมหาราชวัง:</div><div class="detail-value">' + v(29) +
               (row[143] ? ' (' + row[143] + ' ครั้ง)' : '') + '</div></div>' +
@@ -2591,13 +2600,11 @@
             '<div class="col-12"><div class="detail-label">7.9 เมื่อยื่นเสร็จจะเดินทางไป:</div><div class="detail-value">' + v(151) + '</div></div>' +
           '</div>' +
         '</div>' +
-        // Attachment section — populated async by loadDetailAttachments()
-        '<div class="card p-3 mt-3 border-0 shadow-sm" id="detailAttachSection">' +
-          '<div class="detail-section-title" style="border-color:#6c757d;color:#495057">' +
-            '<i class="fas fa-image me-1"></i> รูปประกอบ' +
-          '</div>' +
-          '<div class="text-muted small py-1"><i class="fas fa-spinner fa-spin me-1"></i> กำลังโหลดรูป...</div>' +
-        '</div>';
+        '<div id="detailLoadingBar" class="text-muted small text-center py-2 mt-1">' +
+          '<i class="fas fa-spinner fa-spin me-1"></i> กำลังโหลดรูป...' +
+        '</div>' +
+        '<div id="detailNoAttachMsg"></div>' +
+        '<div id="detailOtherAttach"></div>';
 
       detailModal.show();
       const _rid = String(row[0] || '');
@@ -2606,7 +2613,7 @@
 
     // ==================== DETAIL ATTACHMENTS ====================
     // ---- Detail attachment cache config ----
-    const DETAIL_IMAGE_CONCURRENCY    = 3;  // max parallel getAttachmentData calls
+    const DETAIL_STAGE1_LIMIT          = 3;  // thumbnails fetched in Stage 1 (first visible)
     const DETAIL_IMG_CACHE_MAX_RECORDS = 10; // max records worth of base64 kept in memory
 
     // Metadata cache: unbounded (small JSON, negligible memory)
@@ -2619,7 +2626,6 @@
 
     function _detailImgCacheSet(recordId, attachmentId, b64) {
       if (!_detailImgByRecord[recordId]) {
-        // Evict oldest record's images if at limit
         if (_detailImgLruOrder.length >= DETAIL_IMG_CACHE_MAX_RECORDS) {
           const evict = _detailImgLruOrder.shift();
           (_detailImgByRecord[evict] || []).forEach(function(id) { delete _detailAttImageCache[id]; });
@@ -2628,113 +2634,177 @@
         _detailImgLruOrder.push(recordId);
         _detailImgByRecord[recordId] = [];
       }
-      if (!_detailAttImageCache[attachmentId]) { // don't double-push same att
+      if (!_detailAttImageCache[attachmentId]) {
         _detailAttImageCache[attachmentId] = b64;
         _detailImgByRecord[recordId].push(attachmentId);
       }
     }
 
-    // Bounded concurrency pool: runs tasks (functions returning Promises) with at most
-    // `limit` active at once. Errors inside tasks must be caught by the task itself.
-    async function _concurrentRun(tasks, limit) {
-      let idx = 0;
-      async function worker() {
-        while (idx < tasks.length) { await tasks[idx++](); }
-      }
-      await Promise.allSettled(
-        Array.from({ length: Math.min(limit, tasks.length) }, worker)
-      );
+    function _attSafeId(attId) { return 'att-' + String(attId).replace(/[^a-z0-9]/gi, '-'); }
+
+    function _attThumbSkeleton(sid, fileName, attachmentId, mimeType) {
+      return '<div id="att-wrap-' + sid + '" title="' + escHtml(fileName || '') + '" ' +
+        'style="width:80px;height:80px;border-radius:6px;overflow:hidden;background:#e9ecef;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center">' +
+        '<i id="att-ph-' + sid + '" class="fas fa-image" style="color:#ced4da;font-size:1.4rem"></i>' +
+        '<img id="att-img-' + sid + '" src="" loading="lazy" ' +
+          'data-att-id="' + escHtml(attachmentId || '') + '" ' +
+          'data-mime="' + escHtml(mimeType || 'image/jpeg') + '" ' +
+          'style="display:none;width:80px;height:80px;object-fit:cover" ' +
+          'onclick="openDetailLightbox(this)">' +
+        '</div>';
     }
 
     async function loadDetailAttachments(recordId) {
-      const container = document.getElementById('detailAttachSection');
-      if (!container) return;
+      const _lb = function() { return document.getElementById('detailLoadingBar'); };
 
-      // Phase 1: metadata (fast, no image bytes)
-      let meta = _detailAttMetaCache[recordId];
-      if (!meta) {
-        try {
-          const res = await gasPost({ action: 'listAttachments', recordId: recordId, token: adminSession });
-          if (!container.isConnected) return;
-          if (!res.success) {
-            container.querySelector('div + div').textContent = 'โหลดข้อมูลรูปไม่สำเร็จ';
+      // Browser cache fast-path: metadata + all thumbnails already in memory
+      const cachedMeta = _detailAttMetaCache[recordId];
+      if (cachedMeta) {
+        const allCached = cachedMeta.length === 0 ||
+          cachedMeta.every(function(att) { return !!_detailAttImageCache[att.attachmentId]; });
+        if (allCached) {
+          const lb = _lb();
+          if (!lb || !lb.isConnected) return;
+          lb.remove();
+          if (cachedMeta.length === 0) {
+            const noMsg = document.getElementById('detailNoAttachMsg');
+            if (noMsg && noMsg.isConnected)
+              noMsg.innerHTML = '<div class="text-muted small text-center py-2">ไม่มีรูปแนบ</div>';
             return;
           }
-          meta = (res.attachments || []).filter(function(a) { return a.status === 'active'; });
-          _detailAttMetaCache[recordId] = meta;
-        } catch(e) {
-          if (container.isConnected) container.innerHTML =
-            '<div class="detail-section-title" style="border-color:#6c757d;color:#495057"><i class="fas fa-image me-1"></i> รูปประกอบ</div>' +
-            '<div class="text-danger small py-1">โหลดรูปไม่สำเร็จ</div>';
+          _renderSkeletons(cachedMeta);
+          _applyThumbnails(cachedMeta.map(function(att) {
+            return { attachmentId: att.attachmentId, success: true,
+                     base64: _detailAttImageCache[att.attachmentId], mimeType: att.mimeType };
+          }), recordId);
           return;
         }
       }
-      if (!container.isConnected) return;
 
-      const sectionOrder = Object.keys(UPLOAD_LIMITS);
-      const grouped = {};
-      sectionOrder.forEach(function(k) { grouped[k] = []; });
-      meta.forEach(function(att) { if (grouped[att.section]) grouped[att.section].push(att); });
-      const activeSections = sectionOrder.filter(function(k) { return grouped[k].length > 0; });
-
-      if (activeSections.length === 0) {
-        container.innerHTML =
-          '<div class="detail-section-title" style="border-color:#6c757d;color:#495057"><i class="fas fa-image me-1"></i> รูปประกอบ</div>' +
-          '<div class="text-muted small py-1">ไม่มีรูปแนบ</div>';
+      // Stage 1: ALL metadata + first DETAIL_STAGE1_LIMIT thumbnails (single GAS call)
+      let stage1;
+      try {
+        stage1 = await gasPost({ action: 'getDetailThumbnails', recordId: recordId,
+                                 token: adminSession, offset: 0, limit: DETAIL_STAGE1_LIMIT });
+        const lb = _lb();
+        if (!lb || !lb.isConnected) return;
+        if (!stage1.success) {
+          lb.innerHTML = '<span class="text-danger">โหลดข้อมูลรูปไม่สำเร็จ</span>';
+          return;
+        }
+      } catch(e) {
+        const lb = _lb();
+        if (lb && lb.isConnected) lb.innerHTML = '<span class="text-danger">โหลดรูปไม่สำเร็จ</span>';
         return;
       }
 
-      // Phase 1 render: section headers + skeleton placeholders (no image data yet)
-      const safeId = function(attId) { return 'att-' + attId.replace(/[^a-z0-9]/gi, '-'); };
-      let html =
-        '<div class="detail-section-title" style="border-color:#6c757d;color:#495057">' +
-          '<i class="fas fa-image me-1"></i> รูปประกอบ (' + meta.length + ' รูป)' +
-        '</div>';
-      activeSections.forEach(function(sKey) {
-        const atts  = grouped[sKey];
-        const label = (SECTION_LABELS && SECTION_LABELS[sKey]) ? SECTION_LABELS[sKey] : sKey;
-        html += '<div class="mb-3">' +
-          '<div class="small fw-semibold text-secondary mb-2">' + escHtml(label) + ' — ' + atts.length + ' รูป</div>' +
-          '<div class="d-flex flex-wrap gap-2">';
-        atts.forEach(function(att) {
-          const sid = safeId(att.attachmentId);
-          html +=
-            '<div id="att-wrap-' + sid + '" title="' + escHtml(att.fileName) + '" ' +
-              'style="width:80px;height:80px;border-radius:6px;overflow:hidden;background:#e9ecef;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center">' +
-              '<i id="att-ph-' + sid + '" class="fas fa-image" style="color:#ced4da;font-size:1.4rem"></i>' +
-              '<img id="att-img-' + sid + '" src="" loading="lazy" ' +
-                'style="display:none;width:80px;height:80px;object-fit:cover" ' +
-                'onclick="openDetailLightbox(this.src)">' +
-            '</div>';
-        });
-        html += '</div></div>';
-      });
-      container.innerHTML = html;
+      const lbEl = _lb();
+      if (lbEl) lbEl.remove();
 
-      // Phase 2: bounded-concurrency lazy load (max DETAIL_IMAGE_CONCURRENCY parallel)
-      await _concurrentRun(meta.map(function(att) {
-        return function() {
-          return _loadAttThumb(recordId, att.attachmentId, att.mimeType, safeId(att.attachmentId));
-        };
-      }), DETAIL_IMAGE_CONCURRENCY);
+      const meta = stage1.metadata || [];
+      _detailAttMetaCache[recordId] = meta;
+
+      if (meta.length === 0) {
+        const noMsg = document.getElementById('detailNoAttachMsg');
+        if (noMsg && noMsg.isConnected)
+          noMsg.innerHTML = '<div class="text-muted small text-center py-2">ไม่มีรูปแนบ</div>';
+        return;
+      }
+
+      _renderSkeletons(meta);
+
+      if (stage1.thumbnails && stage1.thumbnails.length > 0) {
+        _applyThumbnails(stage1.thumbnails, recordId);
+      }
+
+      // Stage 2: remaining thumbnails (second and final GAS call)
+      if ((stage1.total || 0) > DETAIL_STAGE1_LIMIT) {
+        try {
+          const stage2 = await gasPost({ action: 'getDetailThumbnails', recordId: recordId,
+                                         token: adminSession, offset: DETAIL_STAGE1_LIMIT });
+          if (stage2.success && stage2.thumbnails && stage2.thumbnails.length > 0) {
+            _applyThumbnails(stage2.thumbnails, recordId);
+          }
+        } catch(e) {
+          // Stage 1 thumbnails remain visible; remaining skeletons stay as placeholders
+        }
+      }
     }
 
-    async function _loadAttThumb(recordId, attachmentId, mimeType, sid) {
-      let b64 = _detailAttImageCache[attachmentId];
-      if (!b64) {
-        try {
-          const res = await gasPost({ action: 'getAttachmentData', attachmentId: attachmentId, token: adminSession });
-          if (!res.success || !res.base64) { _showAttError(sid); return; }
-          b64 = res.base64;
-          _detailImgCacheSet(recordId, attachmentId, b64); // LRU-bounded store
-        } catch(e) { _showAttError(sid); return; }
+    function _renderSkeletons(meta) {
+      const grouped = {};
+      Object.keys(UPLOAD_LIMITS).forEach(function(k) { grouped[k] = []; });
+      const unmapped = [];
+      meta.forEach(function(att) {
+        if (Object.prototype.hasOwnProperty.call(grouped, att.section)) {
+          grouped[att.section].push(att);
+        } else {
+          unmapped.push(att);
+        }
+      });
+
+      Object.keys(grouped).forEach(function(sKey) {
+        if (grouped[sKey].length > 0 && !DETAIL_SECTION_MAP[sKey]) {
+          grouped[sKey].forEach(function(att) { unmapped.push(att); });
+          grouped[sKey] = [];
+        }
+      });
+
+      Object.keys(UPLOAD_LIMITS).forEach(function(sKey) {
+        const atts = grouped[sKey];
+        if (!atts || atts.length === 0) return;
+        const containerId = DETAIL_SECTION_MAP[sKey];
+        if (!containerId) return;
+        const container = document.getElementById(containerId);
+        if (!container || !container.isConnected) return;
+
+        const label = (SECTION_LABELS && SECTION_LABELS[sKey]) ? SECTION_LABELS[sKey] : sKey;
+        let html = '<div class="det-att-group pt-2">' +
+          '<div class="small fw-semibold text-secondary mb-1">' +
+            '<i class="fas fa-camera me-1"></i>' + escHtml(label) + ' (' + atts.length + ' รูป)' +
+          '</div>' +
+          '<div class="d-flex flex-wrap gap-2">';
+        atts.forEach(function(att) {
+          html += _attThumbSkeleton(_attSafeId(att.attachmentId), att.fileName, att.attachmentId, att.mimeType);
+        });
+        html += '</div></div>';
+        container.innerHTML += html;
+      });
+
+      if (unmapped.length > 0) {
+        const otherEl = document.getElementById('detailOtherAttach');
+        if (otherEl && otherEl.isConnected) {
+          let html = '<div class="card p-3 mt-3 border-0 shadow-sm">' +
+            '<div class="detail-section-title" style="border-color:#6c757d;color:#495057">' +
+              '<i class="fas fa-image me-1"></i> รูปอื่น ๆ' +
+            '</div>' +
+            '<div class="d-flex flex-wrap gap-2">';
+          unmapped.forEach(function(att) {
+            html += _attThumbSkeleton(_attSafeId(att.attachmentId), att.fileName, att.attachmentId, att.mimeType);
+          });
+          html += '</div></div>';
+          otherEl.innerHTML = html;
+        }
       }
-      const imgEl = document.getElementById('att-img-' + sid);
-      const phEl  = document.getElementById('att-ph-' + sid);
-      if (!imgEl || !imgEl.isConnected) return; // modal closed while loading
-      imgEl.src   = 'data:' + (mimeType || 'image/jpeg') + ';base64,' + b64;
-      imgEl.style.display = 'block';
-      if (phEl) phEl.style.display = 'none';
+    }
+
+    function _applyThumbnails(thumbnails, recordId) {
+      thumbnails.forEach(function(t) {
+        const sid = _attSafeId(t.attachmentId);
+        if (!t.success) {
+          if (t.reason === 'thumbnail_unavailable') { _showAttUnavailable(sid); }
+          else { _showAttError(sid); }
+          return;
+        }
+        if (!t.base64) { _showAttError(sid); return; }
+        const imgEl = document.getElementById('att-img-' + sid);
+        const phEl  = document.getElementById('att-ph-' + sid);
+        if (!imgEl || !imgEl.isConnected) return;
+        imgEl.src = 'data:' + (t.mimeType || 'image/jpeg') + ';base64,' + t.base64;
+        imgEl.style.display = 'block';
+        if (phEl) phEl.style.display = 'none';
+        _detailImgCacheSet(recordId, t.attachmentId, t.base64);
+      });
     }
 
     function _showAttError(sid) {
@@ -2743,19 +2813,53 @@
       wrap.innerHTML = '<span style="font-size:0.6rem;color:#dc3545;text-align:center;padding:4px;line-height:1.2">โหลดรูปไม่สำเร็จ</span>';
     }
 
-    function openDetailLightbox(src) {
-      const lb  = document.getElementById('detailLightbox');
-      const img = document.getElementById('detailLightboxImg');
-      if (!lb || !img || !src) return;
-      img.src = src;
+    function _showAttUnavailable(sid) {
+      const wrap = document.getElementById('att-wrap-' + sid);
+      if (!wrap || !wrap.isConnected) return;
+      wrap.innerHTML = '<span style="font-size:0.6rem;color:#6c757d;text-align:center;padding:4px;line-height:1.2">ไม่พบรูปตัวอย่าง</span>';
+    }
+
+    function openDetailLightbox(thumbEl) {
+      const lb     = document.getElementById('detailLightbox');
+      const lbImg  = document.getElementById('detailLightboxImg');
+      const lbLoad = document.getElementById('detailLightboxLoading');
+      if (!lb || !lbImg || !lbLoad || !thumbEl) return;
+      const attId = thumbEl.dataset.attId;
+      const mime  = thumbEl.dataset.mime || 'image/jpeg';
+      if (!attId) return;
+      // Show lightbox with loading state immediately
+      lbImg.src = '';
+      lbImg.style.display = 'none';
+      lbLoad.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังโหลดรูปขนาดเต็ม...';
+      lbLoad.style.display = 'flex';
       lb.style.display = 'flex';
+      // Lazy-load full original on demand
+      gasPost({ action: 'getAttachmentData', attachmentId: attId, token: adminSession })
+        .then(function(res) {
+          if (!lb || lb.style.display === 'none') return;
+          lbLoad.style.display = 'none';
+          if (res && res.success && res.base64) {
+            lbImg.src = 'data:' + (res.mimeType || mime) + ';base64,' + res.base64;
+            lbImg.style.display = 'block';
+          } else {
+            lbLoad.innerHTML = '<span style="color:#f88">โหลดรูปไม่สำเร็จ</span>';
+            lbLoad.style.display = 'flex';
+          }
+        })
+        .catch(function() {
+          if (!lb || lb.style.display === 'none') return;
+          lbLoad.innerHTML = '<span style="color:#f88">โหลดรูปไม่สำเร็จ</span>';
+          lbLoad.style.display = 'flex';
+        });
     }
 
     function closeDetailLightbox() {
-      const lb  = document.getElementById('detailLightbox');
-      const img = document.getElementById('detailLightboxImg');
-      if (lb)  lb.style.display  = 'none';
-      if (img) img.src = '';
+      const lb     = document.getElementById('detailLightbox');
+      const lbImg  = document.getElementById('detailLightboxImg');
+      const lbLoad = document.getElementById('detailLightboxLoading');
+      if (lb)     lb.style.display = 'none';
+      if (lbImg)  { lbImg.src = ''; lbImg.style.display = 'none'; }
+      if (lbLoad) lbLoad.style.display = 'none';
     }
 
     // ==================== EDIT ====================
@@ -3507,6 +3611,18 @@
       source_profile_72: 'รูปผู้ใช้/เพจ (ข้อ 7.2)',
       source_post_72:    'รูปโพสต์ (ข้อ 7.2)',
       source_other_72:   'รูปอื่น ๆ (ข้อ 7.2)',
+    };
+    const DETAIL_SECTION_MAP = {
+      officer_found:     'detailCard2Attach',
+      items_evidence:    'detailCard3Attach',
+      person_portrait:   'detailCard4Attach',
+      appearance_photo:  'detailCard5Attach',
+      source_profile_71: 'detailCard71Attach',
+      source_post_71:    'detailCard71Attach',
+      source_other_71:   'detailCard71Attach',
+      source_profile_72: 'detailCard72Attach',
+      source_post_72:    'detailCard72Attach',
+      source_other_72:   'detailCard72Attach',
     };
     let pendingFiles = {};  // { section: [{ compressedBlob, previewObjectUrl, origName, origType, status, errorMsg }] }
     let existingAtts = {};
