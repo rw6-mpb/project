@@ -1598,8 +1598,156 @@
       return _gasReq(GAS_API_URL + '?' + new URLSearchParams(params).toString(), { method: 'GET' });
     }
     function gasPost(data) {
-      return _gasReq(GAS_API_URL, { method: 'POST', body: JSON.stringify(data) });
+      // A late response from an old session must never log out a newer login.
+      if (data.action !== 'loginUser' && data.action !== 'logout' && !data.token && _authRecoveryActive) {
+        return Promise.resolve({ success: false, errorCode: 'SESSION_INVALID', message: 'กรุณาเข้าสู่ระบบใหม่' });
+      }
+      return _gasReq(GAS_API_URL, { method: 'POST', body: JSON.stringify(data) }).then(function(response) {
+        if (isSessionAuthError(response) && data.token && data.token === adminSession) handleSessionAuthError(response);
+        return response;
+      });
     }
+
+    // Draft contains form values only. File/Blob objects remain in the existing memory queues.
+    const SESSION_DRAFT_KEY = 'rw01_form_draft_v1';
+    var _activeView = 'loginView';
+    var _authRecoveryActive = false;
+    var _recoveryOwner = null;
+    var _memoryDraft = null;
+    var _draftSaveTimer = null;
+    var _draftEditLockPending = false;
+    function isSessionAuthError(response) {
+      return response && ['SESSION_EXPIRED', 'SESSION_INVALID', 'SESSION_REVOKED'].indexOf(response.errorCode) !== -1;
+    }
+    function draftAttachmentCount() {
+      return Object.keys(pendingFiles).reduce(function(n, key) { return n + pendingFiles[key].length; }, 0) +
+        BG_QUEUE.items.length + BG_QUEUE.failed.length + _compressBusy;
+    }
+    function preserveSessionDraft() {
+      if (_activeView !== 'formView' || !currentUser) return _memoryDraft;
+      const fields = Array.from(document.getElementById('dataForm').elements).filter(function(el) {
+        return (el.name || el.id) && !['file','password','submit','button','reset'].includes(el.type);
+      }).map(function(el) {
+        return { name: el.name, id: el.id, type: el.type, value: el.value, checked: el.checked,
+          disabled: el.disabled, options: el.tagName === 'SELECT' ? Array.from(el.options).map(function(o) {
+            return { value: o.value, text: o.text, selected: o.selected };
+          }) : null };
+      });
+      _memoryDraft = { version: 1, userId: currentUser.userId, view: 'formView', savedAt: Date.now(), fields: fields,
+        editRecordId: currentEditRecordId, isEdit: editSheetRow !== null || (_draftEditLockPending && !!currentEditRecordId), formSubmitId: _currentFormSubmitId,
+        attachmentCount: draftAttachmentCount(), maps: { incident: amphoeNameToId, current: currentAmphoeMap, domicile: domicileAmphoeMap, bangkok: bangkokAmphoeMap } };
+      try { sessionStorage.setItem(SESSION_DRAFT_KEY, JSON.stringify(_memoryDraft)); }
+      catch(e) { showToast('เก็บข้อมูลชั่วคราวในเบราว์เซอร์ไม่ได้ กรุณาอย่ารีเฟรชหน้านี้ก่อนเข้าสู่ระบบใหม่', 'warning'); }
+      return _memoryDraft;
+    }
+    function readSessionDraft() {
+      if (_memoryDraft) return _memoryDraft;
+      try { const draft = JSON.parse(sessionStorage.getItem(SESSION_DRAFT_KEY) || 'null');
+        return draft && draft.version === 1 && Array.isArray(draft.fields) ? draft : null;
+      } catch(e) { return null; }
+    }
+    function discardSessionDraft() {
+      _memoryDraft = null;
+      try { sessionStorage.removeItem(SESSION_DRAFT_KEY); } catch(e) {}
+    }
+    function handleSessionAuthError(response) {
+      if (_authRecoveryActive) return;
+      preserveSessionDraft();
+      if (currentUser && draftAttachmentCount() > 0) _recoveryOwner = currentUser.userId;
+      _authRecoveryActive = true;
+      if (editHeartbeatInterval) { clearInterval(editHeartbeatInterval); editHeartbeatInterval = null; }
+      currentLockToken = null;
+      clearSession(); // Does not reset form, pendingFiles or BG_QUEUE.
+      updateNavUserDisplay(); applyRoleUI(); showView('loginView');
+      document.querySelectorAll('.modal.show').forEach(function(el) {
+        const modal = bootstrap.Modal.getInstance(el); if (modal) modal.hide();
+      });
+      const message = response.errorCode === 'SESSION_EXPIRED' ? 'เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่' : response.message;
+      const errorEl = document.getElementById('loginViewError');
+      errorEl.textContent = message; errorEl.classList.remove('d-none');
+      showToast(message, 'warning');
+    }
+    function restoreSessionDraft() {
+      const draft = readSessionDraft();
+      if (!draft || !currentUser || draft.userId !== currentUser.userId) return false;
+      const form = document.getElementById('dataForm');
+      const hadMemory = !!_memoryDraft;
+      const applyFields = function() {
+        draft.fields.forEach(function(field) {
+          const el = field.id ? document.getElementById(field.id) : Array.from(form.elements).find(function(e) {
+            return e.name === field.name && (!['radio','checkbox'].includes(e.type) || e.value === field.value);
+          });
+          if (!el || !form.contains(el) || ['file','password'].includes(el.type)) return;
+          if (field.options && el.tagName === 'SELECT') {
+            el.replaceChildren();
+            field.options.forEach(function(o) { el.add(new Option(o.text, o.value, false, o.selected)); });
+          }
+          el.value = field.value;
+          if (el.type === 'checkbox' || el.type === 'radio') el.checked = !!field.checked;
+          el.disabled = !!field.disabled;
+        });
+      };
+      showView('formView', true); // Enter without initUploadState: preserve existing File/Blob references.
+      applyFields();
+      const field = function(name) { return form.querySelector('[name="' + name + '"]'); };
+      onNoticeStatusChange(); onFoundLocationChange(field('col44'), true);
+      onCarryMethodChange(field('col55')); onEnvelopeStatusChange(field('col57'));
+      onClothingChange(field('col10')); onSpeechChange(field('col14'));
+      onVisitedRoyalChange(field('col16')); onPriorComplaintChange(field('col19'));
+      onSource71Change(); onSource72Change(); onPalaceVisitChange();
+      onDocSubmitChange(field('col149')); onBangkokStayToggle();
+      applyFields(); // Some conditional controls reset values; restore after toggling visibility.
+      amphoeNameToId = draft.maps && draft.maps.incident || {};
+      currentAmphoeMap = draft.maps && draft.maps.current || {};
+      domicileAmphoeMap = draft.maps && draft.maps.domicile || {};
+      bangkokAmphoeMap = draft.maps && draft.maps.bangkok || {};
+      _currentFormSubmitId = draft.formSubmitId;
+      editSheetRow = null; currentEditRecordId = null; currentLockToken = null;
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = false;
+      if (draft.isEdit) {
+        currentEditRecordId = String(draft.editRecordId);
+        const record = globalData.find(function(item) { return String(item.data[0]).trim() === currentEditRecordId; });
+        _draftEditLockPending = true; btn.disabled = true;
+        document.getElementById('editModeBanner').classList.remove('d-none');
+        document.getElementById('cancelEditBtn').classList.remove('d-none');
+        document.getElementById('formTitle').textContent = 'แก้ไขข้อมูลที่กู้คืน';
+        btn.innerHTML = '<i class="fas fa-save"></i> บันทึกการแก้ไข';
+        if (record && hasClientPerm('edit_record')) {
+          editSheetRow = record.sheetRow;
+          gasPost({ action: 'acquireEditLock', token: adminSession, recordId: currentEditRecordId }).then(function(r) {
+            if (!r.success) { showToast('กู้คืนข้อมูลแล้ว แต่ยังล็อกรายการไม่ได้ กรุณาเข้าสู่ระบบใหม่หรือลองภายหลัง', 'warning'); return; }
+            currentLockToken = r.lockToken; _draftEditLockPending = false; btn.disabled = false;
+            if (editHeartbeatInterval) clearInterval(editHeartbeatInterval);
+            editHeartbeatInterval = setInterval(function() {
+              if (adminSession && currentLockToken) gasPost({ action: 'renewEditLock', token: adminSession,
+                recordId: currentEditRecordId, lockToken: currentLockToken }).catch(function() {});
+            }, 5 * 60 * 1000);
+          }).catch(function() { showToast('ยังล็อกรายการไม่ได้ ข้อมูลที่กู้คืนยังอยู่', 'warning'); });
+        } else { showToast('กู้คืนข้อมูลแล้ว แต่ไม่พบรายการเดิมหรือไม่มีสิทธิ์แก้ไข จึงยังบันทึกไม่ได้', 'warning'); }
+      } else {
+        _draftEditLockPending = false;
+        document.getElementById('editModeBanner').classList.add('d-none');
+        document.getElementById('cancelEditBtn').classList.add('d-none');
+        document.getElementById('formTitle').textContent = 'แบบฟอร์มลงข้อมูลใหม่';
+        btn.innerHTML = '<i class="fas fa-save"></i> บันทึกข้อมูลเข้าฐานข้อมูล';
+      }
+      renderAllUploadZones();
+      showToast('กู้คืนข้อมูลที่กรอกไว้แล้ว', 'success');
+      if (!hadMemory && draft.attachmentCount > 0) {
+        const message = 'กู้คืนข้อความแล้ว แต่รูปที่เลือกหรือค้างอัปโหลดกู้คืนหลังรีเฟรชไม่ได้ กรุณาเลือกรูปใหม่และตรวจรายการที่บันทึกแล้ว';
+        const errorEl = document.getElementById('editModeName');
+        errorEl.textContent = message; document.getElementById('editModeBanner').classList.remove('d-none');
+        showToast(message, 'warning');
+      }
+      _memoryDraft = draft;
+      return true;
+    }
+    document.addEventListener('input', function(event) {
+      if (!event.target.closest || !event.target.closest('#dataForm')) return;
+      clearTimeout(_draftSaveTimer); _draftSaveTimer = setTimeout(preserveSessionDraft, 500);
+    });
+    window.addEventListener('beforeunload', function() { preserveSessionDraft(); });
 
     // ==================== INIT ====================
     document.addEventListener("DOMContentLoaded", function() {
@@ -1633,10 +1781,10 @@
                 applyFilters();
                 updateNavUserDisplay();
                 applyRoleUI();
-                showView('welcomeView');
+                if (!restoreSessionDraft()) showView('welcomeView');
               } else {
-                clearSession();
-                showView('loginView');
+                if (isSessionAuthError(data)) handleSessionAuthError(data);
+                else { clearSession(); showView('loginView'); }
               }
             })
             .catch(function() { showView('loginView'); });
@@ -1656,7 +1804,8 @@
     });
 
     // ==================== NAVIGATION ====================
-    function showView(viewId) {
+    function showView(viewId, preserveDraft) {
+      _activeView = viewId;
       ['loginView', 'welcomeView', 'dashboardView', 'formView', 'bulkPanelView'].forEach(id => {
         document.getElementById(id).classList.add('d-none');
       });
@@ -1682,7 +1831,7 @@
         btnHome.classList.remove('d-none');
         if (adminSession) btnLogout.classList.remove('d-none');
       }
-      if (viewId === 'formView') { loadProvinces(); initUploadState(); }
+      if (viewId === 'formView') { loadProvinces(); if (!preserveDraft) initUploadState(); }
     }
 
     // Warn before page leave if bg queue has pending work
@@ -1723,6 +1872,9 @@
       if (hasPendingBgWork()) {
         if (!confirm('ยังมีรูปที่กำลังอัปโหลดหรือรออัปโหลดอยู่\nหากออกจากระบบตอนนี้งานที่ค้างอาจสูญหาย\n\nต้องการออกจากระบบหรือไม่?')) return;
       }
+      preserveSessionDraft();
+      if (currentUser && draftAttachmentCount() > 0) _recoveryOwner = currentUser.userId;
+      _authRecoveryActive = true;
       if (adminSession) gasPost({ action: 'logout', token: adminSession }).catch(function() {});
       clearSession();
       updateNavUserDisplay();
@@ -1832,6 +1984,13 @@
     }
 
     function applyLoginResult(data) {
+      const draft = readSessionDraft();
+      if ((draft && draft.userId !== data.user.userId) || (_recoveryOwner && _recoveryOwner !== data.user.userId && draftAttachmentCount() > 0)) {
+        gasPost({ action: 'logout', token: data.token }).catch(function() {});
+        showToast('มีข้อมูลและรูปค้างของบัญชีเดิม กรุณาเข้าสู่ระบบด้วยบัญชีเดิมเพื่อกู้คืนข้อมูล', 'warning');
+        return;
+      }
+      _authRecoveryActive = false;
       adminSession = data.token;
       currentUser  = data.user;
       currentUser.permissions = data.permissions || [];
@@ -1848,7 +2007,7 @@
       if (globalData.length) { populateYearDropdown(); applyFilters(); }
       updateNavUserDisplay();
       applyRoleUI();
-      showView('welcomeView');
+      if (!restoreSessionDraft()) showView('welcomeView');
     }
 
     // ==================== DASHBOARD HELPERS ====================
@@ -1856,7 +2015,7 @@
       gasPost({ action: 'dashboard', token: adminSession })
         .then(function(data) {
           if (!data.success) {
-            if (data.message && data.message.indexOf('หมดอายุ') !== -1) { logout(); return; }
+            if (isSessionAuthError(data)) return;
             showToast('ไม่สามารถโหลดข้อมูลได้: ' + data.message, 'danger'); return;
           }
           globalData             = data.allData;
@@ -3038,6 +3197,7 @@
       if (currentLockToken && currentEditRecordId) {
         gasPost({ action: 'releaseEditLock', token: adminSession, recordId: currentEditRecordId, lockToken: currentLockToken }).catch(function() {});
       }
+      discardSessionDraft();
       resetFormMode();
       document.getElementById('dataForm').reset();
       resetIncidentLocation();
@@ -3047,6 +3207,7 @@
     }
 
     function resetFormMode() {
+      _draftEditLockPending = false;
       currentLockToken = null;
       if (editHeartbeatInterval) { clearInterval(editHeartbeatInterval); editHeartbeatInterval = null; }
       editSheetRow = null;
@@ -3104,7 +3265,7 @@
       const form   = document.getElementById('dataForm');
       const isEdit = editSheetRow !== null;
 
-      if (btn.disabled) return;
+      if (btn.disabled || _draftEditLockPending) return;
 
       // Block Save while compression is still running (race guard)
       if (_compressBusy > 0) {
@@ -3164,7 +3325,10 @@
 
       const onSuccess = function(response) {
         console.log('[SAVE] response', response);
-        if (!response.success) { onFailure({ message: response.message }); return; }
+        if (!response.success) {
+          if (isSessionAuthError(response)) { resetBtn(); return; }
+          onFailure({ message: response.message }); return;
+        }
 
         const rid        = response.recordId || currentEditRecordId;
         const recordName = ((formObject.col4 || '') + ' ' + (formObject.col5 || '')).trim() || ('#' + rid);
@@ -3181,6 +3345,7 @@
 
           showToast(toastMsg, 'success');
           resetBtn();
+          discardSessionDraft();
           form.reset();
           resetIncidentLocation();
           resetAddressGroups();
